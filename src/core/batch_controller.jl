@@ -1,7 +1,7 @@
-# Batch controller for jobs. Essentially a few shortcuts to the Python API.
-# Philipp A. Witte, Microsoft
-# November 2020
-#
+#  ------------------------------------------------------------------------------------------
+#  Copyright (c) Microsoft Corporation. All rights reserved.
+#  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
+#  ------------------------------------------------------------------------------------------
 
 export BatchController, terminate_job, delete_job, delete_pool, resize_pool, wait_for_tasks_to_complete, fetch, destroy!
 export fetchreduce,  fetchreduce!, get_job_stats

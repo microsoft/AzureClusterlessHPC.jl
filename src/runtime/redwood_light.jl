@@ -1,7 +1,7 @@
-# Light version of AzureClusterlessHPC for batch runtime
-# Philipp A. Witte
-# November 2020
-# "AzureClusterlessHPC light" for batch runtime
+#  ------------------------------------------------------------------------------------------
+#  Copyright (c) Microsoft Corporation. All rights reserved.
+#  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
+#  ------------------------------------------------------------------------------------------
 
 using Serialization
 export BlobRef, BatchFuture, BlobFuture, fetch!, remote_reduction#, fetchreduce_batch

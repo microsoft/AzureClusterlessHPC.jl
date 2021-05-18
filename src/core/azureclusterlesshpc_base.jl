@@ -1,8 +1,7 @@
-# AzureClusterlessHPC.jl - Global helper functions
-# Philipp A. Witte, Microsoft
-# January 2021
-#
-
+#  ------------------------------------------------------------------------------------------
+#  Copyright (c) Microsoft Corporation. All rights reserved.
+#  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
+#  ------------------------------------------------------------------------------------------
 
 # Gather parameters from parameter file
 const default_parameters = [

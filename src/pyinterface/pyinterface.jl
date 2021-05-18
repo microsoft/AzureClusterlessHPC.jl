@@ -1,7 +1,7 @@
-# AzureClusterlessHPC.jl
-# Philipp A. Witte, Microsoft
-# November 2020
-#
+#  ------------------------------------------------------------------------------------------
+#  Copyright (c) Microsoft Corporation. All rights reserved.
+#  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
+#  ------------------------------------------------------------------------------------------
 
 # Exports
 export create_batch_client, create_blob_client, create_queue_client, create_clients
