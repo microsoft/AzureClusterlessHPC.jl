@@ -1,33 +1,62 @@
-# Project
 
-> This repo has been populated by an initial template to help get you started. Please
-> make sure to update the content to build a great experience for community-building.
+# AzureClusterlessHPC.jl - Simplified distributed computing on Azure
 
-As the maintainer of this project, please make a few updates:
+## Overview
 
-- Improving this README.MD file to provide a great experience
-- Updating SUPPORT.MD with content about this project's support experience
-- Understanding the security reporting process in SECURITY.MD
-- Remove this section from the README
+**AzureClusterlessHPC.jl** is a package for simplified parallal computing on Azure. AzureClusterlessHPC.jl borrows the syntax of [Julia's Distributed Programming](https://docs.julialang.org/en/v1/stdlib/Distributed/) package to easily execute parallel Julia workloads in the cloud using [Azure Batch](https://azure.microsoft.com/en-us/services/batch/).
 
-## Contributing
+AzureClusterlessHPC provides macros that let us define functions on batch workers, similar to how `@everywhere` works for a parallel Julia session:
 
-This project welcomes contributions and suggestions.  Most contributions require you to agree to a
-Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
-the rights to use your contribution. For details, visit https://cla.opensource.microsoft.com.
+```
+# Define a function
+@batchdef hello_world(name)
+    print("Hello $name")
+    return "Goodbye"
+end
 
-When you submit a pull request, a CLA bot will automatically determine whether you need to provide
-a CLA and decorate the PR appropriately (e.g., status check, comment). Simply follow the instructions
-provided by the bot. You will only need to do this once across all repos using our CLA.
+```
 
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
-For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
-contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+We can then either execute this function on our local machine or as a batch job using the `@batchexec` macro (which is similar to Julia's `@spawn` macro for parallel Julia sessions):
 
-## Trademarks
+```
+# Execute function on local machine
+out = hello_world("Bob")
 
-This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft 
-trademarks or logos is subject to and must follow 
-[Microsoft's Trademark & Brand Guidelines](https://www.microsoft.com/en-us/legal/intellectualproperty/trademarks/usage/general).
-Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship.
-Any use of third-party trademarks or logos are subject to those third-party's policies.
+# Execute function via Azure Batch
+out = @batchexec hello_world("Jane")
+```
+
+Using the `pmap` function in combination with `@batchexec` allows us to run a multi-task batch job:
+
+```
+# Execute a multi-task batch job
+out = @batchexec pmap(name -> hello_world(name), ["Bob", "Jane"])
+```
+
+## Installation
+
+To install AzureClusterlessHPC.jl, run the following command from an interactive Julia session (press the `]` key and then type the command):
+
+```
+] add https://github.com/microsoft/AzureClusterlessHPC.jl
+```
+
+## Documentation
+
+See [here]() for AzureClusterlessHPC's documentation.
+
+
+## Applications
+
+AzureClusterlessHPC can be used to bring any Julia batch computing workloads to the cloud. Check out the notebooks in the [examples]() section to find tutorials for the following applications:
+
+- Generic batch examples
+
+- Deep learning with AzureClusterlessHPC.jl and [Flux.jl](https://github.com/FluxML)
+
+- Seismic imaging and inversion
+
+
+## Credits
+
+AzureClusterlessHPC.jl is developed and maintained by the [Microsoft Research for Industries](https://www.microsoft.com/en-us/research/group/research-for-industry/) (RFI) team. 

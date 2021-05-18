@@ -1,0 +1,14 @@
+{    
+    "_POOL_ID": "JuliaPoolTest",
+    "_POOL_NODE_COUNT": "2",
+    "_POOL_VM_SIZE": "Standard_E8s_v3",
+    "_JOB_ID": "JobTest",
+    "_STANDARD_OUT_FILE_NAME": "stdout.txt",
+    "_NODE_OS_PUBLISHER": "Canonical",
+    "_NODE_OS_OFFER": "UbuntuServer",
+    "_NODE_OS_SKU": "18.04",
+    "_BLOB_CONTAINER": "azureclusterlesshpctemp",
+    "_INTER_NODE_CONNECTION": "0",
+    "_NUM_RETRYS": "2",
+    "_JULIA_DEPOT_PATH": "/root/.julia"
+}

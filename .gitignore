@@ -348,3 +348,18 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+
+# Julia binary formats
+*.jld
+*.hdf5
+*.h5
+
+# Jupyter checkpoints
+.ipynb*
+
+# Data
+data
+
+# Credentials
+secret_aad_*
+secret_key_*

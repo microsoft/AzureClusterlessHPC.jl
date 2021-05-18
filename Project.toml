@@ -1,0 +1,13 @@
+name = "AzureClusterlessHPC"
+uuid = "0090f474-c28d-4577-9e1b-9155814dbffa"
+authors = ["pwitte <pwitte@microsoft.com>"]
+version = "0.1.0"
+
+[deps]
+JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
+Logging = "56ddb016-857b-54e1-b83d-db4d58db5568"
+PyCall = "438e738f-606a-5dbb-bf0a-cddfbfd45ab0"
+Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
+Serialization = "9e88b42a-f829-5b0c-bbe9-9e923198166b"
+SyntaxTree = "a4af3ec5-f8ac-5fed-a759-c2e80b4d74cb"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
