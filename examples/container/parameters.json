@@ -1,0 +1,14 @@
+{    
+    "_POOL_ID": "BatchPoolContainer",
+    "_POOL_VM_SIZE": "Standard_E2s_v3",
+    "_JOB_ID": "BatchJob",
+    "_NODE_OS_PUBLISHER": "microsoft-azure-batch",
+    "_NODE_OS_OFFER": "ubuntu-server-container",
+    "_NODE_OS_SKU": "20-04-lts",
+    "_POOL_COUNT": "1",
+    "_NODE_COUNT_PER_POOL": "2",
+    "_BLOB_CONTAINER": "azureclusterlesstemp",
+    "_CONTAINER": "philippwitte/azureclusterlesshpc:v1.0",
+    "_JULIA_DEPOT_PATH": "/root/.julia",
+    "_PYTHONPATH": "/usr/local/lib/python3.8/dist-packages"
+}
