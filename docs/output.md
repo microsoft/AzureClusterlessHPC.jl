@@ -62,7 +62,7 @@ batch_controller.output
 Inplace `fetch!` by default deletes the referenced blob objects. If `fetch!` is called on the batch controller again, it will then throw an error. To avoid deleting the blob, call `fetch!(batch_controller; destroy_blob=false)`. 
 
 
-## Fetch output and apply reduction operation
+## Fetch and reduce output
 
 AzureClusterlessHPC supplies the `fetchreduce` and `fetchreduce!` functions to collect the output from multiple tasks and apply a specified reduction operation to the output.
 E.g. using the prior example:

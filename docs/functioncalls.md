@@ -1,6 +1,6 @@
-# Remote function calls via batch
+# Remote function calls
 
-## \@batchdef
+## @batchdef
 
 Execute an expression under Main and on the batch workers of a (future) batch job that is executed from the same Julia session (equivalent to `@everywhere` for parallel Julia sessions).
 
@@ -35,7 +35,7 @@ end
 
 Expressions that are tagged via `@batchdef` are collected by AzureClusterlessHPC and are used in subsequent batch job executions. To print the current collection of expressions, type `batch_show()`. To reset the batch environment and remove all prior expressions from the call stack, use `batch_clear()` (or restart the Julia session).
 
-## \@batchexec
+## @batchexec
 
 Execute an expression as a batch job (equivalent to `@spawn` for parallel Julia sessions).
 

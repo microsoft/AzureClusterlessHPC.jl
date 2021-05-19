@@ -1,8 +1,7 @@
-
 # Parameters and credentials 
 
 
-## Credentials (one batch and storage account)
+## Single batch and storage account
 
 To use a single Azure Batch and storage account, you can set up a single combined credential file for both accounts. The required information must provided as a JSON file containing user credentials for Azure blob storage and Azure batch. Azure Batch requires authentication via the Azure Active Directory (AAD), whereas the blob storage account must be authenticated with a secret key. Refer to the [Azure documentation](https://docs.microsoft.com/en-us/azure/batch/batch-aad-auth) for information on how to authenticate Azure Batch via the AAD.
 
@@ -26,7 +25,7 @@ When using AzureClusterlessHPC, set the environment variable `ENV["CREDENTIALS"]
 
 
 
-## Credentials (multiple batch and storage accounts)
+## Multi accounts
 
 AzureClusterlessHPC also allows using multiple storage and/or batch accounts. Using multiple batch accounts provides the possiblity to cirumvent service limits of a single batch account or it allows to distribute workloads among multiple regions. If you create batch accounts for multiple regions, you need to have at least one storage account in each region. To automatically create multiple batch and storage accounts, use the shell script `create_azure_accounts.sh`. Pass the list of region(s) and the number of accounts per region as command line arguments to the script. E.g., to create two batch and storeage acounts in each US West and South Central US (i.e, total of 4 batch and 4 storage accounts), run:
 
@@ -46,7 +45,7 @@ Creating the accounts may take several minutes, depending on how many accounts a
 After loading AzureClusterlessHPC in Julia (`using AzureClusterlessHPC`), you can check which accounts were found by checking `AzureClusterlessHPC.__credentials__`. This returns a list with one entry per available batch account. Type `AzureClusterlessHPC.__credentials__[i]` to print the credential information for the `i-th` account.
 
 
-## Batch parameters
+## User parameters
 
 Users can optionally provide a `parameters.json` file that specifies pool and job parameters. Set the environment variable `ENV["PARAMETERS"]=/path/to/parameters.json` **before** loading the package (see section "Quickstart" for an example).
 

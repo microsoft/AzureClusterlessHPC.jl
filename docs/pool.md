@@ -1,7 +1,6 @@
-# Set up a batch pool
+# Managing pools
 
-
-## Start a pool and optionally install Julia packages on the workers
+## Start a pool
 
 To start a batch pool and (optionally) install a set of specified Julia packages on the workers, we first need to create a bash script of the following form, which will be executed by each node joining the pool:
 
@@ -77,7 +76,7 @@ create_pool_and_resource_file(startup_script; enable_auto_scale=false, auto_scal
 
 
 
-## Start a pool using an existing VM image
+## Pools with managed VM images
 
 To launch a pool with a custom VM image, you need to create a custom VM image and then upload it to the Azure shared image gallery. The image gallery will assign an image reference ID to the image (see [here](https://docs.microsoft.com/en-us/azure/batch/batch-custom-images) for details on how to create a shared image).
 
@@ -101,7 +100,7 @@ For a description of all other keyword arguments, see the above section.
 **Important**: In your parameter file, set the variable `"_JULIA_DEPOT_PATH"` to the path where Julia is installed on the image.
 
 
-## Start a pool using a Docker image
+## Pools with Docker
 
 As a third alternative, you can create an application package using Docker. You first create or specify a Docker image, which will then be pre-installed on each VM joining the batch pool. See the example directory `/path/to/redwood/examples/container` for an example Dockerfile. Follow the subsequent instructions to create a Docker image from a Dockerfile and upload it to your (personal) container repository:
 
@@ -129,7 +128,7 @@ Once you have a Docker image in a public repository, you can specify a Docker im
 If the `_CONTAINER` parameter is set, AzureClusterlessHPC will install the specified container image on the VMs in the batch pool.
 
 
-## Pools with auto-scaling
+## Pool autoscaling
 
 To create a pool with auto-scaling, use one of the above commands and set the following keyword arguments:
 
@@ -169,6 +168,6 @@ create_pool_and_resource_file(startup_script; enable_auto_scale=true, auto_scale
 ```
 
 
-## Resize the pool
+## Pool resize
 
 Currently not supported.
