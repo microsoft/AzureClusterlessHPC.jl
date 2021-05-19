@@ -1,0 +1,16 @@
+{    
+    "_POOL_ID": "BatchPoolMPI",
+    "_POOL_VM_SIZE": "Standard_E4s_v3",
+    "_JOB_ID": "BatchJob",
+    "_NODE_OS_PUBLISHER": "Canonical",
+    "_NODE_OS_OFFER": "UbuntuServer",
+    "_NODE_OS_SKU": "18.04",
+    "_BLOB_CONTAINER": "azureclusterlesstemp",
+    "_POOL_COUNT": "2",
+    "_NODE_COUNT_PER_POOL": "2",
+    "_MPI_RUN": "1",
+    "_INTER_NODE_CONNECTION": "1",
+    "_NUM_NODES_PER_TASK": "2",
+    "_NUM_PROCS_PER_NODE": "4",
+    "_OMP_NUM_THREADS": "1"
+}
