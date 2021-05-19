@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Simplified distributed computing on Azure">
+  
+  <link rel="shortcut icon" href="./img/favicon.ico">
+  <title>Home - AzureClusterlessHPC</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="./css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="./css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="./css/highlight.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Home";
+    var mkdocs_page_input_path = "index.md";
+    var mkdocs_page_url = "/";
+  </script>
+  
+  <script src="./js/jquery-2.1.1.min.js"></script>
+  <script src="./js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="./js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="." class="icon icon-home"> AzureClusterlessHPC</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href=".">Home</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#azureclusterlesshpcjl-simplified-parallel-computing-on-azure-with-julia">AzureClusterlessHPC.jl - Simplified parallel computing on Azure with Julia</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#overview">Overview</a></li>
+        
+            <li><a class="toctree-l3" href="#installation-and-prerequisites">Installation and prerequisites</a></li>
+        
+            <li><a class="toctree-l3" href="#quick-start">Quick start</a></li>
+        
+            <li><a class="toctree-l3" href="#parameters-and-credentials">Parameters and credentials</a></li>
+        
+            <li><a class="toctree-l3" href="#set-up-a-batch-pool">Set up a batch pool</a></li>
+        
+            <li><a class="toctree-l3" href="#remote-function-calls-via-batch">Remote function calls via batch</a></li>
+        
+            <li><a class="toctree-l3" href="#broadcasting">Broadcasting</a></li>
+        
+            <li><a class="toctree-l3" href="#collect-output">Collect output</a></li>
+        
+            <li><a class="toctree-l3" href="#clean-up-resources">Clean up resources</a></li>
+        
+            <li><a class="toctree-l3" href="#faq">FAQ</a></li>
+        
+            <li><a class="toctree-l3" href="#troubleshooting">Troubleshooting</a></li>
+        
+        </ul>
+    
+
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="about/">About</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href=".">AzureClusterlessHPC</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Home</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/microsoft/AzureClusterlessHPC.jl/edit/master/docs/index.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="azureclusterlesshpcjl-simplified-parallel-computing-on-azure-with-julia">AzureClusterlessHPC.jl - Simplified parallel computing on Azure with Julia</h1>
+<h2 id="overview">Overview</h2>
+<p><strong>AzureClusterlessHPC.jl</strong> is a package for simplified batch computing in the cloud. AzureClusterlessHPC.jl borrows the syntax of <a href="https://docs.julialang.org/en/v1/stdlib/Distributed/">Julia's Distributed Programming</a> package to easily execute parallel Julia workloads in the cloud using batch computing services such as <a href="https://azure.microsoft.com/en-us/services/batch/">Azure Batch</a>.</p>
+<h2 id="installation-and-prerequisites">Installation and prerequisites</h2>
+<p>To install AzureClusterlessHPC.jl, run the following command from an interactive Julia session (press the <code>]</code> key and then type the command). When prompted, enter the user name and password that were provided to you:</p>
+<pre><code>] add https://github.com/microsoft/AzureClusterlessHPC.jl
+</code></pre>
+
+<p>AzureClusterlessHPC requires the Azure software development kits (SDKs) for batch computing, blob storage and common functionalities. See <a href="">pyrequirements.txt</a> for the full list of current requirements. To install the required packages, run</p>
+<pre><code># Go to AzureClusterlessHPC directory
+cd /path/to/AzureClusterlessHPC
+pip3 install -r pyrequirements.txt
+</code></pre>
+
+<h2 id="quick-start">Quick start</h2>
+<p>Before running an example, we need to create two JSON files with our Azure credentials and the job parameters, as well as a bash startup-script for the worker nodes. Templates for these files are located in the examples directory:</p>
+<pre><code># Go to example directory
+cd /path/to/AzureClusterlessHPC/examples/batch
+
+# List directory content
+ls -l
+
+credentials.json
+julia_batch_macros.ipynb
+parameters.json
+pool_startup_script.sh
+</code></pre>
+
+<p>Fill out the missing information in <code>credentials.json</code> and in <code>parameters.json</code> (see the next section "Parmeters and credentials" for additional information). Then set the environment variables <code>CREDENTIALS</code> and <code>PARAMETERS</code> so that they point to the files. You can either set the variables in your bash terminal (e.g. in your <code>~/.bashrc</code> file), or directly in the Julia terminal:</p>
+<pre><code># Set path to credentials in Julia
+ENV[&quot;CREDENTIALS&quot;] = joinpath(pwd(), &quot;credentials.json&quot;)
+
+# Set path to batch parameters (pool id, VM types, etc.)
+ENV[&quot;PARAMETERS&quot;] = joinpath(pwd(), &quot;parameters.json&quot;)
+</code></pre>
+
+<p>Next, load AzureClusterlessHPC.jl and create a pool with the parameters from <code>parameters.json</code>:</p>
+<pre><code># Load package
+using AzureClusterlessHPC
+
+# Create default pool with parameters from parameters.json
+startup_script = &quot;pool_startup_script.sh&quot;
+create_pool_and_resource_file(startup_script)
+</code></pre>
+
+<p>Remark: If a pool with the name as specified in <code>parameter.json</code> already exists, the <code>create_pool_and_resource_file</code> function will throw an error.In practice, use a <code>try ... catch</code> block around this expression.</p>
+<p>Now you can execute Julia functions that are defined using the <code>@batchdef</code> macro via Azure batch:</p>
+<pre><code># Define function
+@batchdef function hello_world(name)
+    print(&quot;Hello $name&quot;)
+    return &quot;Goodbye&quot;
+end
+
+# Execute function via Azure batch
+@batchexec hello_world(&quot;Bob&quot;)
+</code></pre>
+
+<p>You can also run multi-tasks batch job using the <code>pmap</code> function in combination with <code>@batchdef</code>:</p>
+<pre><code># Run a multi-task batch job
+@batchexec pmap(name -&gt; hello_world(name), [&quot;Bob&quot;, &quot;Jane&quot;])
+</code></pre>
+
+<p>To delete all resources run:</p>
+<pre><code># Shut down pool
+delete_pool()
+
+# Delete container with temporary blob files
+delete_container()
+</code></pre>
+
+<h2 id="parameters-and-credentials">Parameters and credentials</h2>
+<h3 id="credentials-one-batch-and-storage-account">Credentials (one batch and storage account)</h3>
+<p>To use a single Azure Batch and storage account, you can set up a single combined credential file for both accounts. The required information must provided as a JSON file containing user credentials for Azure blob storage and Azure batch. Azure Batch requires authentication via the Azure Active Directory (AAD), whereas the blob storage account must be authenticated with a secret key. Refer to the <a href="https://docs.microsoft.com/en-us/azure/batch/batch-aad-auth">Azure documentation</a> for information on how to authenticate Azure Batch via the AAD.</p>
+<p>Use the following template to create a file called <code>credentials.json</code> file and fill in your keys and ids. Safely store this file and never upload it to public repositories:</p>
+<pre><code>{
+    &quot;_AD_TENANT&quot;: &quot;xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx&quot;,
+
+    &quot;_AD_BATCH_CLIENT_ID&quot;: &quot;xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx&quot;,
+    &quot;_AD_SECRET_BATCH&quot;: &quot;xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&quot;,
+    &quot;_BATCH_ACCOUNT_URL&quot;: &quot;https://batchaccountname.batchregion.batch.azure.com&quot;,
+    &quot;_BATCH_RESOURCE&quot;: &quot;https://batch.core.windows.net/&quot;,
+
+    &quot;_STORAGE_ACCOUNT_NAME&quot;: &quot;storageaccountname&quot;,
+    &quot;_STORAGE_ACCOUNT_KEY&quot;: &quot;xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&quot;
+}
+</code></pre>
+
+<p>When using AzureClusterlessHPC, set the environment variable <code>ENV["CREDENTIALS"] = "/path/to/credentials.json"</code> <strong>before</strong> you load the package via <code>using AzureClusterlessHPC</code>.</p>
+<h3 id="credentials-multiple-batch-and-storage-accounts">Credentials (multiple batch and storage accounts)</h3>
+<p>AzureClusterlessHPC also allows using multiple storage and/or batch accounts. Using multiple batch accounts provides the possiblity to cirumvent service limits of a single batch account or it allows to distribute workloads among multiple regions. If you create batch accounts for multiple regions, you need to have at least one storage account in each region. To automatically create multiple batch and storage accounts, use the shell script <code>create_azure_accounts.sh</code>. Pass the list of region(s) and the number of accounts per region as command line arguments to the script. E.g., to create two batch and storeage acounts in each US West and South Central US (i.e, total of 4 batch and 4 storage accounts), run:</p>
+<pre><code># Go to AzureClusterlessHPC directory
+cd /path/to/AzureClusterlessHPC
+
+# Azure CLI log in
+az login
+
+# Create accounts
+./create_azure_accounts &quot;westus southcentralus&quot; 2
+</code></pre>
+
+<p>Creating the accounts may take several minutes, depending on how many accounts are being created. The script also fetches the required credentials and stores them in the directory <code>user_data</code>. No further actions from the user side are required. To use the credentials stored in <code>user_data</code> with AzureClusterlessHPC, make sure that the environment variable <code>"CREDENTIALS"</code> is unset (run <code>unset CREDENTIALS</code> from the bash command line). If <code>CREDENTIALS</code> is not set, AzureClusterlessHPC will automatically look for credentials in <code>user_data</code>. </p>
+<p>After loading AzureClusterlessHPC in Julia (<code>using AzureClusterlessHPC</code>), you can check which accounts were found by checking <code>AzureClusterlessHPC.__credentials__</code>. This returns a list with one entry per available batch account. Type <code>AzureClusterlessHPC.__credentials__[i]</code> to print the credential information for the <code>i-th</code> account.</p>
+<h3 id="batch-parameters">Batch parameters</h3>
+<p>Users can optionally provide a <code>parameters.json</code> file that specifies pool and job parameters. Set the environment variable <code>ENV["PARAMETERS"]=/path/to/parameters.json</code> <strong>before</strong> loading the package (see section "Quickstart" for an example).</p>
+<p>The following set of parameters and default values are used, unless specified otherwise by the user:</p>
+<pre><code>{    
+    &quot;_POOL_ID&quot;: &quot;BatchPool&quot;,
+    &quot;_POOL_COUNT&quot;: &quot;1&quot;,
+    &quot;_NODE_COUNT_PER_POOL&quot;: &quot;1&quot;,
+    &quot;_POOL_VM_SIZE&quot;: &quot;Standard_E2s_v3&quot;,
+    &quot;_JOB_ID&quot;: &quot;BatchJob&quot;,
+    &quot;_STANDARD_OUT_FILE_NAME&quot;: &quot;stdout.txt&quot;,
+    &quot;_NODE_OS_PUBLISHER&quot;: &quot;Canonical&quot;,
+    &quot;_NODE_OS_OFFER&quot;: &quot;UbuntuServer&quot;,
+    &quot;_NODE_OS_SKU&quot;: &quot;18.04&quot;,
+    &quot;_BLOB_CONTAINER&quot;: &quot;redwoodtemp&quot;,
+    &quot;_INTER_NODE_CONNECTION&quot;: &quot;0&quot;,
+    &quot;_NUM_RETRYS&quot;: &quot;0&quot;,
+    &quot;_MPI_RUN&quot;: &quot;0&quot;,
+    &quot;_CONTAINER&quot;: &quot;None&quot;,
+    &quot;_NUM_NODES_PER_TASK&quot;: &quot;1&quot;,
+    &quot;_NUM_PROCS_PER_NODE&quot;: &quot;1&quot;,
+    &quot;_OMP_NUM_THREADS&quot;: &quot;1&quot;,
+    &quot;_JULIA_DEPOT_PATH&quot;: &quot;/mnt/batch/tasks/startup/wd/.julia&quot;,
+    &quot;_PYTHONPATH&quot;: &quot;/mnt/batch/tasks/startup/wd/.local/lib/python3.6/site-packages&quot;
+}
+</code></pre>
+
+<p><strong>Note:</strong> Do not modify the <code>"_JULIA_DEPOT_PATH"</code> and <code>"_PYTHONPATH"</code> unless you use a pool with a custom image in which Julia has been already installed. In that case, set the depot path to the location of the <code>.julia</code> directory.</p>
+<h2 id="set-up-a-batch-pool">Set up a batch pool</h2>
+<h3 id="start-a-pool-and-optionally-install-julia-packages-on-the-workers">Start a pool and optionally install Julia packages on the workers</h3>
+<p>To start a batch pool and (optionally) install a set of specified Julia packages on the workers, we first need to create a bash script of the following form, which will be executed by each node joining the pool:</p>
+<pre><code>#!/bin/bash
+
+###################################################################################################
+# DO NOT MODIFY!
+
+# Switch to superuser and load module
+sudo bash
+pwd
+
+# Install Julia
+wget &quot;https://julialang-s3.julialang.org/bin/linux/x64/1.5/julia-1.5.2-linux-x86_64.tar.gz&quot;
+tar -xvzf julia-1.5.2-linux-x86_64.tar.gz
+rm -rf julia-1.5.2-linux-x86_64.tar.gz
+ln -s /mnt/batch/tasks/startup/wd/julia-1.5.2/bin/julia /usr/local/bin/julia
+
+# Install AzureClusterlessHPC
+git clone https://github.com/microsoft/AzureClusterlessHPC.jl
+julia -e 'using Pkg; Pkg.add(url=joinpath(pwd(), &quot;AzureClusterlessHPC&quot;))'
+
+###################################################################################################
+# ADD USER PACKAGES HERE
+# ...
+
+###################################################################################################
+# DO NOT MODIFY!
+
+# Make julia dir available for all users
+chmod -R 777 /mnt/batch/tasks/startup/wd/.julia
+
+</code></pre>
+
+<p>If you need to install Julia packages for your application, specify the packages in the section <code># ADD USER PACKAGES HERE</code>. E.g. to install the Julia package <code>IterativeSolvers.jl</code>, add the line:</p>
+<pre><code>julia -e 'using Pkg; Pkg.add(&quot;IterativeSolvers&quot;)'
+</code></pre>
+
+<p>To install packages that are not officially registered with Julia, use this line to add packages:</p>
+<pre><code>julia -e 'using Pkg; Pkg.develop(PackageSpec(url=&quot;https://github.com/slimgroup/JOLI.jl&quot;))'
+</code></pre>
+
+<p>Save this batch script, e.g. as <code>pool_startup_script.sh</code>. You can now create a pool in which the startup script will be executed on each node that joins the pool:</p>
+<pre><code># Path to bash file
+startup_script = &quot;/path/to/pool_startup_script.sh&quot;
+
+# Create pool
+create_pool_and_resource_file(startup_script; enable_auto_scale=false, auto_scale_formula=nothing,
+    auto_scale_evaluation_interval_minutes=nothing, image_resource_id=nothing)
+</code></pre>
+
+<p><strong>Required input arguments:</strong></p>
+<ul>
+<li><code>startup_script</code>: String that defines the path and name of the bash startup script.</li>
+</ul>
+<p><strong>Optional keyword arguments</strong>:</p>
+<ul>
+<li>
+<p><code>enable_auto_scale=false</code>: Enable auto scaling. If <code>true</code>, the keyword arguments <code>auto_scale_formula</code> and <code>auto_scale_evaluation_interval_minutes</code> must be provided as well. If the parameter <code>_POOL_NODE_COUNT</code> has been set, it will be ignored.</p>
+</li>
+<li>
+<p><code>auto_scale_formula=nothing</code>: String that defines the auto-scaling behavior. See <a href="https://docs.microsoft.com/en-us/azure/batch/batch-automatic-scaling">here</a> for Azure Batch auto-scaling templates.</p>
+</li>
+<li>
+<p><code>auto_scale_evaluation_interval_minutes=nothing</code>: Time interval between evaluations of the auto-scaling function. The minimum possible interval is 5 minutes.</p>
+</li>
+<li>
+<p><code>image_resource_id=nothing</code>: Provide an optional image resource ID to use a custom machine image for nodes joining the batch pool.</p>
+</li>
+</ul>
+<h3 id="start-a-pool-using-an-existing-vm-image">Start a pool using an existing VM image</h3>
+<p>To launch a pool with a custom VM image, you need to create a custom VM image and then upload it to the Azure shared image gallery. The image gallery will assign an image reference ID to the image (see <a href="https://docs.microsoft.com/en-us/azure/batch/batch-custom-images">here</a> for details on how to create a shared image).</p>
+<p>Once you have the shared image ID, pass it as a keyword argument <code>image_resource_id</code> to the <code>create_pool</code> function. If you do not pass the image ID to the function, workers are created with the default Ubuntu image, which does not have Julia installed.</p>
+<pre><code># Image resource ID
+image_id = &quot;xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&quot;
+
+# Create pool with custom VM image
+create_pool(image_resource_id=image_id, enable_auto_scale=false, auto_scale_formula=nothing,
+    auto_scale_evaluation_interval_minutes=nothing)
+</code></pre>
+
+<p><strong>Optional keyword arguments:</strong></p>
+<ul>
+<li><code>image_resource_id=nothing</code>: Image resource ID to use a custom machine image for nodes joining the batch pool.</li>
+</ul>
+<p>For a description of all other keyword arguments, see the above section.</p>
+<p><strong>Important</strong>: In your parameter file, set the variable <code>"_JULIA_DEPOT_PATH"</code> to the path where Julia is installed on the image.</p>
+<h3 id="start-a-pool-using-a-docker-image">Start a pool using a Docker image</h3>
+<p>As a third alternative, you can create an application package using Docker. You first create or specify a Docker image, which will then be pre-installed on each VM joining the batch pool. See the example directory <code>/path/to/redwood/examples/container</code> for an example Dockerfile. Follow the subsequent instructions to create a Docker image from a Dockerfile and upload it to your (personal) container repository:</p>
+<pre><code># Move to directory with Dockerfile
+cd /path/to/redwood/examples/container
+
+# Build image
+docker build -t redoowd:v1.0 .
+
+# Login
+docker login
+
+# Tag and push
+docker tag redwood:v1.0 username/redwood:v1.0
+docker push username/redwood:v1.0
+</code></pre>
+
+<p>Once you have a Docker image in a public repository, you can specify a Docker image in your <code>parameters.json</code> file:</p>
+<pre><code>    &quot;_CONTAINER&quot;: &quot;username/redwood:v1.0&quot;
+</code></pre>
+
+<p>If the <code>_CONTAINER</code> parameter is set, AzureClusterlessHPC will install the specified container image on the VMs in the batch pool.</p>
+<h3 id="pools-with-auto-scaling">Pools with auto-scaling</h3>
+<p>To create a pool with auto-scaling, use one of the above commands and set the following keyword arguments:</p>
+<ul>
+<li>
+<p>Set the keyword argument <code>enable_auto_scale=true</code></p>
+</li>
+<li>
+<p>Define an auto-scaling formula. E.g. the following formula creates a pool with 1 node and resizes the pool to up to 10 VMs based on the number of pending tasks:</p>
+</li>
+</ul>
+<pre><code>auto_scale_formula = &quot;&quot;&quot;startingNumberOfVMs = 1;
+    maxNumberofVMs = 10;
+    pendingTaskSamplePercent = \$PendingTasks.GetSamplePercent(30 * TimeInterval_Second);
+    pendingTaskSamples = pendingTaskSamplePercent &lt; 70 ? startingNumberOfVMs : avg(\$PendingTasks.GetSample(30 * TimeInterval_Second));
+    \$TargetDedicatedNodes=min(maxNumberofVMs, pendingTaskSamples);
+    \$NodeDeallocationOption = taskcompletion;&quot;&quot;&quot;
+</code></pre>
+
+<p>For other auto-scaling formulas, refer to the <a href="https://docs.microsoft.com/en-us/azure/batch/batch-automatic-scaling">Azure Batch documentation</a>.</p>
+<ul>
+<li>Set the auto-scaling interval: <code>auto_scale_evaluation_interval_minutes=5</code>. The minimum allowed values is 5 minutes.</li>
+</ul>
+<p>The full example would look like this:</p>
+<pre><code># Pool startup script
+startup_script = &quot;/path/to/pool_startup_script.sh&quot;
+
+# Autoscale formula
+auto_scale_formula = &quot;&quot;&quot;startingNumberOfVMs = 1;
+    maxNumberofVMs = 10;
+    pendingTaskSamplePercent = \$PendingTasks.GetSamplePercent(30 * TimeInterval_Second);
+    pendingTaskSamples = pendingTaskSamplePercent &lt; 70 ? startingNumberOfVMs : avg(\$PendingTasks.GetSample(30 * TimeInterval_Second));
+    \$TargetDedicatedNodes=min(maxNumberofVMs, pendingTaskSamples);
+    \$NodeDeallocationOption = taskcompletion;&quot;&quot;&quot;
+
+create_pool_and_resource_file(startup_script; enable_auto_scale=true, auto_scale_formula=auto_scale_formula,            
+    auto_scale_evaluation_interval_minutes=5)
+</code></pre>
+
+<h3 id="resize-the-pool">Resize the pool</h3>
+<p>Currently not supported.</p>
+<h2 id="remote-function-calls-via-batch">Remote function calls via batch</h2>
+<h3 id="batchdef">\@batchdef</h3>
+<p>Execute an expression under Main and on the batch workers of a (future) batch job that is executed from the same Julia session (equivalent to <code>@everywhere</code> for parallel Julia sessions).</p>
+<pre><code>@batchdef expr
+</code></pre>
+
+<p><code>@batchdef</code> can be used to define variables, functions or with <code>include</code> and <code>using</code> statements:</p>
+<pre><code># Import packages
+@batchdef using LinearAlgebra, Random
+
+# Includes
+@batchdef include(&quot;testfile.jl&quot;)
+
+# Define variables
+@batchdef A = ones(2, 2)
+
+# Define functions
+@batchdef hello_world(name) = print(&quot;Hello $name&quot;)
+</code></pre>
+
+<p>You can define multiple expression with <code>@batchdef</code> using a <code>begin ... end</code> block:</p>
+<pre><code>@batchdef begin
+    A = ones(1, 1)
+    B = zeros(1, 1)
+end
+</code></pre>
+
+<p>Expressions that are tagged via <code>@batchdef</code> are collected by AzureClusterlessHPC and are used in subsequent batch job executions. To print the current collection of expressions, type <code>batch_show()</code>. To reset the batch environment and remove all prior expressions from the call stack, use <code>batch_clear()</code> (or restart the Julia session).</p>
+<h3 id="batchexec">\@batchexec</h3>
+<p>Execute an expression as a batch job (equivalent to <code>@spawn</code> for parallel Julia sessions).</p>
+<pre><code>@batchexec expr
+</code></pre>
+
+<p>The primary purpose of <code>@batchexec</code> is to execute functions that have been priorly defined with <code>@batchdef</code>. E.g.</p>
+<pre><code># Define function
+@batchdef function hello_world(name)
+    print(&quot;Hello $name&quot;)
+    return &quot;Goodbye&quot;
+end
+
+# Call function via batch
+bctrl = @batchexec hello_world(&quot;Bob&quot;)
+</code></pre>
+
+<p>Arguments for functions executed via <code>@batchexec</code> are always <strong>passed by copy</strong>. This is important to keep in mind when passing large arguments to a function that is executed as a multi-task batch job, in which case arguments are copied to each task separately. To pass large arguments to a multi-task batch job, use the <code>@bcast</code> macro (see next section).</p>
+<p>To execute a multi-task batch job, use the <code>pmap</code> function:</p>
+<pre><code># Multi-task batch job
+bctrl = @batchexec pmap(name -&gt; hello_world(name), [&quot;Bob&quot;, &quot;Jane&quot;])
+</code></pre>
+
+<p>The <code>@batchexec</code> macro returns a batch controller (<code>bctrl</code>) that can be used for the following actions:</p>
+<ul>
+<li>
+<p>Wait for all tasks of the batch job to finish: <code>wait_for_tasks_to_complete(bctrl)</code></p>
+</li>
+<li>
+<p>Terminate the batch job: <code>terminate_job(bctrl)</code></p>
+</li>
+<li>
+<p>Delete the batch job: <code>delete_job(bctrl)</code></p>
+</li>
+<li>
+<p>Delete the pool: <code>delete_pool(bctrl)</code></p>
+</li>
+<li>
+<p>Delete the blob container in which all temporary files are stored: <code>delete_container(bctrl)</code></p>
+</li>
+<li>
+<p>Destroy all Azure resources associated with the batch controller (job, pool, container): <code>destroy!(bctrl)</code></p>
+</li>
+<li>
+<p>Fetch the output of all tasks: <code>output = fetch(bctrl)</code>. This operation is blocking and waits for all tasks to finish. The output is collected asynchonously in order of completion.</p>
+</li>
+<li>
+<p>Fetch the output of task <code>i</code>: <code>output = fetch(bctrl, i)</code> (blocking for that task).</p>
+</li>
+<li>
+<p>Inplace fetch (all tasks). Returns output and overwrites the blob future in <code>bctrl.output</code>: <code>output = fetch!(bctrl)</code> (blocking operation)</p>
+</li>
+<li>
+<p>Inplace fetch (task <code>i</code>): <code>output = fetch!(bctrl, i)</code> (blocking for task <code>i</code>)</p>
+</li>
+<li>
+<p>Fetch output of all tasks and apply a reduction operation to the output (along tasks): <code>output_reduce = fetchreduce(bctrl; op=+)</code> (blocking)</p>
+</li>
+<li>
+<p>Inplace fetch and reduce (overwrite <code>output_reduce</code>): <code>fetchreduce!(bctrl, output_reduce; op=+)</code> (blocking)</p>
+</li>
+</ul>
+<p><strong>Limitations:</strong></p>
+<ul>
+<li>
+<p>Function return arguments must be explicitley returned via the <code>return</code> statement. I.e., implicit returns in which the final function expression is automatically returned are not supported.</p>
+</li>
+<li>
+<p>Functions executed via <code>@batchexec</code> can only have a single <code>return</code> argument. I.e. control structures such as <code>if ... else ... end</code> with multiple <code>return</code> statements are not supported and will throw an exception when fetching the output.</p>
+</li>
+<li>
+<p>Function arguments are passed by copy, never by reference.</p>
+</li>
+</ul>
+<h3 id="mpi-support">MPI support</h3>
+<p>You can execute tasks via Julia MPI on either single VMs or on multiple VMs. To enable MPI on a single VM (shared memory parallelism), set the following variables in your <code>parameters.json</code> file:</p>
+<pre><code>    &quot;_INTER_NODE_CONNECTION&quot;: &quot;0&quot;,
+    &quot;_MPI_RUN&quot;: &quot;1&quot;,
+    &quot;_NUM_NODES_PER_TASK&quot;: &quot;1&quot;,
+    &quot;_NUM_PROCS_PER_NODE&quot;: &quot;2&quot;,
+    &quot;_OMP_NUM_THREADS&quot;: &quot;1&quot;
+</code></pre>
+
+<p>Note, that <code>"_NUM_NODES_PER_TASK"</code> must be set to <code>1</code> if <code>"_INTER_NODE_CONNECTION"</code> is set to <code>"0"</code>. <code>"_NUM_PROCS_PER_NODE"</code> specifies the number of MPI ranks per node and <code>"_OMP_NUM_THREADS"</code> specifies the number of OpenMP threads per rank (if applicable).</p>
+<p>To enable MPI tasks on multiple instances (distributed memory parallelism), set:</p>
+<pre><code>    &quot;_INTER_NODE_CONNECTION&quot;: &quot;1&quot;,
+    &quot;_MPI_RUN&quot;: &quot;1&quot;,
+    &quot;_NUM_NODES_PER_TASK&quot;: &quot;2&quot;,
+    &quot;_NUM_PROCS_PER_NODE&quot;: &quot;4&quot;,
+    &quot;_OMP_NUM_THREADS&quot;: &quot;1&quot;
+</code></pre>
+
+<p>The total number of MPI ranks for each task is given by <code>"_NUM_NODES_PER_TASK"</code> times <code>"_NUM_PROCS_PER_NODE"</code>. E.g. in this example, each MPI task is executed on 2 nodes with 4 processes per node, i.e. 8 MPI ranks in total.</p>
+<p>In your application, you need to load the Julia MPI package via <code>@batchdef</code>. For a full MPI example, see <code>AzureClusterlessHPC/examples/mpi/julia_batch_mpi.ipynb</code>.</p>
+<h2 id="broadcasting">Broadcasting</h2>
+<p>Broadcast an expression to all batch workers of (future) batch jobs and return a batch future. The batch future can be passed as a function argument instead of the variable.</p>
+<pre><code>batch_future = @bcast expr
+</code></pre>
+
+<p>The use of <code>@bcast</code> is recommended to pass large arguments to functions (e.g. arrays). This avoids copying input arguments to each individual task separately. Instead, expressions tagged via <code>@batchdef</code> are uploaded to blob storage once and their blob reference is passed to one or multiple tasks.</p>
+<p>To access a broadcasted variable inside an executed function, use the <code>fetch</code> or <code>fetch!</code> (in-place) function:</p>
+<pre><code># Create and broadcast array
+A = randn(2, 2)
+_A = @bcast A
+
+# Define function
+@batchdef function print_array(_A)
+    A = fetch(_A)   # load A into memory
+    print(A)
+end
+
+# Remotely execute function
+@batchexec print_array(_A)  # pass batch future
+</code></pre>
+
+<p>Calling <code>A = fetch(_A)</code> on the local machine (rather than on a batch worker) downloads the broadcasted variable from blob storage and returns it.</p>
+<h2 id="collect-output">Collect output</h2>
+<h3 id="fetch-output">Fetch output</h3>
+<p>Executing a function as a batch job via <code>@batchexec</code> returns a batch controller of type <code>BatchController</code>:</p>
+<pre><code># Test function
+@batchdef function hello_world(n)
+    A = zeros(n, n)
+    B = ones(n, n)
+    return A, B
+end
+
+# Execute function as a multi-task batch job
+n = 2
+batch_controller = @batchexec pmap(() -&gt; hello_world(n), 1:2)  # 2 tasks
+</code></pre>
+
+<p>The batch controller has a field called <code>batch_controller.output</code>, which is a cell array of blob futures. The blob futures contain a (randomly generated) blob name of the future result stored in blob storage. E.g.:</p>
+<pre><code>julia&gt; batch_controller.output
+
+2-element Array{Any,1}:
+ BlobFuture(&quot;redwoodtemp&quot;, BlobRef((&quot;o9UspZStMmqn&quot;, &quot;TwIMfLrYiac2&quot;)))
+ BlobFuture(&quot;redwoodtemp&quot;, BlobRef((&quot;PxgtEgZonWPJ&quot;, &quot;kZz1Wuknnag0&quot;)))
+</code></pre>
+
+<p>The cell array contains one entry per task, i.e. <code>length(batch_controller.output)</code> is equal to the number of tasks of the executed batch job (in this case 2). As our function returns two arguments, each <code>BlobRef</code> contains two (future) blob names.</p>
+<p>To fetch the output of an executed function, AzureClusterlessHPC provides the <code>fetch</code> and <code>fetch!</code> functions. These functions can be either called on the batch controller <code>output = fetch(batch_controller)</code> or they can be directly called on the blob futures:</p>
+<pre><code># fetch called on batch controller
+output_job = fetch(batch_controller)
+
+# fetch called on blob future
+output_task_1 = fetch(batch_controller.output[1])
+</code></pre>
+
+<p>However, we recommend to always call <code>fetch</code> on the batch controller and not on the batch futures in <code>.output</code>. Calling <code>fetch(batch_controller)</code> is a blocking operation and waits for all batch tasks to terminate. Calling <code>fetch(batch_controller.output[1])</code> is non-blocking and throws an exception if the task or job has not yet finished and the output is not yet available in blob storage.</p>
+<p>AzureClusterlessHPC also supplies in-place fetch functions, which not only return the output, but they also overwrite the <code>BlobRef</code> of the <code>BlobFuture</code> in <code>batch_controller.output</code>:</p>
+<pre><code># Inplace fetch
+output = fetch!(batch_controller)
+
+2-element Array{Any,1}:
+ ([0.0 0.0; 0.0 0.0], [1.0 1.0; 1.0 1.0])
+ ([0.0 0.0; 0.0 0.0], [1.0 1.0; 1.0 1.0])
+
+batch_controller.output
+
+2-element Array{Any,1}:
+ BlobFuture(&quot;redwoodtemp&quot;, ([0.0 0.0; 0.0 0.0], [1.0 1.0; 1.0 1.0]))
+ BlobFuture(&quot;redwoodtemp&quot;, ([0.0 0.0; 0.0 0.0], [1.0 1.0; 1.0 1.0]))
+</code></pre>
+
+<p>Inplace <code>fetch!</code> by default deletes the referenced blob objects. If <code>fetch!</code> is called on the batch controller again, it will then throw an error. To avoid deleting the blob, call <code>fetch!(batch_controller; destroy_blob=false)</code>. </p>
+<h3 id="fetch-output-and-apply-reduction-operation">Fetch output and apply reduction operation</h3>
+<p>AzureClusterlessHPC supplies the <code>fetchreduce</code> and <code>fetchreduce!</code> functions to collect the output from multiple tasks and apply a specified reduction operation to the output.
+E.g. using the prior example:</p>
+<pre><code># Test function
+@batchdef function hello_world(n)
+    A = ones(n, n)
+    B = 2 .* ones(n, n)
+    return A, B
+end
+
+# Execute function as a multi-task batch job
+n = 2
+batch_controller = @batchexec pmap(() -&gt; hello_world(n), 1:2)  # 2 tasks
+</code></pre>
+
+<p>We can fetch and sum the output via:</p>
+<pre><code>output_sum = fetchreduce(batch_controller; op=+, remote=false)
+
+# Returns
+([2.0 2.0; 2.0 2.0], [4.0 4.0; 4.0 4.0])
+</code></pre>
+
+<p>The <code>remote</code> keyword argument specifies where the summation is execute. By default, the output is collected and summed on the master. For <code>remote=true</code>, AzureClusterlessHPC will schedule the summation tasks on idle instances in the batch pool and only the final (reduced) argument is copied back to the master.</p>
+<p>We can also initialize the output ourselves and then call the in-place <code>fetchreduce!</code> function:</p>
+<pre><code># Initialize output
+output = (zeros(2, 2), zeros(2, 2))
+
+# Fetch output and sum
+fetchreduce!(batch_controller, output; op=+)
+
+@show output
+output = ([2.0 2.0; 2.0 2.0], [4.0 4.0; 4.0 4.0])
+</code></pre>
+
+<h2 id="clean-up-resources">Clean up resources</h2>
+<p>After executing a batch job via <code>@batchexec</code>, you can use the returned batch controller to clean up resources:</p>
+<pre><code># Batch job
+batch_controller = @batchexec print(&quot;Hello world&quot;)
+
+# Terminate job
+terminate_job(batch_controller)
+
+# Delete job
+delete_job(batch_controller)
+
+# Delete pool
+delete_pool(batch_controller)
+
+# Delete blob container with all temporary files
+delte_container(batch_controller)
+
+# Or alternatively, delete pool + job + container together
+destroy!(batch_controller)
+</code></pre>
+
+<p>If you did not return a batch controller, you can call the following functions without any input arguments, in which case they will delete the pool and container as specified in your <code>parameter.json</code> file (or the default ones). The <code>delete_all_jobs</code> function will delete all exisiting jobs that start with the job id specified in the parameter file.</p>
+<pre><code># Delete container
+delete_container()
+
+# Delete pool
+delete_pool()
+
+# Delete all jobs
+delete_all_jobs()
+</code></pre>
+
+<h2 id="faq">FAQ</h2>
+<ul>
+<li>How does AzureClusterlessHPC work?</li>
+</ul>
+<p>Whenever you tag an expression with <code>@batchdef</code>, AzureClusterlessHPC collects the abstract syntax tree (AST) of the expressions and appends it to a global collection. You can print the currently collected AST via <code>batch_show()</code> and you can reset the collected expressions via <code>batch_clear()</code>. When you use <code>@batchexec</code>, AzureClusterlessHPC creates a closure around the executed expression and uploads it, along with the collected AST as a batch resource file. AzureClusterlessHPC also anayzes the executed funtion and replaces return statements with serializations, so that return arguments are written to the local disk of the batch worker and subsequently uploaded to blob storage, from where they can be collected via the <code>fetch</code>/<code>fetch!</code> functions.</p>
+<ul>
+<li>What costs does AzureClusterlessHPC incur?</li>
+</ul>
+<p>AzureClusterlessHPC calls Azure Batch and Azure Blob Storage APIs. Costs incur for operations that write data to blob storage, download or store it (e.g. <code>@bcast</code>, <code>@batchexec</code>, <code>fetch</code>, <code>fetch!</code>). For batch jobs, costs incur for the requested VMs in the batch pool (regardless of whether jobs are currently running or not). </p>
+<ul>
+<li>How do I clean up and shut down all services that invoke costs?</li>
+</ul>
+<p>Costs are invoked by a batch pool made up of one or multiple VMs and by files stored in blob storage. To shut down the pool run <code>delete_pool</code> and to delete the blob container that contains any temporary files run <code>delete_container()</code>. These actions will delete the pool and blob container specified in your parameter JSON file (or the default ones created by AzureClusterlessHPC).</p>
+<ul>
+<li>How can I specify Julia packages to be installed on the batch worker nodes?</li>
+</ul>
+<p>To specify Julia packages that are installed on the worker nodes, create a pool startup script and use the <code>create_pool_and_resource_file</code> function to launch the pool. Refer to the section "Create a batch pool" for details.</p>
+<ul>
+<li>How can I start a pool with a custom VM image?</li>
+</ul>
+<p>To start a pool with a custom VM image, you need to first create a custom VM image and then upload it to the Azure shared image gallery. The image gallery will assign an image reference ID to the image (see <a href="https://docs.microsoft.com/en-us/azure/batch/batch-custom-images">here</a> for details on how to create a shared image). When starting your batch pool, pass this ID to the pool startup function: <code>create_pool(image_resource_id="shared_image_id")</code>.</p>
+<ul>
+<li>What kind of input and return arguments are supported in functions executed via <code>@batchexec</code>?</li>
+</ul>
+<p>AzureClusterlessHPC.jl supports any kind of input and return arguments, including custom data structures. Input and return arguments do not need to be JSON serializable. However, we recommend using the same Julia version on the batch workers as on your local machine or master VM. This avoids possible inconsistencies when serializing/deserializing arguments and expressions.</p>
+<ul>
+<li>Are MPI and multi-node batch tasks supported?</li>
+</ul>
+<p>Yes, you can execute AzureClusterlessHPC tasks via Julia MPI on either single VMs or on multiple VMs. See the above section <strong>MPI support</strong> for details on how to runs batch tasks with MPI support.</p>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<p>Contact the developer at <code>pwitte@microsoft.com</code>.</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="about/" class="btn btn-neutral float-right" title="About">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+      <p>Copyright (c) Microsoft Corporation. All rights reserved.</p>
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+    
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/microsoft/AzureClusterlessHPC.jl" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+      
+        <span style="margin-left: 15px"><a href="about/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script src="./js/theme.js"></script>
+
+</body>
+</html>
+
+<!--
+MkDocs version : 0.16.3
+Build Date UTC : 2021-05-19 09:51:18
+-->
