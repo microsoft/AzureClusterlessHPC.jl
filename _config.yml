@@ -1,1 +1,15 @@
-theme: jekyll-theme-slate
+site_name: AzureClusterlessHPC
+site_description: Clusterless HPC on Azure in the Julia language
+site_url: https://microsoft.github.io/AzureClusterlessHPC.jl/
+repo_url: https://github.com/microsoft/AzureClusterlessHPC.jl
+
+nav:
+    - Home: index.md
+    - About: about.md
+
+theme: readthedocs
+
+copyright: Copyright (c) Microsoft Corporation. All rights reserved.
+
+plugins:
+    - search
