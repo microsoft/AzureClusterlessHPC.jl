@@ -66,15 +66,15 @@
                 <ul class="current">
                     <li class="toctree-l1 current"><a class="reference internal current" href="./">Manage pools</a>
     <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#start-a-pool-and-optionally-install-julia-packages-on-the-workers">Start a pool and optionally install Julia packages on the workers</a>
+    <li class="toctree-l2"><a class="reference internal" href="#start-a-pool">Start a pool</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#start-a-pool-using-an-existing-vm-image">Start a pool using an existing VM image</a>
+    <li class="toctree-l2"><a class="reference internal" href="#pools-with-managed-vm-images">Pools with managed VM images</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#start-a-pool-using-a-docker-image">Start a pool using a Docker image</a>
+    <li class="toctree-l2"><a class="reference internal" href="#pools-with-docker">Pools with Docker</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#pools-with-auto-scaling">Pools with auto-scaling</a>
+    <li class="toctree-l2"><a class="reference internal" href="#pool-autoscaling">Pool autoscaling</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#resize-the-pool">Resize the pool</a>
+    <li class="toctree-l2"><a class="reference internal" href="#pool-resize">Pool resize</a>
     </li>
     </ul>
                     </li>
@@ -138,8 +138,8 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="set-up-a-batch-pool">Set up a batch pool</h1>
-<h2 id="start-a-pool-and-optionally-install-julia-packages-on-the-workers">Start a pool and optionally install Julia packages on the workers</h2>
+                <h1 id="managing-pools">Managing pools</h1>
+<h2 id="start-a-pool">Start a pool</h2>
 <p>To start a batch pool and (optionally) install a set of specified Julia packages on the workers, we first need to create a bash script of the following form, which will be executed by each node joining the pool:</p>
 <pre><code>#!/bin/bash
 
@@ -204,7 +204,7 @@ create_pool_and_resource_file(startup_script; enable_auto_scale=false, auto_scal
 <p><code>image_resource_id=nothing</code>: Provide an optional image resource ID to use a custom machine image for nodes joining the batch pool.</p>
 </li>
 </ul>
-<h2 id="start-a-pool-using-an-existing-vm-image">Start a pool using an existing VM image</h2>
+<h2 id="pools-with-managed-vm-images">Pools with managed VM images</h2>
 <p>To launch a pool with a custom VM image, you need to create a custom VM image and then upload it to the Azure shared image gallery. The image gallery will assign an image reference ID to the image (see <a href="https://docs.microsoft.com/en-us/azure/batch/batch-custom-images">here</a> for details on how to create a shared image).</p>
 <p>Once you have the shared image ID, pass it as a keyword argument <code>image_resource_id</code> to the <code>create_pool</code> function. If you do not pass the image ID to the function, workers are created with the default Ubuntu image, which does not have Julia installed.</p>
 <pre><code># Image resource ID
@@ -220,7 +220,7 @@ create_pool(image_resource_id=image_id, enable_auto_scale=false, auto_scale_form
 </ul>
 <p>For a description of all other keyword arguments, see the above section.</p>
 <p><strong>Important</strong>: In your parameter file, set the variable <code>"_JULIA_DEPOT_PATH"</code> to the path where Julia is installed on the image.</p>
-<h2 id="start-a-pool-using-a-docker-image">Start a pool using a Docker image</h2>
+<h2 id="pools-with-docker">Pools with Docker</h2>
 <p>As a third alternative, you can create an application package using Docker. You first create or specify a Docker image, which will then be pre-installed on each VM joining the batch pool. See the example directory <code>/path/to/redwood/examples/container</code> for an example Dockerfile. Follow the subsequent instructions to create a Docker image from a Dockerfile and upload it to your (personal) container repository:</p>
 <pre><code># Move to directory with Dockerfile
 cd /path/to/redwood/examples/container
@@ -239,7 +239,7 @@ docker push username/redwood:v1.0
 <pre><code>    &quot;_CONTAINER&quot;: &quot;username/redwood:v1.0&quot;
 </code></pre>
 <p>If the <code>_CONTAINER</code> parameter is set, AzureClusterlessHPC will install the specified container image on the VMs in the batch pool.</p>
-<h2 id="pools-with-auto-scaling">Pools with auto-scaling</h2>
+<h2 id="pool-autoscaling">Pool autoscaling</h2>
 <p>To create a pool with auto-scaling, use one of the above commands and set the following keyword arguments:</p>
 <ul>
 <li>
@@ -275,7 +275,7 @@ auto_scale_formula = &quot;&quot;&quot;startingNumberOfVMs = 1;
 create_pool_and_resource_file(startup_script; enable_auto_scale=true, auto_scale_formula=auto_scale_formula,            
     auto_scale_evaluation_interval_minutes=5)
 </code></pre>
-<h2 id="resize-the-pool">Resize the pool</h2>
+<h2 id="pool-resize">Pool resize</h2>
 <p>Currently not supported.</p>
               
             </div>

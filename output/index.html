@@ -80,7 +80,7 @@
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#fetch-output">Fetch output</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#fetch-output-and-apply-reduction-operation">Fetch output and apply reduction operation</a>
+    <li class="toctree-l2"><a class="reference internal" href="#fetch-and-reduce-output">Fetch and reduce output</a>
     </li>
     </ul>
                     </li>
@@ -177,7 +177,7 @@ batch_controller.output
  BlobFuture(&quot;redwoodtemp&quot;, ([0.0 0.0; 0.0 0.0], [1.0 1.0; 1.0 1.0]))
 </code></pre>
 <p>Inplace <code>fetch!</code> by default deletes the referenced blob objects. If <code>fetch!</code> is called on the batch controller again, it will then throw an error. To avoid deleting the blob, call <code>fetch!(batch_controller; destroy_blob=false)</code>. </p>
-<h2 id="fetch-output-and-apply-reduction-operation">Fetch output and apply reduction operation</h2>
+<h2 id="fetch-and-reduce-output">Fetch and reduce output</h2>
 <p>AzureClusterlessHPC supplies the <code>fetchreduce</code> and <code>fetchreduce!</code> functions to collect the output from multiple tasks and apply a specified reduction operation to the output.
 E.g. using the prior example:</p>
 <pre><code># Test function
