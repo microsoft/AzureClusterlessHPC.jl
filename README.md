@@ -48,13 +48,13 @@ See [here]() for AzureClusterlessHPC's documentation.
 
 ## Applications
 
-AzureClusterlessHPC can be used to bring any Julia batch computing workloads to the cloud. Check out the notebooks in the [examples]() section to find tutorials for the following applications:
+AzureClusterlessHPC can be used to bring any various distributed computing applications in Julia to Azire. Check out the notebooks in the [examples]() section to find tutorials for the following applications:
 
-- Generic batch examples
+- Generic batch, map-reduce and iterative map-reduce examples
 
 - Deep learning with AzureClusterlessHPC.jl and [Flux.jl](https://github.com/FluxML)
 
-- Seismic imaging and inversion
+- Seismic imaging and inversion with [COFII.jl](https://github.com/ChevronETC/Examples) and [JUDI.jl](https://github.com/slimgroup/JUDI.jl)
 
 
 ## Credits

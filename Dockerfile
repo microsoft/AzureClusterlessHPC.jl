@@ -17,7 +17,6 @@ RUN wget "https://julialang-s3.julialang.org/bin/linux/x64/1.5/julia-1.5.2-linux
     ln -s /julia-1.5.2/bin/julia /usr/local/bin/julia
 
 # AzureClusterlessHPC
-RUN git clone https://github.com/microsoft/AzureClusterlessHPC.jl \
-    julia -e 'using Pkg; Pkg.add.(["PyCall", "JSON", "LightXML"])' && \
-    julia -e 'using Pkg; Pkg.add(url=joinpath(pwd(), "AzureClusterlessHPC"))' && \
+RUN julia -e 'using Pkg; Pkg.add.(["PyCall", "JSON", "LightXML"])' && \
+    julia -e 'using Pkg; Pkg.add(url="https://github.com/microsoft/AzureClusterlessHPC.jl")' && \
     julia -e 'using PyCall; using AzureClusterlessHPC'

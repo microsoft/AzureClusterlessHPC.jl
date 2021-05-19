@@ -1,0 +1,11 @@
+{    
+    "_POOL_ID": "BatchPool",
+    "_NODE_COUNT_PER_POOL": "2",
+    "_POOL_VM_SIZE": "Standard_E2s_v3",
+    "_JOB_ID": "BatchJob",
+    "_NODE_OS_PUBLISHER": "Canonical",
+    "_NODE_OS_OFFER": "UbuntuServer",
+    "_NODE_OS_SKU": "18.04",
+    "_POOL_COUNT": "1",
+    "_BLOB_CONTAINER": "azureclusterlesstemp"
+}
