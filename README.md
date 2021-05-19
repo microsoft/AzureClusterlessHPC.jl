@@ -48,7 +48,7 @@ Follow this [link](https://microsoft.github.io/AzureClusterlessHPC.jl/) to the d
 
 ## Applications
 
-AzureClusterlessHPC can be used to bring any various distributed computing applications in Julia to Azire. Check out the notebooks in the [examples]() section to find tutorials for the following applications:
+AzureClusterlessHPC can be used to bring various distributed computing applications in Julia to Azure. Check out the notebooks in the [examples](https://github.com/microsoft/AzureClusterlessHPC.jl/tree/main/examples) section to find tutorials for the following applications:
 
 - Generic batch, map-reduce and iterative map-reduce examples
 
