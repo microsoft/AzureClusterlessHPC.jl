@@ -54,6 +54,16 @@
                 <ul class="current">
                     <li class="toctree-l1 current"><a class="reference internal current" href="./">Installation</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#install-julia-package">Install Julia package</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#install-python-dependencies">Install Python dependencies</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#create-azure-storage-and-batch-account">Create Azure Storage and Batch account</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#set-up-credentials">Set up credentials</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#test-setup">Test setup</a>
+    </li>
     </ul>
                     </li>
                 </ul>
@@ -128,15 +138,66 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="installation-and-prerequisites">Installation and prerequisites</h1>
-<p>To install AzureClusterlessHPC.jl, run the following command from an interactive Julia session (press the <code>]</code> key and then type the command). When prompted, enter the user name and password that were provided to you:</p>
+                <h1 id="installation-and-setup">Installation and setup</h1>
+<p>Using <code>AzureClusterlessHPC</code> requires at the minimum one Azure Batch and one Azure Blob Storage account. Before being able to run the example, follow the instructions from this section to install the package and dependencies, and set up the necessary Azure resources.</p>
+<h2 id="install-julia-package">Install Julia package</h2>
+<p>Run the following command from an interactive Julia session to install <code>AzureClusterlessHPC.jl</code> (press the <code>]</code> key and then type the command)</p>
 <pre><code>] add https://github.com/microsoft/AzureClusterlessHPC.jl
 </code></pre>
-<p>AzureClusterlessHPC requires the Azure software development kits (SDKs) for batch computing, blob storage and common functionalities. See <a href="">pyrequirements.txt</a> for the full list of current requirements. To install the required packages, run</p>
+<h2 id="install-python-dependencies">Install Python dependencies</h2>
+<p>AzureClusterlessHPC requires the Azure software development kits (SDKs) for batch computing, blob storage and common functionalities. Install the required packages via:</p>
 <pre><code># Go to AzureClusterlessHPC directory
 cd /path/to/AzureClusterlessHPC
 pip3 install -r pyrequirements.txt
 </code></pre>
+<p>Next, we need to make sure that Julia is pointed to the correct Python version in which we installed our packages. Run <code>which python3</code> from the terminal and then start a Julia session and run (replace <code>/path/to/python3</code> with the correct path):</p>
+<pre><code>using Pkg, PyCall
+
+ENV[&quot;PYTHON&quot;] = &quot;/path/to/python3&quot;
+Pkg.build(&quot;PyCall&quot;)
+</code></pre>
+<h2 id="create-azure-storage-and-batch-account">Create Azure Storage and Batch account</h2>
+<p>Follow the following steps to create and Azure Storage and Batch account See <a href="https://docs.microsoft.com/en-us/cli/azure/">here</a> for installation instructions. </p>
+<p>First, log into Azure by running from the terminal:</p>
+<pre><code>az login
+</code></pre>
+<p>Next, we s</p>
+<pre><code># Set region (e.g. US South Central)
+REGION=&quot;southcentralus&quot;
+</code></pre>
+<pre><code># Get tenant id
+SUBSCRIPTION_ID=`az account show --query id --output tsv`
+
+# Create resource group
+az group create --name redwood-rg-${REGION} --location ${REGION}
+
+# Create storage account
+az storage account create --name redstore${REGION}${i} --location ${REGION} --resource-group redwood-rg-${REGION} --sku Standard_LRS
+
+# Create batch account
+az batch account create --name redbatch${REGION}${i} --location ${REGION} --resource-group redwood-rg-${REGION} --storage-account redstore${REGION}${i}
+
+# Register batch app
+APP_ID=`az ad app create --display-name redbatch${REGION}${i} | jq  -r '.appId'`
+
+# Create service principal
+az ad sp create --id $APP_ID
+
+# Assign RBAC to application
+        az role assignment create --assignee $APP_ID --role &quot;Contributor&quot; --scope \
+        &quot;/subscriptions/$SUBSCRIPTION_ID/resourceGroups/redwood-rg-${REGION}/providers/Microsoft.Batch/batchAccounts/redbatch${REGION}${i}&quot;
+</code></pre>
+<h2 id="set-up-credentials">Set up credentials</h2>
+<h2 id="test-setup">Test setup</h2>
+<p>Start a Julia session and set the <code>CREDENTIALS</code> environment variable so that it points to your credential file:</p>
+<pre><code># Set path to credential file
+ENV[&quot;CREDENTIALS&quot;] = &quot;/path/to/credentials.json&quot;
+
+# Load package
+using AzureClusterlessHPC
+</code></pre>
+<p>If you were able to load the package without any warnings or erros, you should be good to go. If you type <code>AzureClusterlessHPC.__credentials__</code>, you should see your credentials.</p>
+<p>Once you have complete all steps successfully you can check out <a href="">this notebook</a> to learn the basic of how to use <code>AzureClusterlessHPC</code>.</p>
               
             </div>
           </div>
