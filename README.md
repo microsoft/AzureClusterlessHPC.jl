@@ -1,5 +1,5 @@
 
-# AzureClusterlessHPC.jl - Simplified distributed computing on Azure
+# AzureClusterlessHPC.jl - Simplified distributed computing
 
 ## Overview
 
