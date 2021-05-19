@@ -1,4 +1,3 @@
-
 # Installation and setup
 
 Using `AzureClusterlessHPC` requires at the minimum one Azure Batch and one Azure Blob Storage account. Before being able to run the example, follow the instructions from this section to install the package and dependencies, and set up the necessary Azure resources.
@@ -39,6 +38,39 @@ First, log into Azure by running from the terminal:
 
 ```
 az login
+```
+
+Next, we s
+
+```
+# Set region (e.g. US South Central)
+REGION="southcentralus"
+```
+
+
+
+```
+# Get tenant id
+SUBSCRIPTION_ID=`az account show --query id --output tsv`
+
+# Create resource group
+az group create --name redwood-rg-${REGION} --location ${REGION}
+
+# Create storage account
+az storage account create --name redstore${REGION}${i} --location ${REGION} --resource-group redwood-rg-${REGION} --sku Standard_LRS
+
+# Create batch account
+az batch account create --name redbatch${REGION}${i} --location ${REGION} --resource-group redwood-rg-${REGION} --storage-account redstore${REGION}${i}
+
+# Register batch app
+APP_ID=`az ad app create --display-name redbatch${REGION}${i} | jq  -r '.appId'`
+
+# Create service principal
+az ad sp create --id $APP_ID
+
+# Assign RBAC to application
+        az role assignment create --assignee $APP_ID --role "Contributor" --scope \
+        "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/redwood-rg-${REGION}/providers/Microsoft.Batch/batchAccounts/redbatch${REGION}${i}"
 ```
 
 
