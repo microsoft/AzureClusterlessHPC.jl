@@ -20,6 +20,6 @@ In addition, the following tutorials show how `AzureClusterlessHPC.jl` can be us
 
 - Seismic [modeling](https://github.com/microsoft/AzureClusterlessHPC.jl/blob/main/examples/cofii/cofii_modeling_batch.ipynb), [imaging](https://github.com/microsoft/AzureClusterlessHPC.jl/blob/main/examples/cofii/cofii_rtm_batch.ipynb) and [inversion](https://github.com/microsoft/AzureClusterlessHPC.jl/blob/main/examples/cofii/cofii_fwi_batch.ipynb) with [COFII.jl](https://github.com/ChevronETC/Examples)
 
-- [Seismic modeling and inversion with JUDI.jl](https://github.com/microsoft/AzureClusterlessHPC.jl/blob/main/examples/judi/judi_modeling_batch.ipynb)
+- [Seismic modeling and inversion](https://github.com/microsoft/AzureClusterlessHPC.jl/blob/main/examples/judi/judi_modeling_batch.ipynb) with [JUDI.jl](https://github.com/slimgroup/JUDI.jl)
 
-- [Deep learning with Flux.jl](https://github.com/microsoft/AzureClusterlessHPC.jl/blob/main/examples/flux/flux_ml_batch.ipynb)
+- [Deep learning](https://github.com/microsoft/AzureClusterlessHPC.jl/blob/main/examples/flux/flux_ml_batch.ipynb) with [Flux.jl](https://github.com/FluxML/Flux.jl)
