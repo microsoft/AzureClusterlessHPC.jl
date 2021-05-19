@@ -13,7 +13,6 @@ AzureClusterlessHPC provides macros that let us define functions on batch worker
     print("Hello $name")
     return "Goodbye"
 end
-
 ```
 
 We can then either execute this function on our local machine or as a batch job using the `@batchexec` macro (which is similar to Julia's `@spawn` macro for parallel Julia sessions):
@@ -43,7 +42,7 @@ To install AzureClusterlessHPC.jl, run the following command from an interactive
 
 ## Documentation
 
-See [here]() for AzureClusterlessHPC's documentation.
+Follow this [link](https://microsoft.github.io/AzureClusterlessHPC.jl/) to the documentation.
 
 
 ## Applications
