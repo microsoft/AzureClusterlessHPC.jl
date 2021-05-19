@@ -7,9 +7,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   
-  <link rel="canonical" href="https://microsoft.github.io/AzureClusterlessHPC.jl/about/">
+  <link rel="canonical" href="https://microsoft.github.io/AzureClusterlessHPC.jl/faq/">
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>About - AzureClusterlessHPC</title>
+  <title>FAQ - AzureClusterlessHPC</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
 
   <link rel="stylesheet" href="../css/theme.css" />
@@ -18,9 +18,9 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "About";
-    var mkdocs_page_input_path = "about.md";
-    var mkdocs_page_url = "/AzureClusterlessHPC.jl/about/";
+    var mkdocs_page_name = "FAQ";
+    var mkdocs_page_input_path = "faq.md";
+    var mkdocs_page_url = "/AzureClusterlessHPC.jl/faq/";
   </script>
   
   <script src="../js/jquery-2.1.1.min.js" defer></script>
@@ -83,14 +83,14 @@
                     <li class="toctree-l1"><a class="reference internal" href="../cleanup/">Clean up</a>
                     </li>
                 </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../faq/">FAQ</a>
-                    </li>
-                </ul>
                 <ul class="current">
-                    <li class="toctree-l1 current"><a class="reference internal current" href="./">About</a>
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">FAQ</a>
     <ul class="current">
     </ul>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../about/">About</a>
                     </li>
                 </ul>
       </div>
@@ -114,10 +114,10 @@
     
       
     
-    <li>About</li>
+    <li>FAQ</li>
     <li class="wy-breadcrumbs-aside">
       
-        <a href="https://github.com/microsoft/AzureClusterlessHPC.jl/edit/master/docs/about.md"
+        <a href="https://github.com/microsoft/AzureClusterlessHPC.jl/edit/master/docs/faq.md"
           class="icon icon-github"> Edit on GitHub</a>
       
     </li>
@@ -128,11 +128,35 @@
           <div role="main">
             <div class="section">
               
-                <h2 id="about">About</h2>
-<p>AzureClusterlessHPC.jl is developed and maintained by the <a href="https://www.microsoft.com/en-us/research/group/research-for-industry/">Microsoft Research for Industry</a> (RFI) team. </p>
-<h2 id="copyright">Copyright</h2>
-<p>Copyright (c) Microsoft Corporation. All rights reserved.</p>
-<p>Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.</p>
+                <h1 id="faq">FAQ</h1>
+<ul>
+<li>How does AzureClusterlessHPC work?</li>
+</ul>
+<p>Whenever you tag an expression with <code>@batchdef</code>, AzureClusterlessHPC collects the abstract syntax tree (AST) of the expressions and appends it to a global collection. You can print the currently collected AST via <code>batch_show()</code> and you can reset the collected expressions via <code>batch_clear()</code>. When you use <code>@batchexec</code>, AzureClusterlessHPC creates a closure around the executed expression and uploads it, along with the collected AST as a batch resource file. AzureClusterlessHPC also anayzes the executed funtion and replaces return statements with serializations, so that return arguments are written to the local disk of the batch worker and subsequently uploaded to blob storage, from where they can be collected via the <code>fetch</code>/<code>fetch!</code> functions.</p>
+<ul>
+<li>What costs does AzureClusterlessHPC incur?</li>
+</ul>
+<p>AzureClusterlessHPC calls Azure Batch and Azure Blob Storage APIs. Costs incur for operations that write data to blob storage, download or store it (e.g. <code>@bcast</code>, <code>@batchexec</code>, <code>fetch</code>, <code>fetch!</code>). For batch jobs, costs incur for the requested VMs in the batch pool (regardless of whether jobs are currently running or not). </p>
+<ul>
+<li>How do I clean up and shut down all services that invoke costs?</li>
+</ul>
+<p>Costs are invoked by a batch pool made up of one or multiple VMs and by files stored in blob storage. To shut down the pool run <code>delete_pool</code> and to delete the blob container that contains any temporary files run <code>delete_container()</code>. These actions will delete the pool and blob container specified in your parameter JSON file (or the default ones created by AzureClusterlessHPC).</p>
+<ul>
+<li>How can I specify Julia packages to be installed on the batch worker nodes?</li>
+</ul>
+<p>To specify Julia packages that are installed on the worker nodes, create a pool startup script and use the <code>create_pool_and_resource_file</code> function to launch the pool. Refer to the section "Create a batch pool" for details.</p>
+<ul>
+<li>How can I start a pool with a custom VM image?</li>
+</ul>
+<p>To start a pool with a custom VM image, you need to first create a custom VM image and then upload it to the Azure shared image gallery. The image gallery will assign an image reference ID to the image (see <a href="https://docs.microsoft.com/en-us/azure/batch/batch-custom-images">here</a> for details on how to create a shared image). When starting your batch pool, pass this ID to the pool startup function: <code>create_pool(image_resource_id="shared_image_id")</code>.</p>
+<ul>
+<li>What kind of input and return arguments are supported in functions executed via <code>@batchexec</code>?</li>
+</ul>
+<p>AzureClusterlessHPC.jl supports any kind of input and return arguments, including custom data structures. Input and return arguments do not need to be JSON serializable. However, we recommend using the same Julia version on the batch workers as on your local machine or master VM. This avoids possible inconsistencies when serializing/deserializing arguments and expressions.</p>
+<ul>
+<li>Are MPI and multi-node batch tasks supported?</li>
+</ul>
+<p>Yes, you can execute AzureClusterlessHPC tasks via Julia MPI on either single VMs or on multiple VMs. See the above section <strong>MPI support</strong> for details on how to runs batch tasks with MPI support.</p>
               
             </div>
           </div>
@@ -140,8 +164,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
+        <a href="../about/" class="btn btn-neutral float-right" title="About">Next <span class="icon icon-circle-arrow-right"></span></a>
       
-        <a href="../faq/" class="btn btn-neutral" title="FAQ"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+        <a href="../cleanup/" class="btn btn-neutral" title="Clean up"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -171,8 +197,10 @@
           <a href="https://github.com/microsoft/AzureClusterlessHPC.jl/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
-        <span><a href="../faq/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../cleanup/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
+      
+        <span style="margin-left: 15px"><a href="../about/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

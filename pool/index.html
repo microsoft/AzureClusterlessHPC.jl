@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="canonical" href="https://microsoft.github.io/AzureClusterlessHPC.jl/pool/">
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Manage pools - AzureClusterlessHPC</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Manage pools";
+    var mkdocs_page_input_path = "pool.md";
+    var mkdocs_page_url = "/AzureClusterlessHPC.jl/pool/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> AzureClusterlessHPC</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../quickstart/">Quickstart</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../credentials/">Credentials</a>
+                    </li>
+                </ul>
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Manage pools</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#start-a-pool-and-optionally-install-julia-packages-on-the-workers">Start a pool and optionally install Julia packages on the workers</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#start-a-pool-using-an-existing-vm-image">Start a pool using an existing VM image</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#start-a-pool-using-a-docker-image">Start a pool using a Docker image</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#pools-with-auto-scaling">Pools with auto-scaling</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#resize-the-pool">Resize the pool</a>
+    </li>
+    </ul>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../functioncalls/">Remote function calls</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../broadcasting/">Broadcasting</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../output/">Collect output</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../cleanup/">Clean up</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../faq/">FAQ</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../about/">About</a>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">AzureClusterlessHPC</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Manage pools</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/microsoft/AzureClusterlessHPC.jl/edit/master/docs/pool.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="set-up-a-batch-pool">Set up a batch pool</h1>
+<h2 id="start-a-pool-and-optionally-install-julia-packages-on-the-workers">Start a pool and optionally install Julia packages on the workers</h2>
+<p>To start a batch pool and (optionally) install a set of specified Julia packages on the workers, we first need to create a bash script of the following form, which will be executed by each node joining the pool:</p>
+<pre><code>#!/bin/bash
+
+###################################################################################################
+# DO NOT MODIFY!
+
+# Switch to superuser and load module
+sudo bash
+pwd
+
+# Install Julia
+wget &quot;https://julialang-s3.julialang.org/bin/linux/x64/1.5/julia-1.5.2-linux-x86_64.tar.gz&quot;
+tar -xvzf julia-1.5.2-linux-x86_64.tar.gz
+rm -rf julia-1.5.2-linux-x86_64.tar.gz
+ln -s /mnt/batch/tasks/startup/wd/julia-1.5.2/bin/julia /usr/local/bin/julia
+
+# Install AzureClusterlessHPC
+git clone https://github.com/microsoft/AzureClusterlessHPC.jl
+julia -e 'using Pkg; Pkg.add(url=joinpath(pwd(), &quot;AzureClusterlessHPC&quot;))'
+
+###################################################################################################
+# ADD USER PACKAGES HERE
+# ...
+
+###################################################################################################
+# DO NOT MODIFY!
+
+# Make julia dir available for all users
+chmod -R 777 /mnt/batch/tasks/startup/wd/.julia
+
+</code></pre>
+<p>If you need to install Julia packages for your application, specify the packages in the section <code># ADD USER PACKAGES HERE</code>. E.g. to install the Julia package <code>IterativeSolvers.jl</code>, add the line:</p>
+<pre><code>julia -e 'using Pkg; Pkg.add(&quot;IterativeSolvers&quot;)'
+</code></pre>
+<p>To install packages that are not officially registered with Julia, use this line to add packages:</p>
+<pre><code>julia -e 'using Pkg; Pkg.develop(PackageSpec(url=&quot;https://github.com/slimgroup/JOLI.jl&quot;))'
+</code></pre>
+<p>Save this batch script, e.g. as <code>pool_startup_script.sh</code>. You can now create a pool in which the startup script will be executed on each node that joins the pool:</p>
+<pre><code># Path to bash file
+startup_script = &quot;/path/to/pool_startup_script.sh&quot;
+
+# Create pool
+create_pool_and_resource_file(startup_script; enable_auto_scale=false, auto_scale_formula=nothing,
+    auto_scale_evaluation_interval_minutes=nothing, image_resource_id=nothing)
+</code></pre>
+<p><strong>Required input arguments:</strong></p>
+<ul>
+<li><code>startup_script</code>: String that defines the path and name of the bash startup script.</li>
+</ul>
+<p><strong>Optional keyword arguments</strong>:</p>
+<ul>
+<li>
+<p><code>enable_auto_scale=false</code>: Enable auto scaling. If <code>true</code>, the keyword arguments <code>auto_scale_formula</code> and <code>auto_scale_evaluation_interval_minutes</code> must be provided as well. If the parameter <code>_POOL_NODE_COUNT</code> has been set, it will be ignored.</p>
+</li>
+<li>
+<p><code>auto_scale_formula=nothing</code>: String that defines the auto-scaling behavior. See <a href="https://docs.microsoft.com/en-us/azure/batch/batch-automatic-scaling">here</a> for Azure Batch auto-scaling templates.</p>
+</li>
+<li>
+<p><code>auto_scale_evaluation_interval_minutes=nothing</code>: Time interval between evaluations of the auto-scaling function. The minimum possible interval is 5 minutes.</p>
+</li>
+<li>
+<p><code>image_resource_id=nothing</code>: Provide an optional image resource ID to use a custom machine image for nodes joining the batch pool.</p>
+</li>
+</ul>
+<h2 id="start-a-pool-using-an-existing-vm-image">Start a pool using an existing VM image</h2>
+<p>To launch a pool with a custom VM image, you need to create a custom VM image and then upload it to the Azure shared image gallery. The image gallery will assign an image reference ID to the image (see <a href="https://docs.microsoft.com/en-us/azure/batch/batch-custom-images">here</a> for details on how to create a shared image).</p>
+<p>Once you have the shared image ID, pass it as a keyword argument <code>image_resource_id</code> to the <code>create_pool</code> function. If you do not pass the image ID to the function, workers are created with the default Ubuntu image, which does not have Julia installed.</p>
+<pre><code># Image resource ID
+image_id = &quot;xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&quot;
+
+# Create pool with custom VM image
+create_pool(image_resource_id=image_id, enable_auto_scale=false, auto_scale_formula=nothing,
+    auto_scale_evaluation_interval_minutes=nothing)
+</code></pre>
+<p><strong>Optional keyword arguments:</strong></p>
+<ul>
+<li><code>image_resource_id=nothing</code>: Image resource ID to use a custom machine image for nodes joining the batch pool.</li>
+</ul>
+<p>For a description of all other keyword arguments, see the above section.</p>
+<p><strong>Important</strong>: In your parameter file, set the variable <code>"_JULIA_DEPOT_PATH"</code> to the path where Julia is installed on the image.</p>
+<h2 id="start-a-pool-using-a-docker-image">Start a pool using a Docker image</h2>
+<p>As a third alternative, you can create an application package using Docker. You first create or specify a Docker image, which will then be pre-installed on each VM joining the batch pool. See the example directory <code>/path/to/redwood/examples/container</code> for an example Dockerfile. Follow the subsequent instructions to create a Docker image from a Dockerfile and upload it to your (personal) container repository:</p>
+<pre><code># Move to directory with Dockerfile
+cd /path/to/redwood/examples/container
+
+# Build image
+docker build -t redoowd:v1.0 .
+
+# Login
+docker login
+
+# Tag and push
+docker tag redwood:v1.0 username/redwood:v1.0
+docker push username/redwood:v1.0
+</code></pre>
+<p>Once you have a Docker image in a public repository, you can specify a Docker image in your <code>parameters.json</code> file:</p>
+<pre><code>    &quot;_CONTAINER&quot;: &quot;username/redwood:v1.0&quot;
+</code></pre>
+<p>If the <code>_CONTAINER</code> parameter is set, AzureClusterlessHPC will install the specified container image on the VMs in the batch pool.</p>
+<h2 id="pools-with-auto-scaling">Pools with auto-scaling</h2>
+<p>To create a pool with auto-scaling, use one of the above commands and set the following keyword arguments:</p>
+<ul>
+<li>
+<p>Set the keyword argument <code>enable_auto_scale=true</code></p>
+</li>
+<li>
+<p>Define an auto-scaling formula. E.g. the following formula creates a pool with 1 node and resizes the pool to up to 10 VMs based on the number of pending tasks:</p>
+</li>
+</ul>
+<pre><code>auto_scale_formula = &quot;&quot;&quot;startingNumberOfVMs = 1;
+    maxNumberofVMs = 10;
+    pendingTaskSamplePercent = \$PendingTasks.GetSamplePercent(30 * TimeInterval_Second);
+    pendingTaskSamples = pendingTaskSamplePercent &lt; 70 ? startingNumberOfVMs : avg(\$PendingTasks.GetSample(30 * TimeInterval_Second));
+    \$TargetDedicatedNodes=min(maxNumberofVMs, pendingTaskSamples);
+    \$NodeDeallocationOption = taskcompletion;&quot;&quot;&quot;
+</code></pre>
+<p>For other auto-scaling formulas, refer to the <a href="https://docs.microsoft.com/en-us/azure/batch/batch-automatic-scaling">Azure Batch documentation</a>.</p>
+<ul>
+<li>Set the auto-scaling interval: <code>auto_scale_evaluation_interval_minutes=5</code>. The minimum allowed values is 5 minutes.</li>
+</ul>
+<p>The full example would look like this:</p>
+<pre><code># Pool startup script
+startup_script = &quot;/path/to/pool_startup_script.sh&quot;
+
+# Autoscale formula
+auto_scale_formula = &quot;&quot;&quot;startingNumberOfVMs = 1;
+    maxNumberofVMs = 10;
+    pendingTaskSamplePercent = \$PendingTasks.GetSamplePercent(30 * TimeInterval_Second);
+    pendingTaskSamples = pendingTaskSamplePercent &lt; 70 ? startingNumberOfVMs : avg(\$PendingTasks.GetSample(30 * TimeInterval_Second));
+    \$TargetDedicatedNodes=min(maxNumberofVMs, pendingTaskSamples);
+    \$NodeDeallocationOption = taskcompletion;&quot;&quot;&quot;
+
+create_pool_and_resource_file(startup_script; enable_auto_scale=true, auto_scale_formula=auto_scale_formula,            
+    auto_scale_evaluation_interval_minutes=5)
+</code></pre>
+<h2 id="resize-the-pool">Resize the pool</h2>
+<p>Currently not supported.</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../functioncalls/" class="btn btn-neutral float-right" title="Remote function calls">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../credentials/" class="btn btn-neutral" title="Credentials"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+      <p>Copyright (c) Microsoft Corporation. All rights reserved.</p>
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/microsoft/AzureClusterlessHPC.jl/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href="../credentials/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../functioncalls/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

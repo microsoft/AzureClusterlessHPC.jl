@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="canonical" href="https://microsoft.github.io/AzureClusterlessHPC.jl/output/">
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Collect output - AzureClusterlessHPC</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Collect output";
+    var mkdocs_page_input_path = "output.md";
+    var mkdocs_page_url = "/AzureClusterlessHPC.jl/output/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> AzureClusterlessHPC</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../quickstart/">Quickstart</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../credentials/">Credentials</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../pool/">Manage pools</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../functioncalls/">Remote function calls</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../broadcasting/">Broadcasting</a>
+                    </li>
+                </ul>
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Collect output</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#fetch-output">Fetch output</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#fetch-output-and-apply-reduction-operation">Fetch output and apply reduction operation</a>
+    </li>
+    </ul>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../cleanup/">Clean up</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../faq/">FAQ</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../about/">About</a>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">AzureClusterlessHPC</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Collect output</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/microsoft/AzureClusterlessHPC.jl/edit/master/docs/output.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="collect-output">Collect output</h1>
+<h2 id="fetch-output">Fetch output</h2>
+<p>Executing a function as a batch job via <code>@batchexec</code> returns a batch controller of type <code>BatchController</code>:</p>
+<pre><code># Test function
+@batchdef function hello_world(n)
+    A = zeros(n, n)
+    B = ones(n, n)
+    return A, B
+end
+
+# Execute function as a multi-task batch job
+n = 2
+batch_controller = @batchexec pmap(() -&gt; hello_world(n), 1:2)  # 2 tasks
+</code></pre>
+<p>The batch controller has a field called <code>batch_controller.output</code>, which is a cell array of blob futures. The blob futures contain a (randomly generated) blob name of the future result stored in blob storage. E.g.:</p>
+<pre><code>julia&gt; batch_controller.output
+
+2-element Array{Any,1}:
+ BlobFuture(&quot;redwoodtemp&quot;, BlobRef((&quot;o9UspZStMmqn&quot;, &quot;TwIMfLrYiac2&quot;)))
+ BlobFuture(&quot;redwoodtemp&quot;, BlobRef((&quot;PxgtEgZonWPJ&quot;, &quot;kZz1Wuknnag0&quot;)))
+</code></pre>
+<p>The cell array contains one entry per task, i.e. <code>length(batch_controller.output)</code> is equal to the number of tasks of the executed batch job (in this case 2). As our function returns two arguments, each <code>BlobRef</code> contains two (future) blob names.</p>
+<p>To fetch the output of an executed function, AzureClusterlessHPC provides the <code>fetch</code> and <code>fetch!</code> functions. These functions can be either called on the batch controller <code>output = fetch(batch_controller)</code> or they can be directly called on the blob futures:</p>
+<pre><code># fetch called on batch controller
+output_job = fetch(batch_controller)
+
+# fetch called on blob future
+output_task_1 = fetch(batch_controller.output[1])
+</code></pre>
+<p>However, we recommend to always call <code>fetch</code> on the batch controller and not on the batch futures in <code>.output</code>. Calling <code>fetch(batch_controller)</code> is a blocking operation and waits for all batch tasks to terminate. Calling <code>fetch(batch_controller.output[1])</code> is non-blocking and throws an exception if the task or job has not yet finished and the output is not yet available in blob storage.</p>
+<p>AzureClusterlessHPC also supplies in-place fetch functions, which not only return the output, but they also overwrite the <code>BlobRef</code> of the <code>BlobFuture</code> in <code>batch_controller.output</code>:</p>
+<pre><code># Inplace fetch
+output = fetch!(batch_controller)
+
+2-element Array{Any,1}:
+ ([0.0 0.0; 0.0 0.0], [1.0 1.0; 1.0 1.0])
+ ([0.0 0.0; 0.0 0.0], [1.0 1.0; 1.0 1.0])
+
+batch_controller.output
+
+2-element Array{Any,1}:
+ BlobFuture(&quot;redwoodtemp&quot;, ([0.0 0.0; 0.0 0.0], [1.0 1.0; 1.0 1.0]))
+ BlobFuture(&quot;redwoodtemp&quot;, ([0.0 0.0; 0.0 0.0], [1.0 1.0; 1.0 1.0]))
+</code></pre>
+<p>Inplace <code>fetch!</code> by default deletes the referenced blob objects. If <code>fetch!</code> is called on the batch controller again, it will then throw an error. To avoid deleting the blob, call <code>fetch!(batch_controller; destroy_blob=false)</code>. </p>
+<h2 id="fetch-output-and-apply-reduction-operation">Fetch output and apply reduction operation</h2>
+<p>AzureClusterlessHPC supplies the <code>fetchreduce</code> and <code>fetchreduce!</code> functions to collect the output from multiple tasks and apply a specified reduction operation to the output.
+E.g. using the prior example:</p>
+<pre><code># Test function
+@batchdef function hello_world(n)
+    A = ones(n, n)
+    B = 2 .* ones(n, n)
+    return A, B
+end
+
+# Execute function as a multi-task batch job
+n = 2
+batch_controller = @batchexec pmap(() -&gt; hello_world(n), 1:2)  # 2 tasks
+</code></pre>
+<p>We can fetch and sum the output via:</p>
+<pre><code>output_sum = fetchreduce(batch_controller; op=+, remote=false)
+
+# Returns
+([2.0 2.0; 2.0 2.0], [4.0 4.0; 4.0 4.0])
+</code></pre>
+<p>The <code>remote</code> keyword argument specifies where the summation is execute. By default, the output is collected and summed on the master. For <code>remote=true</code>, AzureClusterlessHPC will schedule the summation tasks on idle instances in the batch pool and only the final (reduced) argument is copied back to the master.</p>
+<p>We can also initialize the output ourselves and then call the in-place <code>fetchreduce!</code> function:</p>
+<pre><code># Initialize output
+output = (zeros(2, 2), zeros(2, 2))
+
+# Fetch output and sum
+fetchreduce!(batch_controller, output; op=+)
+
+@show output
+output = ([2.0 2.0; 2.0 2.0], [4.0 4.0; 4.0 4.0])
+</code></pre>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../cleanup/" class="btn btn-neutral float-right" title="Clean up">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../broadcasting/" class="btn btn-neutral" title="Broadcasting"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+      <p>Copyright (c) Microsoft Corporation. All rights reserved.</p>
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/microsoft/AzureClusterlessHPC.jl/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href="../broadcasting/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../cleanup/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

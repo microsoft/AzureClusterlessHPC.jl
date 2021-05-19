@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="canonical" href="https://microsoft.github.io/AzureClusterlessHPC.jl/functioncalls/">
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Remote function calls - AzureClusterlessHPC</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Remote function calls";
+    var mkdocs_page_input_path = "functioncalls.md";
+    var mkdocs_page_url = "/AzureClusterlessHPC.jl/functioncalls/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> AzureClusterlessHPC</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../quickstart/">Quickstart</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../credentials/">Credentials</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../pool/">Manage pools</a>
+                    </li>
+                </ul>
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Remote function calls</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#batchdef">\@batchdef</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#batchexec">\@batchexec</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#mpi-support">MPI support</a>
+    </li>
+    </ul>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../broadcasting/">Broadcasting</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../output/">Collect output</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../cleanup/">Clean up</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../faq/">FAQ</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../about/">About</a>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">AzureClusterlessHPC</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Remote function calls</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/microsoft/AzureClusterlessHPC.jl/edit/master/docs/functioncalls.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="remote-function-calls-via-batch">Remote function calls via batch</h1>
+<h2 id="batchdef">\@batchdef</h2>
+<p>Execute an expression under Main and on the batch workers of a (future) batch job that is executed from the same Julia session (equivalent to <code>@everywhere</code> for parallel Julia sessions).</p>
+<pre><code>@batchdef expr
+</code></pre>
+<p><code>@batchdef</code> can be used to define variables, functions or with <code>include</code> and <code>using</code> statements:</p>
+<pre><code># Import packages
+@batchdef using LinearAlgebra, Random
+
+# Includes
+@batchdef include(&quot;testfile.jl&quot;)
+
+# Define variables
+@batchdef A = ones(2, 2)
+
+# Define functions
+@batchdef hello_world(name) = print(&quot;Hello $name&quot;)
+</code></pre>
+<p>You can define multiple expression with <code>@batchdef</code> using a <code>begin ... end</code> block:</p>
+<pre><code>@batchdef begin
+    A = ones(1, 1)
+    B = zeros(1, 1)
+end
+</code></pre>
+<p>Expressions that are tagged via <code>@batchdef</code> are collected by AzureClusterlessHPC and are used in subsequent batch job executions. To print the current collection of expressions, type <code>batch_show()</code>. To reset the batch environment and remove all prior expressions from the call stack, use <code>batch_clear()</code> (or restart the Julia session).</p>
+<h2 id="batchexec">\@batchexec</h2>
+<p>Execute an expression as a batch job (equivalent to <code>@spawn</code> for parallel Julia sessions).</p>
+<pre><code>@batchexec expr
+</code></pre>
+<p>The primary purpose of <code>@batchexec</code> is to execute functions that have been priorly defined with <code>@batchdef</code>. E.g.</p>
+<pre><code># Define function
+@batchdef function hello_world(name)
+    print(&quot;Hello $name&quot;)
+    return &quot;Goodbye&quot;
+end
+
+# Call function via batch
+bctrl = @batchexec hello_world(&quot;Bob&quot;)
+</code></pre>
+<p>Arguments for functions executed via <code>@batchexec</code> are always <strong>passed by copy</strong>. This is important to keep in mind when passing large arguments to a function that is executed as a multi-task batch job, in which case arguments are copied to each task separately. To pass large arguments to a multi-task batch job, use the <code>@bcast</code> macro (see next section).</p>
+<p>To execute a multi-task batch job, use the <code>pmap</code> function:</p>
+<pre><code># Multi-task batch job
+bctrl = @batchexec pmap(name -&gt; hello_world(name), [&quot;Bob&quot;, &quot;Jane&quot;])
+</code></pre>
+<p>The <code>@batchexec</code> macro returns a batch controller (<code>bctrl</code>) that can be used for the following actions:</p>
+<ul>
+<li>
+<p>Wait for all tasks of the batch job to finish: <code>wait_for_tasks_to_complete(bctrl)</code></p>
+</li>
+<li>
+<p>Terminate the batch job: <code>terminate_job(bctrl)</code></p>
+</li>
+<li>
+<p>Delete the batch job: <code>delete_job(bctrl)</code></p>
+</li>
+<li>
+<p>Delete the pool: <code>delete_pool(bctrl)</code></p>
+</li>
+<li>
+<p>Delete the blob container in which all temporary files are stored: <code>delete_container(bctrl)</code></p>
+</li>
+<li>
+<p>Destroy all Azure resources associated with the batch controller (job, pool, container): <code>destroy!(bctrl)</code></p>
+</li>
+<li>
+<p>Fetch the output of all tasks: <code>output = fetch(bctrl)</code>. This operation is blocking and waits for all tasks to finish. The output is collected asynchonously in order of completion.</p>
+</li>
+<li>
+<p>Fetch the output of task <code>i</code>: <code>output = fetch(bctrl, i)</code> (blocking for that task).</p>
+</li>
+<li>
+<p>Inplace fetch (all tasks). Returns output and overwrites the blob future in <code>bctrl.output</code>: <code>output = fetch!(bctrl)</code> (blocking operation)</p>
+</li>
+<li>
+<p>Inplace fetch (task <code>i</code>): <code>output = fetch!(bctrl, i)</code> (blocking for task <code>i</code>)</p>
+</li>
+<li>
+<p>Fetch output of all tasks and apply a reduction operation to the output (along tasks): <code>output_reduce = fetchreduce(bctrl; op=+)</code> (blocking)</p>
+</li>
+<li>
+<p>Inplace fetch and reduce (overwrite <code>output_reduce</code>): <code>fetchreduce!(bctrl, output_reduce; op=+)</code> (blocking)</p>
+</li>
+</ul>
+<p><strong>Limitations:</strong></p>
+<ul>
+<li>
+<p>Function return arguments must be explicitley returned via the <code>return</code> statement. I.e., implicit returns in which the final function expression is automatically returned are not supported.</p>
+</li>
+<li>
+<p>Functions executed via <code>@batchexec</code> can only have a single <code>return</code> argument. I.e. control structures such as <code>if ... else ... end</code> with multiple <code>return</code> statements are not supported and will throw an exception when fetching the output.</p>
+</li>
+<li>
+<p>Function arguments are passed by copy, never by reference.</p>
+</li>
+</ul>
+<h2 id="mpi-support">MPI support</h2>
+<p>You can execute tasks via Julia MPI on either single VMs or on multiple VMs. To enable MPI on a single VM (shared memory parallelism), set the following variables in your <code>parameters.json</code> file:</p>
+<pre><code>    &quot;_INTER_NODE_CONNECTION&quot;: &quot;0&quot;,
+    &quot;_MPI_RUN&quot;: &quot;1&quot;,
+    &quot;_NUM_NODES_PER_TASK&quot;: &quot;1&quot;,
+    &quot;_NUM_PROCS_PER_NODE&quot;: &quot;2&quot;,
+    &quot;_OMP_NUM_THREADS&quot;: &quot;1&quot;
+</code></pre>
+<p>Note, that <code>"_NUM_NODES_PER_TASK"</code> must be set to <code>1</code> if <code>"_INTER_NODE_CONNECTION"</code> is set to <code>"0"</code>. <code>"_NUM_PROCS_PER_NODE"</code> specifies the number of MPI ranks per node and <code>"_OMP_NUM_THREADS"</code> specifies the number of OpenMP threads per rank (if applicable).</p>
+<p>To enable MPI tasks on multiple instances (distributed memory parallelism), set:</p>
+<pre><code>    &quot;_INTER_NODE_CONNECTION&quot;: &quot;1&quot;,
+    &quot;_MPI_RUN&quot;: &quot;1&quot;,
+    &quot;_NUM_NODES_PER_TASK&quot;: &quot;2&quot;,
+    &quot;_NUM_PROCS_PER_NODE&quot;: &quot;4&quot;,
+    &quot;_OMP_NUM_THREADS&quot;: &quot;1&quot;
+</code></pre>
+<p>The total number of MPI ranks for each task is given by <code>"_NUM_NODES_PER_TASK"</code> times <code>"_NUM_PROCS_PER_NODE"</code>. E.g. in this example, each MPI task is executed on 2 nodes with 4 processes per node, i.e. 8 MPI ranks in total.</p>
+<p>In your application, you need to load the Julia MPI package via <code>@batchdef</code>. For a full MPI example, see <code>AzureClusterlessHPC/examples/mpi/julia_batch_mpi.ipynb</code>.</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../broadcasting/" class="btn btn-neutral float-right" title="Broadcasting">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../pool/" class="btn btn-neutral" title="Manage pools"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+      <p>Copyright (c) Microsoft Corporation. All rights reserved.</p>
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/microsoft/AzureClusterlessHPC.jl/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href="../pool/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../broadcasting/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
