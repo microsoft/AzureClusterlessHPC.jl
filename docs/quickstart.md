@@ -1,7 +1,3 @@
-
-
-
-
 # Quick start
 
 Before running an example, we need to create two JSON files with our Azure credentials and the job parameters, as well as a bash startup-script for the worker nodes. Templates for these files are located in the examples directory:

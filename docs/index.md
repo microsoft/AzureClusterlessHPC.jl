@@ -1,4 +1,3 @@
-
 # AzureClusterlessHPC.jl - Simplified parallel computing on Azure with Julia
 
 ## Overview
