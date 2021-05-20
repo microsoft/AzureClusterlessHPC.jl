@@ -90,4 +90,4 @@ ENV["CREDENTIALS"] = "/path/to/credentials.json"
 using AzureClusterlessHPC
 ```
 
-If you were able to load the package without any warnings or erros, you should be good to go. Check out the `Quickstart` section in the documentation for a simple example of how to use `AzureClusterlessHPC` or browse through the [example notebooks](https://github.com/microsoft/AzureClusterlessHPC.jl/tree/main/examples).
+If you were able to load the package without any warnings or erros, you're good to go. Proceed to the [Quickstart](https://microsoft.github.io/AzureClusterlessHPC.jl/quickstart/) section in the documentation or browse through the [example notebooks](https://github.com/microsoft/AzureClusterlessHPC.jl/tree/main/examples).
