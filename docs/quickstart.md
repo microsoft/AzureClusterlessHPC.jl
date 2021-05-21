@@ -6,7 +6,7 @@ To run our first example, we move to the `/examples/batch` directory and have a 
 
 ```
 # Go to example directory
-cd /path/to/AzureClusterlessHPC/examples/batch
+cd ~/.julia/dev/AzureClusterlessHPC/examples/batch
 
 # List directory content
 ls -l
@@ -23,7 +23,7 @@ Next, we start a Julia session and set the environment variables `CREDENTIALS` a
 
 ```
 # Set path to credentials in Julia
-ENV["CREDENTIALS"] = joinpath(pwd(), "credentials.json")
+ENV["CREDENTIALS"] = joinpath(pwd(), "../..", "credentials.json")
 
 # Set path to batch parameters (pool id, VM types, etc.)
 ENV["PARAMETERS"] = joinpath(pwd(), "parameters.json")
