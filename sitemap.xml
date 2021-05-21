@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url>
      <loc>https://microsoft.github.io/AzureClusterlessHPC.jl/</loc>
-     <lastmod>2021-05-20</lastmod>
+     <lastmod>2021-05-21</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://microsoft.github.io/AzureClusterlessHPC.jl/installation/</loc>
-     <lastmod>2021-05-20</lastmod>
+     <lastmod>2021-05-21</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://microsoft.github.io/AzureClusterlessHPC.jl/quickstart/</loc>
-     <lastmod>2021-05-20</lastmod>
+     <lastmod>2021-05-21</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://microsoft.github.io/AzureClusterlessHPC.jl/credentials/</loc>
-     <lastmod>2021-05-20</lastmod>
+     <lastmod>2021-05-21</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://microsoft.github.io/AzureClusterlessHPC.jl/pool/</loc>
-     <lastmod>2021-05-20</lastmod>
+     <lastmod>2021-05-21</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://microsoft.github.io/AzureClusterlessHPC.jl/functioncalls/</loc>
-     <lastmod>2021-05-20</lastmod>
+     <lastmod>2021-05-21</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://microsoft.github.io/AzureClusterlessHPC.jl/broadcasting/</loc>
-     <lastmod>2021-05-20</lastmod>
+     <lastmod>2021-05-21</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://microsoft.github.io/AzureClusterlessHPC.jl/output/</loc>
-     <lastmod>2021-05-20</lastmod>
+     <lastmod>2021-05-21</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://microsoft.github.io/AzureClusterlessHPC.jl/cleanup/</loc>
-     <lastmod>2021-05-20</lastmod>
+     <lastmod>2021-05-21</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://microsoft.github.io/AzureClusterlessHPC.jl/faq/</loc>
-     <lastmod>2021-05-20</lastmod>
+     <lastmod>2021-05-21</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://microsoft.github.io/AzureClusterlessHPC.jl/about/</loc>
-     <lastmod>2021-05-20</lastmod>
+     <lastmod>2021-05-21</lastmod>
      <changefreq>daily</changefreq>
     </url>
 </urlset>

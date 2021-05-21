@@ -60,8 +60,6 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#create-azure-storage-and-batch-account">Create Azure Storage and Batch account</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#set-up-credentials">Set up credentials</a>
-    </li>
     <li class="toctree-l2"><a class="reference internal" href="#test-setup">Test setup</a>
     </li>
     </ul>
@@ -157,41 +155,22 @@ ENV[&quot;PYTHON&quot;] = &quot;/path/to/python3&quot;
 Pkg.build(&quot;PyCall&quot;)
 </code></pre>
 <h2 id="create-azure-storage-and-batch-account">Create Azure Storage and Batch account</h2>
-<p>Follow the following steps to create and Azure Storage and Batch account See <a href="https://docs.microsoft.com/en-us/cli/azure/">here</a> for installation instructions. </p>
-<p>First, log into Azure by running from the terminal:</p>
+<p>Using <code>AzureClusterlessHPC.jl</code> requires an Azure Storage and Azure Batch account with AAD authentication. First, install the Azure Command Line Interface (CLI) by following the instructions <a href="https://docs.microsoft.com/en-us/cli/azure/">here</a>.</p>
+<p>Next, log into your Azure account by running:</p>
 <pre><code>az login
 </code></pre>
-<p>Next, we s</p>
-<pre><code># Set region (e.g. US South Central)
-REGION=&quot;southcentralus&quot;
+<p>Once you have sucessfully logged in, follow the next steps to create all required accounts and to create a credential file:</p>
+<pre><code># Move to AzureClusterlessHPC directory
+cd /path/to/AzureClusterlessHPC
+
+# Create accounts for given base name
+./setup myname
 </code></pre>
-<pre><code># Get tenant id
-SUBSCRIPTION_ID=`az account show --query id --output tsv`
-
-# Create resource group
-az group create --name redwood-rg-${REGION} --location ${REGION}
-
-# Create storage account
-az storage account create --name redstore${REGION}${i} --location ${REGION} --resource-group redwood-rg-${REGION} --sku Standard_LRS
-
-# Create batch account
-az batch account create --name redbatch${REGION}${i} --location ${REGION} --resource-group redwood-rg-${REGION} --storage-account redstore${REGION}${i}
-
-# Register batch app
-APP_ID=`az ad app create --display-name redbatch${REGION}${i} | jq  -r '.appId'`
-
-# Create service principal
-az ad sp create --id $APP_ID
-
-# Assign RBAC to application
-        az role assignment create --assignee $APP_ID --role &quot;Contributor&quot; --scope \
-        &quot;/subscriptions/$SUBSCRIPTION_ID/resourceGroups/redwood-rg-${REGION}/providers/Microsoft.Batch/batchAccounts/redbatch${REGION}${i}&quot;
-</code></pre>
-<h2 id="set-up-credentials">Set up credentials</h2>
+<p>The shell script writes the credentials to <code>/path/to/AzureClusterlessHPC/credentials.json</code>. <strong>Make sure to never check this credential file into git and keep it private!</strong></p>
 <h2 id="test-setup">Test setup</h2>
 <p>Start a Julia session and set the <code>CREDENTIALS</code> environment variable so that it points to your credential file:</p>
 <pre><code># Set path to credential file
-ENV[&quot;CREDENTIALS&quot;] = &quot;/path/to/credentials.json&quot;
+ENV[&quot;CREDENTIALS&quot;] = &quot;/path/to/AzureClusterlessHPC/credentials.json&quot;
 
 # Load package
 using AzureClusterlessHPC
