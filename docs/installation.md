@@ -32,50 +32,25 @@ Pkg.build("PyCall")
 
 ## Create Azure Storage and Batch account
 
-Follow the following steps to create and Azure Storage and Batch account See [here](https://docs.microsoft.com/en-us/cli/azure/) for installation instructions. 
+Using `AzureClusterlessHPC.jl` requires an Azure Storage and Azure Batch account with AAD authentication. First, install the Azure Command Line Interface (CLI) by following the instructions [here](https://docs.microsoft.com/en-us/cli/azure/).
 
-First, log into Azure by running from the terminal:
+Next, log into your Azure account by running:
 
 ```
 az login
 ```
 
-Next, we s
+Once you have sucessfully logged in, follow the next steps to create all required accounts and to create a credential file:
 
 ```
-# Set region (e.g. US South Central)
-REGION="southcentralus"
+# Move to AzureClusterlessHPC directory
+cd /path/to/AzureClusterlessHPC
+
+# Create accounts for given base name
+./setup myname
 ```
 
-
-
-```
-# Get tenant id
-SUBSCRIPTION_ID=`az account show --query id --output tsv`
-
-# Create resource group
-az group create --name redwood-rg-${REGION} --location ${REGION}
-
-# Create storage account
-az storage account create --name redstore${REGION}${i} --location ${REGION} --resource-group redwood-rg-${REGION} --sku Standard_LRS
-
-# Create batch account
-az batch account create --name redbatch${REGION}${i} --location ${REGION} --resource-group redwood-rg-${REGION} --storage-account redstore${REGION}${i}
-
-# Register batch app
-APP_ID=`az ad app create --display-name redbatch${REGION}${i} | jq  -r '.appId'`
-
-# Create service principal
-az ad sp create --id $APP_ID
-
-# Assign RBAC to application
-        az role assignment create --assignee $APP_ID --role "Contributor" --scope \
-        "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/redwood-rg-${REGION}/providers/Microsoft.Batch/batchAccounts/redbatch${REGION}${i}"
-```
-
-
-## Set up credentials
-
+The shell script writes the credentials to `/path/to/AzureClusterlessHPC/credentials.json`. **Make sure to never check this credential file into git and keep it private!**
 
 
 ## Test setup
@@ -84,7 +59,7 @@ Start a Julia session and set the `CREDENTIALS` environment variable so that it 
 
 ```
 # Set path to credential file
-ENV["CREDENTIALS"] = "/path/to/credentials.json"
+ENV["CREDENTIALS"] = "/path/to/AzureClusterlessHPC/credentials.json"
 
 # Load package
 using AzureClusterlessHPC

@@ -363,3 +363,4 @@ data
 # Credentials
 secret_aad_*
 secret_key_*
+credentials.json
