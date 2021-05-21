@@ -44,6 +44,8 @@ To install AzureClusterlessHPC.jl, run the following command from an interactive
 ] dev https://github.com/microsoft/AzureClusterlessHPC.jl
 ```
 
+Before being able to use `AzureClusterlessHPC.jl` you need to create a few Azure resources. Follow the instructions [here](https://microsoft.github.io/AzureClusterlessHPC.jl/installation/).
+
 ## Documentation
 
 Follow this [link](https://microsoft.github.io/AzureClusterlessHPC.jl/) to the documentation.
