@@ -129,26 +129,27 @@
             <div class="section">
               
                 <h1 id="quick-start">Quick start</h1>
-<p>Before running an example, we need to create two JSON files with our Azure credentials and the job parameters, as well as a bash startup-script for the worker nodes. Templates for these files are located in the examples directory:</p>
+<p>To run this example, you need to have followed the installation and setup steps in <a href="https://microsoft.github.io/AzureClusterlessHPC.jl/installation/">Installation</a>. Complete the steps in the installation section before proceeding. See section <a href="https://microsoft.github.io/AzureClusterlessHPC.jl/credentials/">Credentials</a> for additional information on resources and credentials.</p>
+<p>To run our first example, we move to the <code>/examples/batch</code> directory and have a look at the directory content:</p>
 <pre><code># Go to example directory
-cd /path/to/AzureClusterlessHPC/examples/batch
+cd ~/.julia/dev/AzureClusterlessHPC/examples/batch
 
 # List directory content
 ls -l
 
-credentials.json
 julia_batch_macros.ipynb
 parameters.json
 pool_startup_script.sh
 </code></pre>
-<p>Fill out the missing information in <code>credentials.json</code> and in <code>parameters.json</code> (see the next section "Parmeters and credentials" for additional information). Then set the environment variables <code>CREDENTIALS</code> and <code>PARAMETERS</code> so that they point to the files. You can either set the variables in your bash terminal (e.g. in your <code>~/.bashrc</code> file), or directly in the Julia terminal:</p>
+<p>We can see that our directory contains a <code>parameters.json</code> file with job parameters such as the number and type of Azure instances for our pool. (See section <a href="https://microsoft.github.io/AzureClusterlessHPC.jl/credentials/#user-parameters">User parameters</a> for a list of all available job parameters.) Additionally, we have a <code>pool_startup_script.sh</code> that is executed by every new VM joining a pool and which allows us to specify dependiencies that need to be installed on the worker nodes. Alternatively, we can also start pools with a managed VM image or using <a href="https://github.com/microsoft/AzureClusterlessHPC.jl/blob/main/examples/container/julia_batch_docker.ipynb">Docker images</a>.</p>
+<p>Next, we start a Julia session and set the environment variables <code>CREDENTIALS</code> and <code>PARAMETERS</code> so that they point to your parameter and credential file. You can either set the variables in your bash terminal (e.g. in your <code>~/.bashrc</code> file), or directly in the Julia terminal:</p>
 <pre><code># Set path to credentials in Julia
-ENV[&quot;CREDENTIALS&quot;] = joinpath(pwd(), &quot;credentials.json&quot;)
+ENV[&quot;CREDENTIALS&quot;] = joinpath(pwd(), &quot;../..&quot;, &quot;credentials.json&quot;)
 
 # Set path to batch parameters (pool id, VM types, etc.)
 ENV[&quot;PARAMETERS&quot;] = joinpath(pwd(), &quot;parameters.json&quot;)
 </code></pre>
-<p>Next, load AzureClusterlessHPC.jl and create a pool with the parameters from <code>parameters.json</code>:</p>
+<p>Next, load AzureClusterlessHPC.jl and create a pool with the parameters from <code>parameters.json</code> and using our <code>pool_startup_script.sh</code>:</p>
 <pre><code># Load package
 using AzureClusterlessHPC
 
@@ -156,7 +157,7 @@ using AzureClusterlessHPC
 startup_script = &quot;pool_startup_script.sh&quot;
 create_pool_and_resource_file(startup_script)
 </code></pre>
-<p>Remark: If a pool with the name as specified in <code>parameter.json</code> already exists, the <code>create_pool_and_resource_file</code> function will throw an error.In practice, use a <code>try ... catch</code> block around this expression.</p>
+<p>You can check the status of your batch pool in the <a href="https://azure.microsoft.com/en-us/features/azure-portal/">Microsoft Azure Portal</a> or with the <a href="https://azure.github.io/BatchExplorer/">Azure Batch Explorer</a> (recommended). </p>
 <p>Now you can execute Julia functions that are defined using the <code>@batchdef</code> macro via Azure batch:</p>
 <pre><code># Define function
 @batchdef function hello_world(name)

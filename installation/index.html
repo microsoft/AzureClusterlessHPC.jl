@@ -140,12 +140,12 @@
 <p>Using <code>AzureClusterlessHPC</code> requires at the minimum one Azure Batch and one Azure Blob Storage account. Before being able to run the example, follow the instructions from this section to install the package and dependencies, and set up the necessary Azure resources.</p>
 <h2 id="install-julia-package">Install Julia package</h2>
 <p>Run the following command from an interactive Julia session to install <code>AzureClusterlessHPC.jl</code> (press the <code>]</code> key and then type the command)</p>
-<pre><code>] add https://github.com/microsoft/AzureClusterlessHPC.jl
+<pre><code>] dev https://github.com/microsoft/AzureClusterlessHPC.jl
 </code></pre>
 <h2 id="install-python-dependencies">Install Python dependencies</h2>
 <p>AzureClusterlessHPC requires the Azure software development kits (SDKs) for batch computing, blob storage and common functionalities. Install the required packages via:</p>
 <pre><code># Go to AzureClusterlessHPC directory
-cd /path/to/AzureClusterlessHPC
+cd ~/.julia/dev/AzureClusterlessHPC
 pip3 install -r pyrequirements.txt
 </code></pre>
 <p>Next, we need to make sure that Julia is pointed to the correct Python version in which we installed our packages. Run <code>which python3</code> from the terminal and then start a Julia session and run (replace <code>/path/to/python3</code> with the correct path):</p>
@@ -161,7 +161,7 @@ Pkg.build(&quot;PyCall&quot;)
 </code></pre>
 <p>Once you have sucessfully logged in, follow the next steps to create all required accounts and to create a credential file:</p>
 <pre><code># Move to AzureClusterlessHPC directory
-cd /path/to/AzureClusterlessHPC
+cd ~/.julia/dev/AzureClusterlessHPC
 
 # Create accounts for given base name
 ./setup myname
@@ -170,7 +170,8 @@ cd /path/to/AzureClusterlessHPC
 <h2 id="test-setup">Test setup</h2>
 <p>Start a Julia session and set the <code>CREDENTIALS</code> environment variable so that it points to your credential file:</p>
 <pre><code># Set path to credential file
-ENV[&quot;CREDENTIALS&quot;] = &quot;/path/to/AzureClusterlessHPC/credentials.json&quot;
+using Pkg
+ENV[&quot;CREDENTIALS&quot;] = Pkg.dir(&quot;AzureClusterlessHPC&quot;, &quot;credentials.json&quot;)
 
 # Load package
 using AzureClusterlessHPC
