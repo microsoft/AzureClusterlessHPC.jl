@@ -2,6 +2,15 @@
 
 Using `AzureClusterlessHPC` requires at the minimum one Azure Batch and one Azure Blob Storage account. Before being able to run the example, follow the instructions from this section to install the package and dependencies, and set up the necessary Azure resources.
 
+## Prerequisites
+
+- Ubuntu 18.04/20.04 or Debian 10
+
+- Julia v1.5 or later
+
+- Python3 and pip3
+
+
 ## Install Julia package
 
 Run the following command from an interactive Julia session to install `AzureClusterlessHPC.jl` (press the `]` key and then type the command)
@@ -24,7 +33,7 @@ pip3 install -r pyrequirements.txt
 Next, we need to make sure that Julia is pointed to the correct Python version in which we installed our packages. Run `which python3` from the terminal and then start a Julia session and run (replace `/path/to/python3` with the correct path):
 
 ```
-using Pkg, PyCall
+using Pkg, PyCall   # run Pkg.add("PyCall") is necessary
 
 ENV["PYTHON"] = "/path/to/python3"
 Pkg.build("PyCall")
@@ -32,9 +41,13 @@ Pkg.build("PyCall")
 
 ## Create Azure Storage and Batch account
 
-Using `AzureClusterlessHPC.jl` requires an Azure Storage and Azure Batch account with AAD authentication. First, install the Azure Command Line Interface (CLI) by following the instructions [here](https://docs.microsoft.com/en-us/cli/azure/).
+Using `AzureClusterlessHPC.jl` requires an Azure Storage and Azure Batch account with AAD authentication. First, install the Azure Command Line Interface (CLI) by running (see [here](https://docs.microsoft.com/en-us/cli/azure/) for additional instructions):
 
-Next, log into your Azure account by running:
+```
+curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+```
+
+Next, log into your Azure account:
 
 ```
 az login
@@ -46,7 +59,10 @@ Once you have sucessfully logged in, follow the next steps to create all require
 # Move to AzureClusterlessHPC directory
 cd ~/.julia/dev/AzureClusterlessHPC
 
-# Create accounts for given base name
+# Install JSON parsing
+sudo apt-get update -y & sudo apt-get install -y jq
+
+# Create batch and storage accounts with given base name
 ./setup myname
 ```
 
