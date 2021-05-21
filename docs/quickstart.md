@@ -1,6 +1,8 @@
 # Quick start
 
-Before running an example, we need to create two JSON files with our Azure credentials and the job parameters, as well as a bash startup-script for the worker nodes. Templates for these files are located in the examples directory:
+To run this example, you need to have followed the installation and setup steps in [Installation](https://microsoft.github.io/AzureClusterlessHPC.jl/installation/). Complete the steps in the installation section before proceeding. See section [Credentials](https://microsoft.github.io/AzureClusterlessHPC.jl/credentials/) for additional information on resources and credentials.
+
+To run our first example, we move to the `/examples/batch` directory and have a look at the directory content:
 
 ```
 # Go to example directory
@@ -9,13 +11,15 @@ cd /path/to/AzureClusterlessHPC/examples/batch
 # List directory content
 ls -l
 
-credentials.json
 julia_batch_macros.ipynb
 parameters.json
 pool_startup_script.sh
 ```
 
-Fill out the missing information in `credentials.json` and in `parameters.json` (see the next section "Parmeters and credentials" for additional information). Then set the environment variables `CREDENTIALS` and `PARAMETERS` so that they point to the files. You can either set the variables in your bash terminal (e.g. in your `~/.bashrc` file), or directly in the Julia terminal:
+We can see that our directory contains a `parameters.json` file with job parameters such as the number and type of Azure instances for our pool. (See section [User parameters](https://microsoft.github.io/AzureClusterlessHPC.jl/credentials/#user-parameters) for a list of all available job parameters.) Additionally, we have a `pool_startup_script.sh` that is executed by every new VM joining a pool and which allows us to specify dependiencies that need to be installed on the worker nodes. Alternatively, we can also start pools with a managed VM image or using [Docker images](https://github.com/microsoft/AzureClusterlessHPC.jl/blob/main/examples/container/julia_batch_docker.ipynb).
+
+
+Next, we start a Julia session and set the environment variables `CREDENTIALS` and `PARAMETERS` so that they point to your parameter and credential file. You can either set the variables in your bash terminal (e.g. in your `~/.bashrc` file), or directly in the Julia terminal:
 
 ```
 # Set path to credentials in Julia
@@ -25,7 +29,7 @@ ENV["CREDENTIALS"] = joinpath(pwd(), "credentials.json")
 ENV["PARAMETERS"] = joinpath(pwd(), "parameters.json")
 ```
 
-Next, load AzureClusterlessHPC.jl and create a pool with the parameters from `parameters.json`:
+Next, load AzureClusterlessHPC.jl and create a pool with the parameters from `parameters.json` and using our `pool_startup_script.sh`:
 
 ```
 # Load package
@@ -36,7 +40,7 @@ startup_script = "pool_startup_script.sh"
 create_pool_and_resource_file(startup_script)
 ```
 
-Remark: If a pool with the name as specified in `parameter.json` already exists, the `create_pool_and_resource_file` function will throw an error.In practice, use a `try ... catch` block around this expression.
+You can check the status of your batch pool in the [Microsoft Azure Portal](https://azure.microsoft.com/en-us/features/azure-portal/) or with the [Azure Batch Explorer](https://azure.github.io/BatchExplorer/) (recommended). 
 
 Now you can execute Julia functions that are defined using the `@batchdef` macro via Azure batch:
 

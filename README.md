@@ -41,7 +41,7 @@ out = @batchexec pmap(name -> hello_world(name), ["Bob", "Jane"])
 To install AzureClusterlessHPC.jl, run the following command from an interactive Julia session (press the `]` key and then type the command):
 
 ```
-] add https://github.com/microsoft/AzureClusterlessHPC.jl
+] dev https://github.com/microsoft/AzureClusterlessHPC.jl
 ```
 
 ## Documentation
