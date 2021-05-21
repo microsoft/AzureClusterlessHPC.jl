@@ -54,6 +54,8 @@
                 <ul class="current">
                     <li class="toctree-l1 current"><a class="reference internal current" href="./">Installation</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#prerequisites">Prerequisites</a>
+    </li>
     <li class="toctree-l2"><a class="reference internal" href="#install-julia-package">Install Julia package</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#install-python-dependencies">Install Python dependencies</a>
@@ -138,6 +140,18 @@
               
                 <h1 id="installation-and-setup">Installation and setup</h1>
 <p>Using <code>AzureClusterlessHPC</code> requires at the minimum one Azure Batch and one Azure Blob Storage account. Before being able to run the example, follow the instructions from this section to install the package and dependencies, and set up the necessary Azure resources.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li>
+<p>Ubuntu 18.04/20.04 or Debian 10</p>
+</li>
+<li>
+<p>Julia v1.5 or later</p>
+</li>
+<li>
+<p>Python3 and pip3</p>
+</li>
+</ul>
 <h2 id="install-julia-package">Install Julia package</h2>
 <p>Run the following command from an interactive Julia session to install <code>AzureClusterlessHPC.jl</code> (press the <code>]</code> key and then type the command)</p>
 <pre><code>] dev https://github.com/microsoft/AzureClusterlessHPC.jl
@@ -149,21 +163,26 @@ cd ~/.julia/dev/AzureClusterlessHPC
 pip3 install -r pyrequirements.txt
 </code></pre>
 <p>Next, we need to make sure that Julia is pointed to the correct Python version in which we installed our packages. Run <code>which python3</code> from the terminal and then start a Julia session and run (replace <code>/path/to/python3</code> with the correct path):</p>
-<pre><code>using Pkg, PyCall
+<pre><code>using Pkg, PyCall   # run Pkg.add(&quot;PyCall&quot;) is necessary
 
 ENV[&quot;PYTHON&quot;] = &quot;/path/to/python3&quot;
 Pkg.build(&quot;PyCall&quot;)
 </code></pre>
 <h2 id="create-azure-storage-and-batch-account">Create Azure Storage and Batch account</h2>
-<p>Using <code>AzureClusterlessHPC.jl</code> requires an Azure Storage and Azure Batch account with AAD authentication. First, install the Azure Command Line Interface (CLI) by following the instructions <a href="https://docs.microsoft.com/en-us/cli/azure/">here</a>.</p>
-<p>Next, log into your Azure account by running:</p>
+<p>Using <code>AzureClusterlessHPC.jl</code> requires an Azure Storage and Azure Batch account with AAD authentication. First, install the Azure Command Line Interface (CLI) by running (see <a href="https://docs.microsoft.com/en-us/cli/azure/">here</a> for additional instructions):</p>
+<pre><code>curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+</code></pre>
+<p>Next, log into your Azure account:</p>
 <pre><code>az login
 </code></pre>
 <p>Once you have sucessfully logged in, follow the next steps to create all required accounts and to create a credential file:</p>
 <pre><code># Move to AzureClusterlessHPC directory
 cd ~/.julia/dev/AzureClusterlessHPC
 
-# Create accounts for given base name
+# Install JSON parsing
+sudo apt-get update -y &amp; sudo apt-get install -y jq
+
+# Create batch and storage accounts with given base name
 ./setup myname
 </code></pre>
 <p>The shell script writes the credentials to <code>/path/to/AzureClusterlessHPC/credentials.json</code>. <strong>Make sure to never check this credential file into git and keep it private!</strong></p>
