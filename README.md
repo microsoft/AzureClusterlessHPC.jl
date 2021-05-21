@@ -4,7 +4,10 @@
 
 ## Overview
 
-**AzureClusterlessHPC.jl** is a package for simplified parallal computing on Azure. AzureClusterlessHPC.jl borrows the syntax of [Julia's Distributed Programming](https://docs.julialang.org/en/v1/stdlib/Distributed/) package to easily execute parallel Julia workloads in the cloud using [Azure Batch](https://azure.microsoft.com/en-us/services/batch/).
+**AzureClusterlessHPC.jl** is a package for simplified parallal computing on Azure. AzureClusterlessHPC.jl borrows the syntax of [Julia's Distributed Programming](https://docs.julialang.org/en/v1/stdlib/Distributed/) package to easily execute parallel Julia workloads in the cloud using [Azure Batch](https://azure.microsoft.com/en-us/services/batch/). Instead of a parallel Julia session, users can maintain one or multiple pools of workers and remotely execute code on them.
+
+![im1](docs/architecture.png)
+
 
 AzureClusterlessHPC provides macros that let us define functions on batch workers, similar to how `@everywhere` works for a parallel Julia session:
 
@@ -32,9 +35,6 @@ Using the `pmap` function in combination with `@batchexec` allows us to run a mu
 # Execute a multi-task batch job
 out = @batchexec pmap(name -> hello_world(name), ["Bob", "Jane"])
 ```
-
-![im1](docs/architecture.png)
-
 
 ## Installation
 
