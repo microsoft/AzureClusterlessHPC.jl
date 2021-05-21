@@ -7,7 +7,7 @@ Using `AzureClusterlessHPC` requires at the minimum one Azure Batch and one Azur
 Run the following command from an interactive Julia session to install `AzureClusterlessHPC.jl` (press the `]` key and then type the command)
 
 ```
-] add https://github.com/microsoft/AzureClusterlessHPC.jl
+] dev https://github.com/microsoft/AzureClusterlessHPC.jl
 ```
 
 
@@ -17,7 +17,7 @@ AzureClusterlessHPC requires the Azure software development kits (SDKs) for batc
 
 ```
 # Go to AzureClusterlessHPC directory
-cd /path/to/AzureClusterlessHPC
+cd ~/.julia/dev/AzureClusterlessHPC
 pip3 install -r pyrequirements.txt
 ```
 
@@ -44,7 +44,7 @@ Once you have sucessfully logged in, follow the next steps to create all require
 
 ```
 # Move to AzureClusterlessHPC directory
-cd /path/to/AzureClusterlessHPC
+cd ~/.julia/dev/AzureClusterlessHPC
 
 # Create accounts for given base name
 ./setup myname
@@ -59,7 +59,8 @@ Start a Julia session and set the `CREDENTIALS` environment variable so that it 
 
 ```
 # Set path to credential file
-ENV["CREDENTIALS"] = "/path/to/AzureClusterlessHPC/credentials.json"
+using Pkg
+ENV["CREDENTIALS"] = Pkg.dir("AzureClusterlessHPC", "credentials.json")
 
 # Load package
 using AzureClusterlessHPC
