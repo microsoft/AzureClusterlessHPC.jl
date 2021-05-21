@@ -75,5 +75,5 @@ The following set of parameters and default values are used, unless specified ot
 }
 ```
 
-**Note:** Do not modify the `"_JULIA_DEPOT_PATH"` and `"_PYTHONPATH"` unless you use a pool with a custom image in which Julia has been already installed. In that case, set the depot path to the location of the `.julia` directory.
+**Note:** Do not modify the `"_JULIA_DEPOT_PATH"` and `"_PYTHONPATH"` unless you use a pool with a custom image or Docker container in which Julia has been already installed. In that case, set the depot path to the location of the `.julia` directory.
 
