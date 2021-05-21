@@ -33,6 +33,9 @@ Using the `pmap` function in combination with `@batchexec` allows us to run a mu
 out = @batchexec pmap(name -> hello_world(name), ["Bob", "Jane"])
 ```
 
+![im1](docs/architecture.png)
+
+
 ## Installation
 
 To install AzureClusterlessHPC.jl, run the following command from an interactive Julia session (press the `]` key and then type the command):
