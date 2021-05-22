@@ -132,9 +132,14 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="azureclusterlesshpcjl-simplified-parallel-computing-on-azure-with-julia">AzureClusterlessHPC.jl - Simplified parallel computing on Azure with Julia</h1>
+                <h1 id="azureclusterlesshpcjl">AzureClusterlessHPC.jl</h1>
 <h2 id="overview">Overview</h2>
-<p><strong>AzureClusterlessHPC.jl</strong> is a package for simplified batch computing in the cloud. AzureClusterlessHPC.jl borrows the syntax of <a href="https://docs.julialang.org/en/v1/stdlib/Distributed/">Julia's Distributed Programming</a> package to easily execute parallel Julia workloads in the cloud using batch computing services such as <a href="https://azure.microsoft.com/en-us/services/batch/">Azure Batch</a>.</p>
+<p><strong>AzureClusterlessHPC.jl</strong> is a package for simplified parallel computing in the cloud. AzureClusterlessHPC.jl borrows the syntax of <a href="https://docs.julialang.org/en/v1/stdlib/Distributed/">Julia's Distributed Programming</a> package to easily execute parallel Julia workloads in the cloud.</p>
+<p>Unlike traditional distributed programming in Julia, you do not need create a cluster of interconnected nodes with a parallel Julia session running on them. Instead, <code>AzureClusterlessHPC.jl</code> allows you to create one or multiple pools of virtual machines (VMs) on which you can remotely execute Julia functions:</p>
+<p><img alt="im1" src="docs/azureclusterlesshpc.png" /></p>
+<p>The advantage is that you can scale almost indefinitely, as you elliminate the master worker as a bottleneck that needs to communicate with an increasing number of workers. Instead, you run on a single Julia worker that schedulers and executes workloads through one or multiple Azure Batch clients. The underlying resources are managed by the cloud and can dynamically shrink and grow at any time:</p>
+<p><img alt="im1" src="docs/scaling.png" /></p>
+<p>Each pool can have up to 2,000 individual nodes or up to 100 interconnected nodes. Pools with interconnected nodes allow you to run MPI or distributed Julia code within a single pool and you can run multiple MPI function across many pools.</p>
 <h2 id="troubleshooting">Troubleshooting</h2>
 <p>Contact the developer at <code>pwitte@microsoft.com</code>.</p>
               
@@ -194,5 +199,5 @@
 
 <!--
 MkDocs version : 1.1.2
-Build Date UTC : 2021-05-22 00:13:09.052643+00:00
+Build Date UTC : 2021-05-22 00:30:50.652588+00:00
 -->
