@@ -3,9 +3,9 @@
 
 ## Single batch and storage account
 
-To use a single Azure Batch and storage account, you can set up a single combined credential file for both accounts. The required information must provided as a JSON file containing user credentials for Azure blob storage and Azure batch. Azure Batch requires authentication via the Azure Active Directory (AAD), whereas the blob storage account must be authenticated with a secret key. Refer to the [Azure documentation](https://docs.microsoft.com/en-us/azure/batch/batch-aad-auth) for information on how to authenticate Azure Batch via the AAD.
+`AzureClusterlessHPC.jl` requires at the minimum **one Azure Batch** account and **one Azure Storage** account. The storage account is authenticated via a secret key, whereas Azure Batch must be authenticated using the Azure Active Directory (AAD). The `setup.sh` script in the root directory automatically creates the accounts and creates a `credentials.json` file. 
 
-Use the following template to create a file called `credentials.json` file and fill in your keys and ids. Safely store this file and never upload it to public repositories:
+Alternatively, you can set up the accounts manually (e.g. using the Azure console). Refer to the [Azure documentation](https://docs.microsoft.com/en-us/azure/batch/batch-aad-auth) for information on how to authenticate Azure Batch via the AAD. Once you have created the accounts, create a credential file with the storage key and batch AAD authentication. Use the following template for the `credentials.json` file: 
 
 ```
 {
@@ -22,7 +22,6 @@ Use the following template to create a file called `credentials.json` file and f
 ```
 
 When using AzureClusterlessHPC, set the environment variable `ENV["CREDENTIALS"] = "/path/to/credentials.json"` **before** you load the package via `using AzureClusterlessHPC`.
-
 
 
 ## Multi accounts
