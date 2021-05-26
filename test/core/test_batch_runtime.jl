@@ -74,8 +74,8 @@ out1 = fetch(blobfuture_single)
 @test typeof(blobfuture_single.blob) == BlobRef
 @test blobfuture_single.blob.name == tuple(string_name...)
 
-out2 = fetch!(blobfuture_single)
-@test blobfuture_single.blob == A
+#out2 = fetch!(blobfuture_single)
+#@test blobfuture_single.blob == A
 
 # Remove temp files
 run(`rm test_blobref`)
