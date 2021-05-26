@@ -163,9 +163,10 @@ cd ~/.julia/dev/AzureClusterlessHPC
 pip3 install -r pyrequirements.txt
 </code></pre>
 <p>Next, we need to make sure that Julia is pointed to the correct Python version in which we installed our packages. Run <code>which python3</code> from the terminal and then start a Julia session and run (replace <code>/path/to/python3</code> with the correct path):</p>
-<pre><code>using Pkg, PyCall   # run Pkg.add(&quot;PyCall&quot;) is necessary
+<pre><code>using Pkg; Pkg.add(&quot;PyCall&quot;)
+using PyCall
 
-ENV[&quot;PYTHON&quot;] = &quot;/path/to/python3&quot;
+ENV[&quot;PYTHON&quot;] = &quot;/path/to/python3&quot;  # typically &quot;/usr/bin/python3&quot; or similar
 Pkg.build(&quot;PyCall&quot;)
 </code></pre>
 <h2 id="create-azure-storage-and-batch-account">Create Azure Storage and Batch account</h2>
