@@ -60,7 +60,7 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#install-python-dependencies">Install Python dependencies</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#create-azure-storage-and-batch-account">Create Azure Storage and Batch account</a>
+    <li class="toctree-l2"><a class="reference internal" href="#create-azure-storage-and-batch-account-with-aad-authentication">Create Azure Storage and Batch account with AAD authentication</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#test-setup">Test setup</a>
     </li>
@@ -169,7 +169,7 @@ using PyCall
 ENV[&quot;PYTHON&quot;] = &quot;/path/to/python3&quot;  # typically &quot;/usr/bin/python3&quot; or similar
 Pkg.build(&quot;PyCall&quot;)
 </code></pre>
-<h2 id="create-azure-storage-and-batch-account">Create Azure Storage and Batch account</h2>
+<h2 id="create-azure-storage-and-batch-account-with-aad-authentication">Create Azure Storage and Batch account with AAD authentication</h2>
 <p>Using <code>AzureClusterlessHPC.jl</code> requires an Azure Storage and Azure Batch account with AAD authentication. First, install the Azure Command Line Interface (CLI) by running (see <a href="https://docs.microsoft.com/en-us/cli/azure/">here</a> for additional instructions):</p>
 <pre><code>curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 </code></pre>
