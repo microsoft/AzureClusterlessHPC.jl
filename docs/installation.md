@@ -40,7 +40,7 @@ ENV["PYTHON"] = "/path/to/python3"  # typically "/usr/bin/python3" or similar
 Pkg.build("PyCall")
 ```
 
-## Create Azure Storage and Batch account
+## Create Azure Storage and Batch account with AAD authentication
 
 Using `AzureClusterlessHPC.jl` requires an Azure Storage and Azure Batch account with AAD authentication. First, install the Azure Command Line Interface (CLI) by running (see [here](https://docs.microsoft.com/en-us/cli/azure/) for additional instructions):
 
