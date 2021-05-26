@@ -183,7 +183,7 @@ cd ~/.julia/dev/AzureClusterlessHPC
 sudo apt-get update -y &amp; sudo apt-get install -y jq
 
 # Create batch and storage accounts with given base name and region
-./deploy myname southcentralus
+./deploy.sh myname southcentralus
 </code></pre>
 <p>The shell script writes the credentials to <code>/path/to/AzureClusterlessHPC/credentials.json</code>. <strong>Make sure to never check this credential file into git and keep it private!</strong></p>
 <h2 id="test-setup">Test setup</h2>
