@@ -17,22 +17,39 @@ function recompile_azureclusterlesshpc(; runtime=false)
     Base.compilecache(azureclusterlesshpc_pkgid)
 end
 
-if ARGS[1] == "core"
-    
+
+if length(ARGS) == 0
+
+    # Base tests
     recompile_azureclusterlesshpc(runtime=false)
     include("TestCore.jl")
     using Main.TestCore
     TestCore.runtests()
-
-elseif ARGS[1] == "runtime"
-
+    
+    # Runtime tests
     recompile_azureclusterlesshpc(runtime=true)
     include("TestRuntime.jl")
     using Main.TestRuntime
     TestRuntime.runtests()
-
+    recompile_azureclusterlesshpc(runtime=false)
 else
-    print("Pass \"core\" or \"runtime\".\n")
+    if ARGS[1] == "core"
+        
+        recompile_azureclusterlesshpc(runtime=false)
+        include("TestCore.jl")
+        using Main.TestCore
+        TestCore.runtests()
+
+    elseif ARGS[1] == "runtime"
+
+        recompile_azureclusterlesshpc(runtime=true)
+        include("TestRuntime.jl")
+        using Main.TestRuntime
+        TestRuntime.runtests()
+
+    else
+        print("Pass \"core\" or \"runtime\".\n")
+    end
+    recompile_azureclusterlesshpc(runtime=false)
 end
 
-recompile_azureclusterlesshpc(runtime=false)
