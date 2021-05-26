@@ -11,7 +11,7 @@
 BASE=$1
 
 # Set region (e.g. US South Central)
-REGION="southcentralus"
+REGION=$2
 
 # Resource group name
 RESOURCE_GROUP="${BASE}-rg"

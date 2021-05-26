@@ -62,8 +62,8 @@ cd ~/.julia/dev/AzureClusterlessHPC
 # Install JSON parsing
 sudo apt-get update -y & sudo apt-get install -y jq
 
-# Create batch and storage accounts with given base name
-./setup myname
+# Create batch and storage accounts with given base name and region
+./deploy myname southcentralus
 ```
 
 The shell script writes the credentials to `/path/to/AzureClusterlessHPC/credentials.json`. **Make sure to never check this credential file into git and keep it private!**
