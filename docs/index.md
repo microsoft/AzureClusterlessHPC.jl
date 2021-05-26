@@ -17,5 +17,4 @@ Each pool can have up to 2,000 individual nodes or up to 100 interconnected node
 
 ## Troubleshooting
 
-Contact the developer at `pwitte@microsoft.com`.
-
+If you encounter any problems or errors, please file a github issue [here](https://github.com/microsoft/AzureClusterlessHPC.jl/issues).
