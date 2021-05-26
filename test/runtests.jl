@@ -17,7 +17,7 @@ function recompile_azureclusterlesshpc(; runtime=false)
     Base.compilecache(azureclusterlesshpc_pkgid)
 end
 
-
+# Run tests
 if length(ARGS) == 0
 
     # Base tests
