@@ -28,7 +28,6 @@ jobs:
 
       matrix:
         version: ['1.5', '1.6']
-        tests: ["basics", "layers", "networks"]
         os: [ubuntu-latest]
 
     steps:
