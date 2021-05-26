@@ -33,9 +33,10 @@ pip3 install -r pyrequirements.txt
 Next, we need to make sure that Julia is pointed to the correct Python version in which we installed our packages. Run `which python3` from the terminal and then start a Julia session and run (replace `/path/to/python3` with the correct path):
 
 ```
-using Pkg, PyCall   # run Pkg.add("PyCall") is necessary
+using Pkg; Pkg.add("PyCall")
+using PyCall
 
-ENV["PYTHON"] = "/path/to/python3"
+ENV["PYTHON"] = "/path/to/python3"  # typically "/usr/bin/python3" or similar
 Pkg.build("PyCall")
 ```
 
