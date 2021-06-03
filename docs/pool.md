@@ -59,6 +59,10 @@ create_pool_and_resource_file(startup_script; enable_auto_scale=false, auto_scal
     auto_scale_evaluation_interval_minutes=nothing, image_resource_id=nothing)
 ```
 
+Once you run the pool creation command, an active pool is added to the current session. You can list the currently active pools with `AzureClusterlessHPC.__active_pools__`.
+
+**Important**: If you start a new session, you need to run the `create_pool_and_resource_file` again, even if your pool still exists, so that the pool is added to the active pools of the session.
+
 **Required input arguments:**
 
 - `startup_script`: String that defines the path and name of the bash startup script.

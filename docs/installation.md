@@ -10,6 +10,7 @@ Using `AzureClusterlessHPC` requires at the minimum one Azure Batch and one Azur
 
 - Python3 and pip3
 
+**Important**: Your local Julia version needs to match the Julia version that is installed on the batch workers. The examples in this repository are set up for Julia 1.6.1.
 
 ## Install Julia package
 
