@@ -62,7 +62,8 @@ end
  See also:  [`create_pool_and_resource_file`](@ref)
  """
 function create_pool(; enable_auto_scale=false, auto_scale_formula=nothing, 
-    auto_scale_evaluation_interval_minutes=nothing, image_resource_id=nothing)
+    auto_scale_evaluation_interval_minutes=nothing, image_resource_id=nothing, 
+    container_registry=nothing)
 
     # Autoscaling?
     if enable_auto_scale
@@ -92,7 +93,7 @@ function create_pool(; enable_auto_scale=false, auto_scale_formula=nothing,
                 __params__["_NODE_OS_PUBLISHER"], __params__["_NODE_OS_OFFER"], __params__["_NODE_OS_SKU"],
                 enable_inter_node=enable_inter_node, enable_auto_scale=enable_auto_scale, auto_scale_formula=auto_scale_formula, 
                 auto_scale_evaluation_interval_minutes=auto_scale_evaluation_interval_minutes, image_resource_id=image_resource_id,
-                container=docker_container)
+                container=docker_container, container_registry=container_registry)
 
             # Keep track of active pools
             print(join(["Created pool ", i ," of ", num_pools, " in ", credential_per_pool[i]["_REGION"], " with ", num_nodes, " nodes.\n"]))

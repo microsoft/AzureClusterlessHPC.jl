@@ -256,7 +256,7 @@ def select_latest_verified_vm_image_with_node_agent_sku(
 def create_pool(batch_service_client, pool_id, pool_vm_size, pool_node_count, node_os_publisher, 
     node_os_offer, node_os_sku, image_resource_id=None, enable_inter_node=False, resource_files=None,
     enable_auto_scale=False, auto_scale_formula=None, auto_scale_evaluation_interval_minutes=None,
-    container=None):
+    container=None, container_registry=None):
 
     # Configure the start task for the pool
     user = batchmodels.AutoUserSpecification(
@@ -286,7 +286,11 @@ def create_pool(batch_service_client, pool_id, pool_vm_size, pool_node_count, no
 
     # Container image
     if container is not None:
-        container_conf = batchmodels.ContainerConfiguration(container_image_names=[container])
+        if container_registry is not None:
+            container_conf = batchmodels.ContainerConfiguration(container_image_names=[container],
+                container_registries=[container_registry])
+        else:
+            container_conf = batchmodels.ContainerConfiguration(container_image_names=[container])        
     else:
         container_conf = None
 
@@ -326,14 +330,15 @@ def create_pool(batch_service_client, pool_id, pool_vm_size, pool_node_count, no
 def create_pool_and_resource_file(clients, pool_id, pool_vm_size, pool_node_count, node_os_publisher, 
     node_os_offer, node_os_sku, file_name, container_name, image_resource_id=None, enable_inter_node=False,
     enable_auto_scale=False, auto_scale_formula=None, auto_scale_evaluation_interval_minutes=None,
-    container=None):
+    container=None, container_registry=None):
 
     resource_file = create_pool_resource_file(clients["blob_client"], file_name, container_name)
 
     create_pool(clients["batch_client"], pool_id, pool_vm_size, pool_node_count, node_os_publisher, 
         node_os_offer, node_os_sku, image_resource_id=image_resource_id, enable_inter_node=enable_inter_node, 
         resource_files=resource_file, enable_auto_scale=enable_auto_scale, auto_scale_formula=auto_scale_formula, 
-        auto_scale_evaluation_interval_minutes=auto_scale_evaluation_interval_minutes, container=container)
+        auto_scale_evaluation_interval_minutes=auto_scale_evaluation_interval_minutes, container=container,
+        container_registry=container_registry)
 
 
 # Fine

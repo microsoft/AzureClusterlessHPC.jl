@@ -93,23 +93,26 @@ create_batch_output_file(blob_client, storage_account_name, container_name, file
 function create_pool(batch_service_client, pool_id, pool_vm_size, pool_node_count, node_os_publisher, 
     node_os_offer, node_os_sku; image_resource_id=nothing, enable_inter_node=false, resource_files=nothing,
     enable_auto_scale=false, auto_scale_formula=nothing, auto_scale_evaluation_interval_minutes=nothing,
-    container=nothing)
+    container=nothing, container_registry=nothing)
 
     azureclusterlesshpc.create_pool(batch_service_client, pool_id, pool_vm_size, pool_node_count, node_os_publisher, 
         node_os_offer, node_os_sku, image_resource_id=image_resource_id, enable_inter_node=enable_inter_node, 
         resource_files=resource_files, enable_auto_scale=enable_auto_scale, auto_scale_formula=auto_scale_formula, 
-        auto_scale_evaluation_interval_minutes=auto_scale_evaluation_interval_minutes, container=container)
+        auto_scale_evaluation_interval_minutes=auto_scale_evaluation_interval_minutes, container=container,
+        container_registry=container_registry)
 end
 
 # Create pool and resource file
 function create_pool_and_resource_file(clients, pool_id, pool_vm_size, pool_node_count, node_os_publisher, 
     node_os_offer, node_os_sku, file_name, container_name; image_resource_id=nothing, enable_inter_node=false,
-    enable_auto_scale=false, auto_scale_formula=nothing, auto_scale_evaluation_interval_minutes=15, container=false)
+    enable_auto_scale=false, auto_scale_formula=nothing, auto_scale_evaluation_interval_minutes=15, container=false,
+    container_registry=nothing)
 
     azureclusterlesshpc.create_pool_and_resource_file(clients, pool_id, pool_vm_size, pool_node_count, node_os_publisher, 
         node_os_offer, node_os_sku, file_name, container_name, image_resource_id=image_resource_id, 
         enable_inter_node=enable_inter_node, enable_auto_scale=enable_auto_scale, auto_scale_formula=auto_scale_formula,
-        auto_scale_evaluation_interval_minutes=auto_scale_evaluation_interval_minutes, container=container)
+        auto_scale_evaluation_interval_minutes=auto_scale_evaluation_interval_minutes, container=container,
+        container_registry=container_registry)
 end
 
 # Enable auto scaling for batch pool
