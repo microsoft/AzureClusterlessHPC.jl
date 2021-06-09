@@ -77,6 +77,9 @@ function batch_clear()
     else
         global __resources__ = Array{Any}(undef, 0)
     end
+    if length(__active_pools__) > 0
+        global __active_pools__ = Array{Dict}(undef, 0)
+    end
 end    
 
 
