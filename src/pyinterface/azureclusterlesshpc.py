@@ -485,11 +485,13 @@ def create_batch_task(resource_files=None, environment_variables=None, applicati
 
     return task
 
-# Conflict
-def wait_for_tasks_to_complete(batch_service_client, job_id, timedelta_minutes, verbose=True):
+# Wait for tasks to complete
+def wait_for_tasks_to_complete(batch_service_client, job_id, timedelta_minutes, verbose=True, num_restart=1):
 
     timeout = datetime.timedelta(minutes=timedelta_minutes)
     timeout_expiration = datetime.datetime.now() + timeout
+    task_retries = {}
+
     if verbose:
         print("Monitoring all tasks for 'Completed' state, timeout in {}..."
             .format(timeout), end='')
@@ -499,13 +501,36 @@ def wait_for_tasks_to_complete(batch_service_client, job_id, timedelta_minutes, 
             print('.', end='')
         sys.stdout.flush()
         tasks = batch_service_client.task.list(job_id)
+        incomplete_tasks = []
+        failed_tasks = []
 
-        incomplete_tasks = [task for task in tasks if
-                            task.state != batchmodels.TaskState.completed]
+        # Check if tasks completed or failed and restart is task is eligible
+        for task in tasks:
+            if task.state == batchmodels.TaskState.completed:
+                if task.execution_info.result == batchmodels.TaskExecutionResult.failure:
+
+                    # Restart task
+                    if task_retries.get(task.id) is None:
+                        retry_count = 0
+                    else:
+                        retry_count = task_retries[task.id]
+                    if retry_count < num_restart:
+                        print('Restart task no ', task.id, '\n')
+                        batch_service_client.task.reactivate(job_id, task.id)
+                        incomplete_tasks.append(task.id)
+                        task_retries.update({task.id: retry_count + 1})
+                    else:
+                        print('Task ', task.id, ' failed.\n')
+                        failed_tasks.append(task.id)
+            else:
+                incomplete_tasks.append(task.id)
         if not incomplete_tasks:
             if verbose:
                 print()
-            return True
+            if len(failed_tasks) > 0:
+                return failed_tasks
+            else:
+                return True
         else:
             time.sleep(1)
     if verbose:

@@ -232,10 +232,11 @@ end
  - Nothing
  
 """
-function wait_for_tasks_to_complete(batch_controller::BatchController, timeout=60)
+function wait_for_tasks_to_complete(batch_controller::BatchController; timeout=60, num_restart=0)
     @sync begin
         for (i, batch_client) in enumerate(batch_controller.batch_client)
-            @async wait_for_tasks_to_complete(batch_client, batch_controller.job_id[i], timeout; verbose=__verbose__)
+            @async wait_for_tasks_to_complete(batch_client, batch_controller.job_id[i], timeout; 
+                verbose=__verbose__, num_restart=num_restart)
         end
     end
 end

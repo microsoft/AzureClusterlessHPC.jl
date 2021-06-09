@@ -77,7 +77,6 @@ function create_batch_resource_for_blob_future_in_ast(expr, pool_no, blob_future
 end
 
 function create_batch_resource_from_blob_future(blob_future::BlobFuture, pool_no, blob_futures)
-    num_files = length(blob_future.blob.name)
     for blob in blob_future.blob.name
         push!(blob_futures, create_batch_resource_from_blob(__active_pools__[pool_no]["clients"]["blob_client"], blob_future.container, blob)[1])
     end
@@ -114,7 +113,6 @@ end
 function create_batch_task!(expr, pool_no, count, tasks, resources, task_ids, output, app_cmd, options)
 
     # Append expressions previously tagged via @batchdef
-    task_no = length(tasks) + 1
     isnothing(options) ? (task_base = "task_") : (task_base = options.task_name)
     push!(task_ids, Dict("taskname" => join([task_base, count]), "pool" => pool_no))
     if isnothing(__expressions__)

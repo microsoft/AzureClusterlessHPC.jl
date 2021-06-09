@@ -79,7 +79,7 @@ create_batch_resource_from_bytes(blob_client::Nothing, container, blob_name, blo
 create_batch_job(batch_client::Nothing, job_id, pool_id; uses_task_dependencies=false, priority=0) = nothing
 
 # Wait for all tasks to complete
-wait_for_tasks_to_complete(batch_service_client::Nothing, job_id, timeout, verbose=true) = true
+wait_for_tasks_to_complete(batch_service_client::Nothing, job_id, timeout, verbose=true, num_restart=0) = true
 
 # Wait for specified task to complete
 wait_for_task_to_complete(batch_service_client::Nothing, job_id, task_id, timeout, verbose=true) = true
