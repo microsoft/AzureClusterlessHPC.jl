@@ -74,8 +74,8 @@ end
 create_blob_url(blob_client::PyObject, container_name, blob_list) = 
     azureclusterlesshpc.create_blob_url(blob_client, container_name, blob_list)
 
-upload_bytes_to_container(blob_client::PyObject, container_name, blob_name, blob) = 
-    azureclusterlesshpc.upload_bytes_to_container(blob_client, container_name, blob_name, blob)
+upload_bytes_to_container(blob_client::PyObject, container_name, blob_name, blob; verbose=true) = 
+    azureclusterlesshpc.upload_bytes_to_container(blob_client, container_name, blob_name, blob; verbose=verbose)
 
 # Create containers given a list of container names
 create_blob_containers(blob_client::PyObject, container_name_list::Array{String, 1}) =
@@ -108,8 +108,8 @@ function create_pool_and_resource_file(clients, pool_id, pool_vm_size, pool_node
     enable_auto_scale=false, auto_scale_formula=nothing, auto_scale_evaluation_interval_minutes=15, container=false,
     container_registry=nothing)
 
-    azureclusterlesshpc.create_pool_and_resource_file(clients, pool_id, pool_vm_size, pool_node_count, node_os_publisher, 
-        node_os_offer, node_os_sku, file_name, container_name, image_resource_id=image_resource_id, 
+    azureclusterlesshpc.create_pool_and_resource_file(clients, pool_id, pool_vm_size, pool_node_count, 
+        node_os_publisher, node_os_offer, node_os_sku, file_name, container_name, image_resource_id=image_resource_id,
         enable_inter_node=enable_inter_node, enable_auto_scale=enable_auto_scale, auto_scale_formula=auto_scale_formula,
         auto_scale_evaluation_interval_minutes=auto_scale_evaluation_interval_minutes, container=container,
         container_registry=container_registry)
@@ -122,10 +122,11 @@ enable_auto_scale(batch_client, pool_id, auto_scale_formula; auto_scale_evaluati
 
 
 # Resize pool
-resize_pool(batch_client, pool_id, target_dedicated_nodes, target_low_priority_nodes; resize_timeout_minutes=nothing, node_deallocation_option=nothing, pool_resize_options=nothing) = 
-    azureclusterlesshpc.resize_pool(batch_client, pool_id, target_dedicated_nodes, target_low_priority_nodes, resize_timeout_minutes=resize_timeout_minutes, 
-        node_deallocation_option=node_deallocation_option, pool_resize_options=pool_resize_options)
-
+resize_pool(batch_client, pool_id, target_dedicated_nodes, target_low_priority_nodes; 
+    resize_timeout_minutes=nothing, node_deallocation_option=nothing, pool_resize_options=nothing) = 
+    azureclusterlesshpc.resize_pool(batch_client, pool_id, target_dedicated_nodes, target_low_priority_nodes, 
+        resize_timeout_minutes=resize_timeout_minutes, node_deallocation_option=node_deallocation_option, 
+        pool_resize_options=pool_resize_options)
 
 # Create resource from url
 create_batch_resource_from_blob_url(shared_url, shared_blob) = 
@@ -133,28 +134,32 @@ create_batch_resource_from_blob_url(shared_url, shared_blob) =
 
 
 # Create resource file from file
-create_batch_resource_from_file(blob_client, container, file) = azureclusterlesshpc.create_batch_resource_from_file(blob_client, container, file)
+create_batch_resource_from_file(blob_client, container, file; verbose=true) = 
+    azureclusterlesshpc.create_batch_resource_from_file(blob_client, container, file, verbose=verbose)
 
 
 # Create resource file from existing blob
-create_batch_resource_from_blob(blob_client, container, blob) = azureclusterlesshpc.create_batch_resource_from_blob(blob_client, container, blob)
+create_batch_resource_from_blob(blob_client, container, blob) = 
+    azureclusterlesshpc.create_batch_resource_from_blob(blob_client, container, blob)
 
 
 # Create resource file from bytes
-create_batch_resource_from_bytes(blob_client, container, blob_name, blob) =
-    azureclusterlesshpc.create_batch_resource_from_bytes(blob_client, container, blob_name, blob)
+create_batch_resource_from_bytes(blob_client, container, blob_name, blob; verbose=true) =
+    azureclusterlesshpc.create_batch_resource_from_bytes(blob_client, container, blob_name, blob, verbose=verbose)
 
 
 # Create batch job
-create_batch_job(batch_client, job_id, pool_id; uses_task_dependencies=false, priority=0) = 
-    azureclusterlesshpc.create_batch_job(batch_client, job_id, pool_id, uses_task_dependencies=uses_task_dependencies, priority=priority)
+create_batch_job(batch_client, job_id, pool_id; uses_task_dependencies=false, priority=0, verbose=true) = 
+    azureclusterlesshpc.create_batch_job(batch_client, job_id, pool_id, uses_task_dependencies=uses_task_dependencies,
+        priority=priority, verbose=verbose)
 
 
 # Create tasks for batch job
 create_batch_task(; resource_files=nothing, environment_variables=nothing, application_cmd=nothing,
     output_files=nothing, taskname="task", task_constraints=nothing, num_nodes_per_task=1, docker_container=nothing) =     
     azureclusterlesshpc.create_batch_task(resource_files=resource_files, environment_variables=environment_variables, 
-    application_cmd=application_cmd, output_files=output_files, taskname=taskname, task_constraints=task_constraints, num_nodes_per_task=num_nodes_per_task, docker_container=docker_container)
+        application_cmd=application_cmd, output_files=output_files, taskname=taskname, task_constraints=task_constraints, 
+        num_nodes_per_task=num_nodes_per_task, docker_container=docker_container)
 
     
 # Create task constraints
@@ -164,27 +169,30 @@ create_task_constraint(; max_wall_clock_time=nothing, retention_time=nothing, ma
 
 
 # Wait for all tasks to complete
-wait_for_tasks_to_complete(batch_service_client, job_id, timeout) = 
-    azureclusterlesshpc.wait_for_tasks_to_complete(batch_service_client, job_id, timeout)
+wait_for_tasks_to_complete(batch_service_client, job_id, timeout; verbose=true) = 
+    azureclusterlesshpc.wait_for_tasks_to_complete(batch_service_client, job_id, timeout, verbose=verbose)
 
 
 # Wait for specified task to complete
-wait_for_task_to_complete(batch_service_client, job_id, task_id, timeout) = 
-    azureclusterlesshpc.wait_for_task_to_complete(batch_service_client, job_id, task_id, timeout)
+wait_for_task_to_complete(batch_service_client, job_id, task_id, timeout; verbose=true) = 
+    azureclusterlesshpc.wait_for_task_to_complete(batch_service_client, job_id, task_id, timeout, verbose=verbose)
 
 
 # Wait for one task from a list of tasks to complete
-wait_for_one_task_to_complete(batch_service_client, job_id, task_id_list, timedelta_minutes) = 
-    azureclusterlesshpc.wait_for_one_task_to_complete(batch_service_client, job_id, task_id_list, timedelta_minutes)
+wait_for_one_task_to_complete(batch_service_client, job_id, task_id_list, timedelta_minutes; verbose=true) = 
+    azureclusterlesshpc.wait_for_one_task_to_complete(batch_service_client, job_id, task_id_list, timedelta_minutes,
+        verbose=verbose)
 
 
 # Wait for one task from a list of tasks to complete
-wait_for_one_task_from_multi_pool(batch_service_client, job_id, task_id_list, timedelta_minutes) = 
-    azureclusterlesshpc.wait_for_one_task_from_multi_pool(batch_service_client, job_id, task_id_list, timedelta_minutes)
+wait_for_one_task_from_multi_pool(batch_service_client, job_id, task_id_list, timedelta_minutes; verbose=true) = 
+    azureclusterlesshpc.wait_for_one_task_from_multi_pool(batch_service_client, job_id, task_id_list, 
+        timedelta_minutes, verbose=verbose)
 
 
-wait_for_one_task_from_multi_jobs(batch_service_client, job_id_list, task_id_list, timedelta_minutes) =
-    azureclusterlesshpc.wait_for_one_task_from_multi_jobs(batch_service_client, job_id_list, task_id_list, timedelta_minutes)
+wait_for_one_task_from_multi_jobs(batch_service_client, job_id_list, task_id_list, timedelta_minutes; verbose=true) =
+    azureclusterlesshpc.wait_for_one_task_from_multi_jobs(batch_service_client, job_id_list, task_id_list, 
+        timedelta_minutes, verbose=verbose)
 
 # Create batch environment variable
 create_batch_env(name, value) = azureclusterlesshpc.create_batch_env(name, value)

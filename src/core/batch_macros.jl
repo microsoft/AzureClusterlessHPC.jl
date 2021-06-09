@@ -25,7 +25,8 @@ function append_batchdef_expression(expr)
     if expr.args[1] == :include
         for (client, resource) in zip(__clients__, __resources__)
             create_blob_containers(client["blob_client"], [__container__]) # if not exist
-            push!(resource, create_batch_resource_from_file(client["blob_client"], __container__, expr.args[2])[1])
+            push!(resource, create_batch_resource_from_file(client["blob_client"], __container__, expr.args[2];
+                verbose=__verbose__)[1])
         end
         expr.args[end] = convert(String, split(expr.args[end], "/")[end])    # remove path
     end
@@ -156,7 +157,7 @@ function create_batch_task!(expr, pool_no, count, tasks, resources, task_ids, ou
         env_num_nodes_per_task, env_num_procs_per_node, __params__["_OMP_NUM_THREADS"]])
 
     # Create resource file and append to resource list
-    ast_resource = create_batch_resource_from_bytes(__active_pools__[pool_no]["clients"]["blob_client"], __container__, filename, iostream.data)
+    ast_resource = create_batch_resource_from_bytes(__active_pools__[pool_no]["clients"]["blob_client"], __container__, filename, iostream.data; verbose=__verbose__)
     length(__active_pools__[pool_no]["resources"]) > 0 && (ast_resource = vcat(ast_resource, __active_pools__[pool_no]["resources"]))
 
     # Create resource file for blob futures in AST
@@ -265,21 +266,23 @@ function submit_batch_job(expression_list; options=nothing)
         pool_no = pool_numbers[i]
         push!(job_ids, join([job_base, "_", i]))
         create_batch_job(__active_pools__[pool_no]["clients"]["batch_client"], job_ids[end], 
-            __active_pools__[pool_no]["pool_id"]; uses_task_dependencies=false, priority=priority)
+            __active_pools__[pool_no]["pool_id"]; uses_task_dependencies=false, priority=priority, verbose=__verbose__)
         create_blob_containers(__active_pools__[pool_no]["clients"]["blob_client"], [__container__])
 
         # Add Julia runtime and cmd to batch resource list
         resources = Array{PyObject}(undef, 0)
         push!(resources, create_batch_resource_from_file(__active_pools__[pool_no]["clients"]["blob_client"], 
-            __container__, joinpath(dirname(pathof(AzureClusterlessHPC)), "runtime/application-cmd"))[1])  
+            __container__, joinpath(dirname(pathof(AzureClusterlessHPC)), "runtime/application-cmd"); 
+            verbose=__verbose__)[1])  
         push!(resources, create_batch_resource_from_file(__active_pools__[pool_no]["clients"]["blob_client"],
-            __container__, joinpath(dirname(pathof(AzureClusterlessHPC)), "runtime/batch_runtime.jl"))[1])
+            __container__, joinpath(dirname(pathof(AzureClusterlessHPC)), "runtime/batch_runtime.jl");
+            verbose=__verbose__)[1])
 
         # Serialize expressions with "using ..." and create batch resource
         if ~isnothing(__packages__)
             iostream = IOBuffer(); serialize(iostream, __packages__)
             push!(resources, create_batch_resource_from_bytes(__active_pools__[pool_no]["clients"]["blob_client"], 
-                __container__, "packages.dat", iostream.data)[1])
+                __container__, "packages.dat", iostream.data; verbose=__verbose__)[1])
         end
         
         # Create tasks for each batch pool
@@ -598,7 +601,7 @@ function create_bcast_batch_resource(blob_name, binary; container=nothing)
         if ~isempty(resource_idx)
             popat!(resource, resource_idx[1]) # remove original resource
         end
-        upload_bytes_to_container(client["blob_client"], container, blob_name, binary)
+        upload_bytes_to_container(client["blob_client"], container, blob_name, binary; verbose=__verbose__)
     end
 
     # Return future w/ blob name

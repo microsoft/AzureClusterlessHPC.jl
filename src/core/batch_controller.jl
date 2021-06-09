@@ -235,7 +235,7 @@ end
 function wait_for_tasks_to_complete(batch_controller::BatchController, timeout=60)
     @sync begin
         for (i, batch_client) in enumerate(batch_controller.batch_client)
-            @async wait_for_tasks_to_complete(batch_client, batch_controller.job_id[i], timeout)
+            @async wait_for_tasks_to_complete(batch_client, batch_controller.job_id[i], timeout; verbose=__verbose__)
         end
     end
 end

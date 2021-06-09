@@ -96,11 +96,11 @@ function create_pool(; enable_auto_scale=false, auto_scale_formula=nothing,
                 container=docker_container, container_registry=container_registry)
 
             # Keep track of active pools
-            print(join(["Created pool ", i ," of ", num_pools, " in ", credential_per_pool[i]["_REGION"], " with ", num_nodes, " nodes.\n"]))
+            __verbose__ && print(join(["Created pool ", i ," of ", num_pools, " in ", credential_per_pool[i]["_REGION"], " with ", num_nodes, " nodes.\n"]))
             push!(__active_pools__, Dict("pool_id" => pool_id, "clients" => clients_per_pool[i], "credentials" => credential_per_pool[i],
                 "resources" => resources_per_pool[i]))
         catch
-            print(join(["Pool ", i ," of ", num_pools, " in ", credential_per_pool[i]["_REGION"]," already exists.\n"]))
+            __verbose__ && print(join(["Pool ", i ," of ", num_pools, " in ", credential_per_pool[i]["_REGION"]," already exists.\n"]))
             push!(__active_pools__, Dict("pool_id" => pool_id, "clients" => clients_per_pool[i], "credentials" => credential_per_pool[i],
                 "resources" => resources_per_pool[i]))
         end
@@ -175,11 +175,11 @@ function create_pool_and_resource_file(startup_script; enable_auto_scale=false, 
                 container=docker_container)
 
             # Keep track of active pools
-            print(join(["Created pool ", i ," of ", num_pools, " in ", credential_per_pool[i]["_REGION"], " with ", num_nodes, " nodes.\n"]))
+            __verbose__ && print(join(["Created pool ", i ," of ", num_pools, " in ", credential_per_pool[i]["_REGION"], " with ", num_nodes, " nodes.\n"]))
             push!(__active_pools__, Dict("pool_id" => pool_id, "clients" => clients_per_pool[i], "credentials" => credential_per_pool[i],
                 "resources" => resources_per_pool[i]))
         catch
-            print(join(["Pool ", i ," of ", num_pools, " in ", credential_per_pool[i]["_REGION"]," already exists.\n"]))
+            __verbose__ && print(join(["Pool ", i ," of ", num_pools, " in ", credential_per_pool[i]["_REGION"]," already exists.\n"]))
             push!(__active_pools__, Dict("pool_id" => pool_id, "clients" => clients_per_pool[i], "credentials" => credential_per_pool[i],
                 "resources" => resources_per_pool[i]))
         end
