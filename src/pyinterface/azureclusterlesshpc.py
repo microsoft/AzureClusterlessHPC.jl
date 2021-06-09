@@ -127,13 +127,14 @@ def upload_blob_and_create_sas(
     return sas_url
 
 # Conflict
-def upload_files_to_blob(blob_client, container_name, file_paths):
+def upload_files_to_blob(blob_client, container_name, file_paths, verbose=True):
 
     blob_names = list()
     for path_to_file in file_paths:
         blob_name = os.path.basename(path_to_file)
 
-        print('Uploading file {} to blob container [{}]...'.format(path_to_file, container_name))
+        if verbose:
+            print('Uploading file {} to blob container [{}]...'.format(path_to_file, container_name))
 
         blob_client.create_blob_from_path(container_name, blob_name, path_to_file)
         blob_names.append(blob_name)
@@ -141,9 +142,9 @@ def upload_files_to_blob(blob_client, container_name, file_paths):
     return blob_names
 
 # Fine
-def upload_bytes_to_container(blob_client, container_name, blob_name, blob):
-    
-    print('Uploading file {} to container [{}]...'.format(blob_name, container_name))
+def upload_bytes_to_container(blob_client, container_name, blob_name, blob, verbose=True):
+    if verbose:
+        print('Uploading file {} to container [{}]...'.format(blob_name, container_name))
     
     blob_client.create_blob_from_bytes(container_name, blob_name, bytes(blob))
     return [blob_name]
@@ -378,10 +379,10 @@ def create_batch_resource_from_blob_url(shared_url, shared_blob):
     return shared_resource
 
 
-def create_batch_resource_from_file(blob_client, container, shared_file):
+def create_batch_resource_from_file(blob_client, container, shared_file, verbose=True):
 
     # Upload to blob and create url
-    shared_blob = upload_files_to_blob(blob_client, container, [shared_file])
+    shared_blob = upload_files_to_blob(blob_client, container, [shared_file], verbose=verbose)
     shared_url = create_blob_url(blob_client, container, shared_blob)
 
     # Create batch resource
@@ -390,10 +391,10 @@ def create_batch_resource_from_file(blob_client, container, shared_file):
     return shared_resource
 
 
-def create_batch_resource_from_bytes(blob_client, container, blob_name, blob):
+def create_batch_resource_from_bytes(blob_client, container, blob_name, blob, verbose=True):
 
     # Upload to blob and create url
-    shared_blob = upload_bytes_to_container(blob_client, container, blob_name, blob)
+    shared_blob = upload_bytes_to_container(blob_client, container, blob_name, blob, verbose=verbose)
     shared_url = create_blob_url(blob_client, container, shared_blob)
 
     # Create batch resource
@@ -413,10 +414,11 @@ def create_batch_resource_from_blob(blob_client, container, shared_blob):
     return shared_resource
 
 
-def create_batch_job(batch_client, job_id, pool_id, uses_task_dependencies=False, priority=0):
+def create_batch_job(batch_client, job_id, pool_id, uses_task_dependencies=False, priority=0, verbose=True):
 
     try: 
-        print('Creating job [{}]...'.format(job_id))
+        if verbose:
+            print('Creating job [{}]...'.format(job_id))
 
         job = batchServiceClient.models.JobAddParameter(
             id=job_id,
@@ -426,7 +428,8 @@ def create_batch_job(batch_client, job_id, pool_id, uses_task_dependencies=False
 
         batch_client.job.add(job)
     except:
-        print('Job already exists.')
+        if verbose:
+            print('Job already exists.')
 
 
 def create_task_constraint(max_wall_clock_time=None, retention_time=None, max_task_retry_count = 0):
@@ -483,61 +486,70 @@ def create_batch_task(resource_files=None, environment_variables=None, applicati
     return task
 
 # Conflict
-def wait_for_tasks_to_complete(batch_service_client, job_id, timedelta_minutes):
+def wait_for_tasks_to_complete(batch_service_client, job_id, timedelta_minutes, verbose=True):
 
     timeout = datetime.timedelta(minutes=timedelta_minutes)
     timeout_expiration = datetime.datetime.now() + timeout
-    print("Monitoring all tasks for 'Completed' state, timeout in {}..."
-          .format(timeout), end='')
+    if verbose:
+        print("Monitoring all tasks for 'Completed' state, timeout in {}..."
+            .format(timeout), end='')
 
     while datetime.datetime.now() < timeout_expiration:
-        print('.', end='')
+        if verbose:
+            print('.', end='')
         sys.stdout.flush()
         tasks = batch_service_client.task.list(job_id)
 
         incomplete_tasks = [task for task in tasks if
                             task.state != batchmodels.TaskState.completed]
         if not incomplete_tasks:
-            print()
+            if verbose:
+                print()
             return True
         else:
             time.sleep(1)
-    print()
+    if verbose:
+        print()
     raise RuntimeError("ERROR: Tasks did not reach 'Completed' state within "
                        "timeout period of " + str(timeout))
 
 
-def wait_for_task_to_complete(batch_service_client, job_id, task_id, timedelta_minutes):
+def wait_for_task_to_complete(batch_service_client, job_id, task_id, timedelta_minutes, verbose=True):
 
     timeout = datetime.timedelta(minutes=timedelta_minutes)
     timeout_expiration = datetime.datetime.now() + timeout
-    print("Monitoring task {} for 'Completed' state, timeout in {}..."
-          .format(task_id, timeout), end='')
+    if verbose:
+        print("Monitoring task {} for 'Completed' state, timeout in {}..."
+            .format(task_id, timeout), end='')
 
     while datetime.datetime.now() < timeout_expiration:
-        print('.', end='')
+        if verbose:
+            print('.', end='')
         sys.stdout.flush()
         task = batch_service_client.task.get(job_id, task_id)
 
         is_complete = task.state == batchmodels.TaskState.completed
 
         if is_complete:
-            print()
+            if verbose:
+                print()
             return True
         else:
             time.sleep(1)
-    print()
+    if verbose:
+        print()
     raise RuntimeError("ERROR: Task did not reach 'Completed' state within "
                        "timeout period of " + str(timeout))
 
 
-def wait_for_one_task_to_complete(batch_service_client, job_id, task_id_list, timedelta_minutes):
+def wait_for_one_task_to_complete(batch_service_client, job_id, task_id_list, timedelta_minutes, verbose=True):
 
     timeout = datetime.timedelta(minutes=timedelta_minutes)
     timeout_expiration = datetime.datetime.now() + timeout
 
     while datetime.datetime.now() < timeout_expiration:
-        print('.', end='')
+        if verbose:
+            print('.', end='')
         sys.stdout.flush()
 
         is_complete = False
@@ -551,19 +563,20 @@ def wait_for_one_task_to_complete(batch_service_client, job_id, task_id_list, ti
         
         # No completed task found -> sleep and try again
         time.sleep(1)
-            
-    print()
+    if verbose:        
+        print()
     raise RuntimeError("ERROR: Task did not reach 'Completed' state within "
                        "timeout period of " + str(timeout))
 
 
-def wait_for_one_task_from_multi_pool(batch_service_clients, job_id, task_id_list, timedelta_minutes):
+def wait_for_one_task_from_multi_pool(batch_service_clients, job_id, task_id_list, timedelta_minutes, verbose=True):
 
     timeout = datetime.timedelta(minutes=timedelta_minutes)
     timeout_expiration = datetime.datetime.now() + timeout
 
     while datetime.datetime.now() < timeout_expiration:
-        print('.', end='')
+        if verbose:
+            print('.', end='')
         sys.stdout.flush()
 
         is_complete = False
@@ -583,19 +596,20 @@ def wait_for_one_task_from_multi_pool(batch_service_clients, job_id, task_id_lis
         
         # No completed task found -> sleep and try again
         time.sleep(1)
-            
-    print()
+    if verbose:        
+        print()
     raise RuntimeError("ERROR: Task did not reach 'Completed' state within "
                        "timeout period of " + str(timeout))
 
 
-def wait_for_one_task_from_multi_jobs(batch_service_client, job_id_list, task_id_list, timedelta_minutes):
+def wait_for_one_task_from_multi_jobs(batch_service_client, job_id_list, task_id_list, timedelta_minutes, verbose=True):
 
     timeout = datetime.timedelta(minutes=timedelta_minutes)
     timeout_expiration = datetime.datetime.now() + timeout
 
     while datetime.datetime.now() < timeout_expiration:
-        print('.', end='')
+        if verbose:
+            print('.', end='')
         sys.stdout.flush()
 
         is_complete = False
@@ -609,8 +623,8 @@ def wait_for_one_task_from_multi_jobs(batch_service_client, job_id_list, task_id
         
         # No completed task found -> sleep and try again
         time.sleep(1)
-            
-    print()
+    if verbose:        
+        print()
     raise RuntimeError("ERROR: Task did not reach 'Completed' state within "
                        "timeout period of " + str(timeout))
 
