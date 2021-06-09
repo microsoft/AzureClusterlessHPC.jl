@@ -136,7 +136,7 @@ function fetch(batch_controller::BatchController; destroy_blob=false, timeout=60
     out_files = Array{Any}(undef, length(batch_controller.output))
     remaining_tasks = deepcopy(batch_controller.task_id)
     task_id = nothing
-    print("Monitoring tasks for 'Completed' state, timeout in $timeout minutes ...")
+    __verbose__ && print("Monitoring tasks for 'Completed' state, timeout in $timeout minutes ...")
     while true
 
         # Wait for one task from task list to finish
@@ -145,7 +145,7 @@ function fetch(batch_controller::BatchController; destroy_blob=false, timeout=60
         catch
            throw("Reached timeout for task completion.")
         end
-        print("\nFetch output from task $task_id")
+        __verbose__ && print("\nFetch output from task $task_id")
 
         # Fetch its output
         task_no = findall(i -> i["taskname"] == task_id, batch_controller.task_id)[1]
@@ -157,7 +157,7 @@ function fetch(batch_controller::BatchController; destroy_blob=false, timeout=60
 
         # Return it task list is empty
         if isempty(remaining_tasks)
-            print("\n")
+            __verbose__ && print("\n")
             if length(out_files) > 1
                 return out_files
             elseif length(out_files) == 1
@@ -175,7 +175,7 @@ function fetch!(batch_controller::BatchController; destroy_blob=true, timeout=60
     out_files = Array{Any}(undef, length(batch_controller.output))
     remaining_tasks = deepcopy(batch_controller.task_id)
     task_id = nothing
-    print("Monitoring tasks for 'Completed' state, timeout in $timeout minutes ...")
+    __verbose__ && print("Monitoring tasks for 'Completed' state, timeout in $timeout minutes ...")
     while true
 
         # Wait for one task from task list to finish
@@ -184,7 +184,7 @@ function fetch!(batch_controller::BatchController; destroy_blob=true, timeout=60
         catch
            throw("Reached timeout for task completion.")
         end
-        print("\nFetch output from task $task_id")
+        __verbose__ && print("\nFetch output from task $task_id")
 
         # Fetch its output
         task_no = findall(i -> i["taskname"] == task_id, batch_controller.task_id)[1]
@@ -196,7 +196,7 @@ function fetch!(batch_controller::BatchController; destroy_blob=true, timeout=60
 
         # Return it task list is empty
         if isempty(remaining_tasks)
-            print("\n")
+            __verbose__ && print("\n")
             if length(out_files) > 1
                 return out_files
             else
@@ -327,7 +327,7 @@ function fetchreduce_local(batch_controller::BatchController; op=+, destroy_blob
         task_id = nothing
         output = nothing
 
-        print("Monitoring tasks for 'Completed' state, timeout in $timeout minutes ...")
+        __verbose__ && print("Monitoring tasks for 'Completed' state, timeout in $timeout minutes ...")
         while true
 
             # Wait for one task from task list to finish
@@ -336,7 +336,7 @@ function fetchreduce_local(batch_controller::BatchController; op=+, destroy_blob
             catch
                 throw("Reached timeout for task completion.")
             end
-            print("\nFetch output from task $task_id")
+            __verbose__ && print("\nFetch output from task $task_id")
 
             # Fetch its output
             task_no = findall(i -> i["taskname"] == task_id, batch_controller.task_id)[1]
@@ -356,7 +356,7 @@ function fetchreduce_local(batch_controller::BatchController; op=+, destroy_blob
 
             # Return it task list is empty
             if isempty(remaining_tasks)
-                print("\n")
+                __verbose__ && print("\n")
                 if length(output) > 1
                     return output
                 elseif length(output) == 1
@@ -407,7 +407,7 @@ function fetchreduce_remote(batch_client, blob_client, job_id, task_id, func_out
         job_ids = Array{Any}(undef, length(remaining_tasks)) .= job_id
         temp_blobs = []; orig_blobs = []
 
-        print("Monitoring tasks for 'Completed' state, timeout in $timeout minutes ...")
+        __verbose__ && print("Monitoring tasks for 'Completed' state, timeout in $timeout minutes ...")
         while true
 
             # Wait for two tasks to finish
@@ -473,7 +473,7 @@ function fetchreduce!(batch_controller::BatchController, output::Tuple; op=+, de
         remaining_tasks = deepcopy(batch_controller.task_id)
         task_id = nothing
 
-        print("Monitoring tasks for 'Completed' state, timeout in $timeout minutes ...")
+        __verbose__ && print("Monitoring tasks for 'Completed' state, timeout in $timeout minutes ...")
         while true
 
             # Wait for one task from task list to finish
@@ -482,7 +482,7 @@ function fetchreduce!(batch_controller::BatchController, output::Tuple; op=+, de
             catch
                 throw("Reached timeout for task completion.")
             end
-            print("\nFetch output from task $task_id")
+            __verbose__ && print("\nFetch output from task $task_id")
 
             # Fetch its output
             task_no = findall(i -> i["taskname"] == task_id, batch_controller.task_id)[1]
@@ -503,7 +503,7 @@ function fetchreduce!(batch_controller::BatchController, output::Tuple; op=+, de
 
             # Return it task list is empty
             if isempty(remaining_tasks)
-                print("\n")
+                __verbose__ && print("\n")
                 if length(output) > 1
                     return output
                 else
@@ -529,7 +529,7 @@ function fetchreduce!(batch_controller::BatchController, output; op=+, destroy_b
         remaining_tasks = deepcopy(batch_controller.task_id)
         task_id = nothing
 
-        print("Monitoring tasks for 'Completed' state, timeout in $timeout minutes ...")
+        __verbose__ && print("Monitoring tasks for 'Completed' state, timeout in $timeout minutes ...")
         while true
 
             # Wait for one task from task list to finish
@@ -538,7 +538,7 @@ function fetchreduce!(batch_controller::BatchController, output; op=+, destroy_b
             catch
                 throw("Reached timeout for task completion.")
             end
-            print("\nFetch output from task $task_id")
+            __verbose__ && print("\nFetch output from task $task_id")
 
             # Fetch its output
             task_no = findall(i -> i["taskname"] == task_id, batch_controller.task_id)[1]
@@ -557,7 +557,7 @@ function fetchreduce!(batch_controller::BatchController, output; op=+, destroy_b
 
             # Return it task list is empty
             if isempty(remaining_tasks)
-                print("\n")
+                __verbose__ && print("\n")
                 if length(output) > 1
                     return output
                 else

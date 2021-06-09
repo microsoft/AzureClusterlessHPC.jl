@@ -23,7 +23,8 @@ const default_parameters = [
     ["_NUM_PROCS_PER_NODE", "1"],
     ["_OMP_NUM_THREADS", "1"],
     ["_JULIA_DEPOT_PATH", "/mnt/batch/tasks/startup/wd/.julia"],
-    ["_PYTHONPATH", "/mnt/batch/tasks/startup/wd/.local/lib/python3.6/site-packages"]
+    ["_PYTHONPATH", "/mnt/batch/tasks/startup/wd/.local/lib/python3.6/site-packages"],
+    ["_VERBOSE", "1"]
 ]
 
 function create_parameter_dict(params, default_parameters)

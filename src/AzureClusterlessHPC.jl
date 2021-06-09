@@ -92,6 +92,12 @@ else
         end
         global __container__ = __get_container__
 
+        if __params__["_VERBOSE"] == "1"
+            global __verbose__ = true
+        else
+            global __verbose__ = false
+        end
+
         # Global list of pools (start with no pools)
         global __active_pools__ = Array{Dict}(undef, 0)
 
