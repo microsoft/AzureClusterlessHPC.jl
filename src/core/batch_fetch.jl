@@ -32,14 +32,14 @@
  - `output`: List of return arguments of executed function (one entry per task) or data from blob/batch future.
  
 """
-function fetch(batch_controller::BatchController, idx; destroy_blob=false, timeout=60, wait_for_completion=true)
+function fetch(batch_controller::BatchController, idx; destroy_blob=false, timeout=60, wait_for_completion=true, num_restart=0)
 
     # Wait for specified task to finish
     task_id = batch_controller.task_id[idx]["taskname"]
     pool_no = batch_controller.task_id[idx]["pool"]
     if wait_for_completion
         wait_for_task_to_complete(batch_controller.batch_client[pool_no], batch_controller.job_id[pool_no], task_id, timeout; 
-            verbose=__verbose__)
+            verbose=__verbose__, num_restart=num_restart)
     end
 
     # Loop over entries in Future for i-th task
@@ -93,14 +93,14 @@ end
  - `output`: List of return arguments of executed function (one entry per task) or data from blob/batch future.
  
 """
-function fetch!(batch_controller::BatchController, idx; destroy_blob=true, timeout=60, wait_for_completion=true)
+function fetch!(batch_controller::BatchController, idx; destroy_blob=true, timeout=60, wait_for_completion=true, num_restart=0)
 
     # Wait for specified task to finish
     task_id = batch_controller.task_id[idx]["taskname"]
     pool_no = batch_controller.task_id[idx]["pool"]
     if wait_for_completion
         wait_for_task_to_complete(batch_controller.batch_client[pool_no], batch_controller.job_id[pool_no], task_id, timeout;
-            verbose=__verbose__)
+            verbose=__verbose__, num_restart=num_restart)
     end
 
     # Loop over entries in Future for i-th task
@@ -133,7 +133,7 @@ end
 
 
 # Fetch output blobs of all tasks in order of completion (blocking operation)
-function fetch(batch_controller::BatchController; destroy_blob=false, timeout=60)
+function fetch(batch_controller::BatchController; destroy_blob=false, timeout=60, num_restart=0)
 
     out_files = Array{Any}(undef, length(batch_controller.output))
     remaining_tasks = deepcopy(batch_controller.task_id)
@@ -143,7 +143,7 @@ function fetch(batch_controller::BatchController; destroy_blob=false, timeout=60
 
         # Wait for one task from task list to finish
         try
-            task_id, pool_no = wait_for_one_task_from_multi_pool(batch_controller.batch_client, batch_controller.job_id, remaining_tasks, timeout; verbose=__verbose__)
+            task_id, pool_no = wait_for_one_task_from_multi_pool(batch_controller.batch_client, batch_controller.job_id, remaining_tasks, timeout; verbose=__verbose__, num_restart=num_restart)
         catch
            throw("Reached timeout for task completion.")
         end
@@ -172,7 +172,7 @@ function fetch(batch_controller::BatchController; destroy_blob=false, timeout=60
 end
 
 
-function fetch!(batch_controller::BatchController; destroy_blob=true, timeout=60)
+function fetch!(batch_controller::BatchController; destroy_blob=true, timeout=60, num_restart=0)
 
     out_files = Array{Any}(undef, length(batch_controller.output))
     remaining_tasks = deepcopy(batch_controller.task_id)
@@ -182,7 +182,7 @@ function fetch!(batch_controller::BatchController; destroy_blob=true, timeout=60
 
         # Wait for one task from task list to finish
         try
-            task_id, pool_no = wait_for_one_task_from_multi_pool(batch_controller.batch_client, batch_controller.job_id, remaining_tasks, timeout; verbose=__verbose__)
+            task_id, pool_no = wait_for_one_task_from_multi_pool(batch_controller.batch_client, batch_controller.job_id, remaining_tasks, timeout; verbose=__verbose__, num_restart=num_restart)
         catch
            throw("Reached timeout for task completion.")
         end
@@ -259,7 +259,7 @@ end
  - `output`: Return argument(s) of executed function after application of reduction operation (along tasks)
  
 """
-function fetchreduce(batch_controller::BatchController; op=+, destroy_blob=false, timeout=60, remote=false, reduce_code=reduction_code)
+function fetchreduce(batch_controller::BatchController; op=+, destroy_blob=false, timeout=60, remote=false, reduce_code=reduction_code, num_restart=0)
     if remote == false
         return fetchreduce_local(batch_controller; op=op, destroy_blob=destroy_blob, timeout=timeout)
     else
@@ -317,7 +317,7 @@ function fetchreduce(batch_controller::BatchController; op=+, destroy_blob=false
 end
 
 # Fetch and reduce operation locally
-function fetchreduce_local(batch_controller::BatchController; op=+, destroy_blob=false, timeout=60)
+function fetchreduce_local(batch_controller::BatchController; op=+, destroy_blob=false, timeout=60, num_restart=0)
 
     # Single task: simply fetch output
     if batch_controller.num_tasks == 1
@@ -334,7 +334,7 @@ function fetchreduce_local(batch_controller::BatchController; op=+, destroy_blob
 
             # Wait for one task from task list to finish
             try
-                task_id, pool_no = wait_for_one_task_from_multi_pool(batch_controller.batch_client, batch_controller.job_id, remaining_tasks, timeout; verbose=__verbose__)
+                task_id, pool_no = wait_for_one_task_from_multi_pool(batch_controller.batch_client, batch_controller.job_id, remaining_tasks, timeout; verbose=__verbose__, num_restart=num_restart)
             catch
                 throw("Reached timeout for task completion.")
             end
@@ -373,11 +373,11 @@ end
 
 
 function wait_for_task_from_job_list!(batch_client, output, job_ids, remaining_tasks, timeout, temp_blobs, orig_blobs,
-    original_job_id)
+    original_job_id; num_restart=0)
 
     # Wait for task to finish
     task_id, job_id = wait_for_one_task_from_multi_jobs(batch_client, job_ids, remaining_tasks, 
-        timeout; verbose=__verbose__)
+        timeout; verbose=__verbose__, num_restart=num_restart)
     local_id = findall(i -> i["taskname"] == task_id, remaining_tasks)[1]
 
     # Remove completed task from task/job/output list
@@ -398,7 +398,7 @@ end
 
 # Execute reduce function remotely
 function fetchreduce_remote(batch_client, blob_client, job_id, task_id, func_output, blobcontainer, pool_no;
-    op=+, destroy_blob=false, timeout=60)
+    op=+, destroy_blob=false, timeout=60, num_restart=0)
 
     # Single task: simply fetch output
     num_tasks = length(func_output)
@@ -416,9 +416,9 @@ function fetchreduce_remote(batch_client, blob_client, job_id, task_id, func_out
 
             # Wait for two tasks to finish
             output_ref1 = wait_for_task_from_job_list!(batch_client, output, job_ids, remaining_tasks, 
-                timeout, temp_blobs, orig_blobs, original_job_id)
+                timeout, temp_blobs, orig_blobs, original_job_id, num_restart=num_restart)
             output_ref2 = wait_for_task_from_job_list!(batch_client, output, job_ids, remaining_tasks, 
-                timeout, temp_blobs, orig_blobs, original_job_id)
+                timeout, temp_blobs, orig_blobs, original_job_id, num_restart=num_restart)
 
             # Submit summation as new batch job (non-blocking) and add to pending tasks/jobs
             task_name = join(["task_", randstring(12)])
@@ -461,7 +461,7 @@ end
  - `output`: Return argument(s) of executed function after application of reduction operation (along tasks)
  
 """
-function fetchreduce!(batch_controller::BatchController, output::Tuple; op=+, destroy_blob=true, timeout=60)
+function fetchreduce!(batch_controller::BatchController, output::Tuple; op=+, destroy_blob=true, timeout=60, num_restart=0)
 
     # Single task: simply fetch output
     if batch_controller.num_tasks == 1
@@ -484,7 +484,7 @@ function fetchreduce!(batch_controller::BatchController, output::Tuple; op=+, de
             # Wait for one task from task list to finish
             try
                 task_id, pool_no = wait_for_one_task_from_multi_pool(batch_controller.batch_client, 
-                batch_controller.job_id, remaining_tasks, timeout; verbose=__verbose__)
+                batch_controller.job_id, remaining_tasks, timeout; verbose=__verbose__, num_restart=num_restart)
             catch
                 throw("Reached timeout for task completion.")
             end
@@ -522,7 +522,7 @@ function fetchreduce!(batch_controller::BatchController, output::Tuple; op=+, de
 end
 
 # Inplace fetch-reduce for single output argument
-function fetchreduce!(batch_controller::BatchController, output; op=+, destroy_blob=true, timeout=60)
+function fetchreduce!(batch_controller::BatchController, output; op=+, destroy_blob=true, timeout=60, num_restart=0)
 
     # Single task: simply fetch output
     if batch_controller.num_tasks == 1
@@ -542,7 +542,7 @@ function fetchreduce!(batch_controller::BatchController, output; op=+, destroy_b
             # Wait for one task from task list to finish
             try
                 task_id, pool_no = wait_for_one_task_from_multi_pool(batch_controller.batch_client, 
-                    batch_controller.job_id, remaining_tasks, timeout, verbose=__verbose__)
+                    batch_controller.job_id, remaining_tasks, timeout, verbose=__verbose__, num_restart=num_restart)
             catch
                 throw("Reached timeout for task completion.")
             end
