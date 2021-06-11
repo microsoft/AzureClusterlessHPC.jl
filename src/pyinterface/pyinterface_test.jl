@@ -85,11 +85,11 @@ wait_for_tasks_to_complete(batch_service_client::Nothing, job_id, timeout, verbo
 wait_for_task_to_complete(batch_service_client::Nothing, job_id, task_id, timeout, verbose=true) = true
 
 # Wait for one task from a list of tasks to complete
-function wait_for_one_task_to_complete(batch_service_client::Array{Nothing,1}, job_id, 
-        task_id_list, timedelta_minutes, verbose=true)
-    idx = randperm(length(task_id_list))[1]    # return random index from task list
-    return task_id_list[idx]
-end
+# function wait_for_one_task_to_complete(batch_service_client::Array{Nothing,1}, job_id, 
+#         task_id_list, timedelta_minutes, verbose=true)
+#     idx = randperm(length(task_id_list))[1]    # return random index from task list
+#     return task_id_list[idx]
+# end
 
 function wait_for_one_task_from_multi_pool(batch_service_client::Array{Nothing,1}, 
         job_id, task_id_list, timedelta_minutes, verbose=true)

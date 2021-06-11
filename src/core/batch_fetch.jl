@@ -49,11 +49,16 @@ function fetch(batch_controller::BatchController, idx; destroy_blob=false, timeo
 
         # Fetch blob and add to collection
         if ~isnothing(batch_controller.blob_client[pool_no])
-            val = batch_controller.blob_client[pool_no].get_blob_to_bytes(batch_controller.blobcontainer, blob)
-            push!(out_files, deserialize(IOBuffer(val.content)))
+            try
+                val = batch_controller.blob_client[pool_no].get_blob_to_bytes(batch_controller.blobcontainer, blob)
+                push!(out_files, deserialize(IOBuffer(val.content)))
 
-            # Delete blob (default is true)
-            destroy_blob && batch_controller.blob_client[pool_no].delete_blob(batch_controller.blobcontainer, blob)
+                # Delete blob (default is true)
+                destroy_blob && batch_controller.blob_client[pool_no].delete_blob(batch_controller.blobcontainer, blob)
+            catch
+                @warn "Blob does not exist or task has not finished yet. Return nothing."
+                push!(out_files, nothing)
+            end
         end
     end
 
@@ -110,11 +115,16 @@ function fetch!(batch_controller::BatchController, idx; destroy_blob=true, timeo
 
         # Fetch blob and add to collection
         if ~isnothing(batch_controller.blob_client[pool_no])
-            val = batch_controller.blob_client[pool_no].get_blob_to_bytes(batch_controller.blobcontainer, blob)
-            push!(out_files, deserialize(IOBuffer(val.content)))
+            try
+                val = batch_controller.blob_client[pool_no].get_blob_to_bytes(batch_controller.blobcontainer, blob)
+                push!(out_files, deserialize(IOBuffer(val.content)))
 
-            # Delete blob (default is true)
-            destroy_blob && batch_controller.blob_client[pool_no].delete_blob(batch_controller.blobcontainer, blob)
+                # Delete blob (default is true)
+                destroy_blob && batch_controller.blob_client[pool_no].delete_blob(batch_controller.blobcontainer, blob)
+            catch
+                @warn "Blob does not exist or task has not finished yet. Return nothing."
+                push!(out_files, nothing)
+            end
         end
     end
 
@@ -143,7 +153,7 @@ function fetch(batch_controller::BatchController; destroy_blob=false, timeout=60
 
         # Wait for one task from task list to finish
         try
-            task_id, pool_no = wait_for_one_task_from_multi_pool(batch_controller.batch_client, batch_controller.job_id, remaining_tasks, timeout; verbose=__verbose__, num_restart=num_restart)
+            task_id = wait_for_one_task_from_multi_pool(batch_controller.batch_client, batch_controller.job_id, remaining_tasks, timeout; verbose=__verbose__, num_restart=num_restart)[1]
         catch
            throw("Reached timeout for task completion.")
         end
@@ -152,7 +162,8 @@ function fetch(batch_controller::BatchController; destroy_blob=false, timeout=60
         # Fetch its output
         task_no = findall(i -> i["taskname"] == task_id, batch_controller.task_id)[1]
         if ~isempty(remaining_tasks)
-            out_files[task_no] = fetch(batch_controller, task_no; destroy_blob=destroy_blob, timeout=timeout, wait_for_completion=false)
+            out_files[task_no] = fetch(batch_controller, task_no; destroy_blob=destroy_blob, timeout=timeout, wait_for_completion=false, 
+                num_restart=0)
             local_id = findall(i -> i["taskname"] == task_id, remaining_tasks)[1]
             popat!(remaining_tasks, local_id)
         end
@@ -182,7 +193,7 @@ function fetch!(batch_controller::BatchController; destroy_blob=true, timeout=60
 
         # Wait for one task from task list to finish
         try
-            task_id, pool_no = wait_for_one_task_from_multi_pool(batch_controller.batch_client, batch_controller.job_id, remaining_tasks, timeout; verbose=__verbose__, num_restart=num_restart)
+            task_id = wait_for_one_task_from_multi_pool(batch_controller.batch_client, batch_controller.job_id, remaining_tasks, timeout; verbose=__verbose__, num_restart=num_restart)[1]
         catch
            throw("Reached timeout for task completion.")
         end
@@ -334,7 +345,7 @@ function fetchreduce_local(batch_controller::BatchController; op=+, destroy_blob
 
             # Wait for one task from task list to finish
             try
-                task_id, pool_no = wait_for_one_task_from_multi_pool(batch_controller.batch_client, batch_controller.job_id, remaining_tasks, timeout; verbose=__verbose__, num_restart=num_restart)
+                task_id = wait_for_one_task_from_multi_pool(batch_controller.batch_client, batch_controller.job_id, remaining_tasks, timeout; verbose=__verbose__, num_restart=num_restart)[1]
             catch
                 throw("Reached timeout for task completion.")
             end
@@ -376,8 +387,8 @@ function wait_for_task_from_job_list!(batch_client, output, job_ids, remaining_t
     original_job_id; num_restart=0)
 
     # Wait for task to finish
-    task_id, job_id = wait_for_one_task_from_multi_jobs(batch_client, job_ids, remaining_tasks, 
-        timeout; verbose=__verbose__, num_restart=num_restart)
+    task_id = wait_for_one_task_from_multi_jobs(batch_client, job_ids, remaining_tasks, 
+        timeout; verbose=__verbose__, num_restart=num_restart)[1]
     local_id = findall(i -> i["taskname"] == task_id, remaining_tasks)[1]
 
     # Remove completed task from task/job/output list
@@ -483,8 +494,8 @@ function fetchreduce!(batch_controller::BatchController, output::Tuple; op=+, de
 
             # Wait for one task from task list to finish
             try
-                task_id, pool_no = wait_for_one_task_from_multi_pool(batch_controller.batch_client, 
-                batch_controller.job_id, remaining_tasks, timeout; verbose=__verbose__, num_restart=num_restart)
+                task_id = wait_for_one_task_from_multi_pool(batch_controller.batch_client, 
+                batch_controller.job_id, remaining_tasks, timeout; verbose=__verbose__, num_restart=num_restart)[1]
             catch
                 throw("Reached timeout for task completion.")
             end
@@ -541,8 +552,8 @@ function fetchreduce!(batch_controller::BatchController, output; op=+, destroy_b
 
             # Wait for one task from task list to finish
             try
-                task_id, pool_no = wait_for_one_task_from_multi_pool(batch_controller.batch_client, 
-                    batch_controller.job_id, remaining_tasks, timeout, verbose=__verbose__, num_restart=num_restart)
+                task_id = wait_for_one_task_from_multi_pool(batch_controller.batch_client, 
+                    batch_controller.job_id, remaining_tasks, timeout, verbose=__verbose__, num_restart=num_restart)[1]
             catch
                 throw("Reached timeout for task completion.")
             end

@@ -8,7 +8,7 @@ export create_batch_client, create_blob_client, create_queue_client, create_clie
 export create_blob_containers, create_pool_and_resource_file, resize_pool, create_pool
 export create_batch_resource_from_file, create_batch_resource_from_bytes, create_batch_resource_from_blob
 export create_batch_job, create_batch_task, submit_batch_job, create_batch_env
-export wait_for_tasks_to_complete, wait_for_task_to_complete, wait_for_one_task_to_complete
+export wait_for_tasks_to_complete, wait_for_task_to_complete#, wait_for_one_task_to_complete
 export create_batch_output_file, create_task_constraint, enable_auto_scale, create_batch_envs
 export wait_for_one_task_from_multi_jobs, wait_for_one_task_from_multi_pool
 export upload_bytes_to_container, create_blob_url, create_batch_resource_from_blob_url
@@ -181,9 +181,9 @@ wait_for_task_to_complete(batch_service_client, job_id, task_id, timeout; verbos
 
 
 # Wait for one task from a list of tasks to complete
-wait_for_one_task_to_complete(batch_service_client, job_id, task_id_list, timedelta_minutes; verbose=true, num_restart=0) = 
-    azureclusterlesshpc.wait_for_one_task_to_complete(batch_service_client, job_id, task_id_list, timedelta_minutes,
-        verbose=verbose, num_restart=num_restart)
+# wait_for_one_task_to_complete(batch_service_client, job_id, task_id_list, timedelta_minutes; verbose=true, num_restart=0) = 
+#     azureclusterlesshpc.wait_for_one_task_to_complete(batch_service_client, job_id, task_id_list, timedelta_minutes,
+#         verbose=verbose, num_restart=num_restart)
 
 
 # Wait for one task from a list of tasks to complete
