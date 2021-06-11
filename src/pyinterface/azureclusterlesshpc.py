@@ -551,16 +551,18 @@ def wait_for_task_to_complete(batch_service_client, job_id, task_id, timedelta_m
         print("Monitoring task {} for 'Completed' state, timeout in {}..."
             .format(task_id, timeout), end='')
 
-    while datetime.datetime.now() < timeout_expiration:
+    while True:
         if verbose:
             print('.', end='')
         sys.stdout.flush()
         task = batch_service_client.task.get(job_id, task_id)
 
+        # Check if task has terminated and restart if applicable
         if task.state == batchmodels.TaskState.completed:
             if task.execution_info.result == batchmodels.TaskExecutionResult.failure:
                 if task_retries < num_restart:
                     batch_service_client.task.reactivate(job_id, task.id)
+                    timeout_expiration = datetime.datetime.now() + timeout  # reset timeout
                     task_retries += 1
                     if verbose:
                         print('\nRestart task no ', task.id)
@@ -574,11 +576,24 @@ def wait_for_task_to_complete(batch_service_client, job_id, task_id, timedelta_m
                 return True
         else:
             time.sleep(1)
-    if verbose:
-        print()
-    warnings.warn("Task did not reach 'Completed' state within "
-                       "timeout period of " + str(timeout))
-    return False
+
+        # Restart after timeout?
+        if datetime.datetime.now() >= timeout_expiration:
+            if task_retries < num_restart:
+                task = batch_service_client.task.get(job_id, task_id)
+                if task.state != batchmodels.TaskState.completed:
+                    batch_service_client.task.terminate(job_id, task.id)
+                batch_service_client.task.reactivate(job_id, task.id)
+                timeout_expiration = datetime.datetime.now() + timeout
+                task_retries += 1
+                if verbose:
+                    print('\nTask has timed out. Restart task ', task.id)
+            else:
+                if verbose:
+                    print()
+                warnings.warn("Task did not reach 'Completed' state within "
+                    "timeout period of " + str(timeout))
+                return False
 
 
 # def wait_for_one_task_to_complete(batch_service_client, job_id, task_id_list, timedelta_minutes, verbose=True, num_restart=0):
