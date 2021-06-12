@@ -9,7 +9,7 @@ import azure.batch.models as batchmodels
 import azure.batch as batch
 from azure.common.credentials import ServicePrincipalCredentials
 import azure.batch._batch_service_client as batchServiceClient
-import datetime, os, sys, time
+import datetime, os, sys, time, warnings
 
 
 ###################################################################################################
@@ -485,11 +485,13 @@ def create_batch_task(resource_files=None, environment_variables=None, applicati
 
     return task
 
-# Conflict
-def wait_for_tasks_to_complete(batch_service_client, job_id, timedelta_minutes, verbose=True):
+# Wait for tasks to complete
+def wait_for_tasks_to_complete(batch_service_client, job_id, timedelta_minutes, verbose=True, num_restart=0):
 
     timeout = datetime.timedelta(minutes=timedelta_minutes)
     timeout_expiration = datetime.datetime.now() + timeout
+    task_retries = {}
+
     if verbose:
         print("Monitoring all tasks for 'Completed' state, timeout in {}..."
             .format(timeout), end='')
@@ -499,80 +501,106 @@ def wait_for_tasks_to_complete(batch_service_client, job_id, timedelta_minutes, 
             print('.', end='')
         sys.stdout.flush()
         tasks = batch_service_client.task.list(job_id)
+        incomplete_tasks = []
+        failed_tasks = []
 
-        incomplete_tasks = [task for task in tasks if
-                            task.state != batchmodels.TaskState.completed]
+        # Check if tasks completed or failed and restart is task is eligible
+        for task in tasks:
+            if task.state == batchmodels.TaskState.completed:
+                if task.execution_info.result == batchmodels.TaskExecutionResult.failure:
+
+                    # Restart task
+                    if task_retries.get(task.id) is None:
+                        retry_count = 0
+                    else:
+                        retry_count = task_retries[task.id]
+
+                    if retry_count < num_restart:
+                        if verbose:
+                            print('\nRestart task no ', task.id)
+                        batch_service_client.task.reactivate(job_id, task.id)
+                        incomplete_tasks.append(task.id)
+                        task_retries.update({task.id: retry_count + 1})
+                    else:
+                        failed_tasks.append(task.id)
+            else:
+                incomplete_tasks.append(task.id)
         if not incomplete_tasks:
             if verbose:
                 print()
-            return True
+            if len(failed_tasks) > 0:
+                return failed_tasks
+            else:
+                return True
         else:
             time.sleep(1)
     if verbose:
         print()
-    raise RuntimeError("ERROR: Tasks did not reach 'Completed' state within "
+    warnings.warn("Task did not reach 'Completed' state within "
                        "timeout period of " + str(timeout))
+    return False
 
 
-def wait_for_task_to_complete(batch_service_client, job_id, task_id, timedelta_minutes, verbose=True):
+def wait_for_task_to_complete(batch_service_client, job_id, task_id, timedelta_minutes, verbose=True, num_restart=0):
 
     timeout = datetime.timedelta(minutes=timedelta_minutes)
     timeout_expiration = datetime.datetime.now() + timeout
+    task_retries = 0
+    
     if verbose:
         print("Monitoring task {} for 'Completed' state, timeout in {}..."
             .format(task_id, timeout), end='')
 
-    while datetime.datetime.now() < timeout_expiration:
+    while True:
         if verbose:
             print('.', end='')
         sys.stdout.flush()
         task = batch_service_client.task.get(job_id, task_id)
 
-        is_complete = task.state == batchmodels.TaskState.completed
-
-        if is_complete:
-            if verbose:
-                print()
-            return True
+        # Check if task has terminated and restart if applicable
+        if task.state == batchmodels.TaskState.completed:
+            if task.execution_info.result == batchmodels.TaskExecutionResult.failure:
+                if task_retries < num_restart:
+                    batch_service_client.task.reactivate(job_id, task.id)
+                    timeout_expiration = datetime.datetime.now() + timeout  # reset timeout
+                    task_retries += 1
+                    if verbose:
+                        print('\nRestart task no ', task.id)
+                else:
+                    if verbose:
+                        print()
+                    return False
+            else:
+                if verbose:
+                    print()
+                return True
         else:
             time.sleep(1)
-    if verbose:
-        print()
-    raise RuntimeError("ERROR: Task did not reach 'Completed' state within "
-                       "timeout period of " + str(timeout))
+
+        # Restart after timeout?
+        if datetime.datetime.now() >= timeout_expiration:
+            if task_retries < num_restart:
+                task = batch_service_client.task.get(job_id, task_id)
+                if task.state != batchmodels.TaskState.completed:
+                    batch_service_client.task.terminate(job_id, task.id)
+                batch_service_client.task.reactivate(job_id, task.id)
+                timeout_expiration = datetime.datetime.now() + timeout
+                task_retries += 1
+                if verbose:
+                    print('\nTask has timed out. Restart task ', task.id)
+            else:
+                if verbose:
+                    print()
+                warnings.warn("Task did not reach 'Completed' state within "
+                    "timeout period of " + str(timeout))
+                return False
 
 
-def wait_for_one_task_to_complete(batch_service_client, job_id, task_id_list, timedelta_minutes, verbose=True):
-
-    timeout = datetime.timedelta(minutes=timedelta_minutes)
-    timeout_expiration = datetime.datetime.now() + timeout
-
-    while datetime.datetime.now() < timeout_expiration:
-        if verbose:
-            print('.', end='')
-        sys.stdout.flush()
-
-        is_complete = False
-
-        for task_id in task_id_list:
-            task = batch_service_client.task.get(job_id, task_id)
-            is_complete = task.state == batchmodels.TaskState.completed
-
-            if is_complete:
-                return task_id
-        
-        # No completed task found -> sleep and try again
-        time.sleep(1)
-    if verbose:        
-        print()
-    raise RuntimeError("ERROR: Task did not reach 'Completed' state within "
-                       "timeout period of " + str(timeout))
-
-
-def wait_for_one_task_from_multi_pool(batch_service_clients, job_id, task_id_list, timedelta_minutes, verbose=True):
+def wait_for_one_task_from_multi_pool(batch_service_clients, job_id, task_id_list, timedelta_minutes, verbose=True, num_restart=0):
 
     timeout = datetime.timedelta(minutes=timedelta_minutes)
     timeout_expiration = datetime.datetime.now() + timeout
+    task_retries = {}
 
     while datetime.datetime.now() < timeout_expiration:
         if verbose:
@@ -590,22 +618,40 @@ def wait_for_one_task_from_multi_pool(batch_service_clients, job_id, task_id_lis
             else:
                 task = batch_service_clients[pool_no].task.get(job_id[pool_no], task_name)
             is_complete = task.state == batchmodels.TaskState.completed
+            if is_complete:            
+                if task.execution_info.result == batchmodels.TaskExecutionResult.failure:
+                    if task_retries.get(task.id) is None:
+                        retry_count = 0
+                    else:
+                        retry_count = task_retries[task.id]
 
-            if is_complete:
-                return task_name, pool_no
-        
+                    if retry_count < num_restart:
+                        if type(job_id) == str:
+                            batch_service_clients[pool_no].task.reactivate(job_id, task.id)
+                        else:
+                            batch_service_clients[pool_no].task.reactivate(job_id[pool_no], task.id)
+                        task_retries.update({task.id: retry_count + 1})
+                        if verbose:
+                            print('\nRestart task no ', task.id)
+                    else:
+                        warnings.warn("Task failed after maximum number of retries.")
+                        return task_name, pool_no, False
+                else:
+                    return task_name, pool_no, True
         # No completed task found -> sleep and try again
         time.sleep(1)
     if verbose:        
         print()
-    raise RuntimeError("ERROR: Task did not reach 'Completed' state within "
+    warnings.warn("Task did not reach 'Completed' state within "
                        "timeout period of " + str(timeout))
+    return None, None, False
 
 
-def wait_for_one_task_from_multi_jobs(batch_service_client, job_id_list, task_id_list, timedelta_minutes, verbose=True):
+def wait_for_one_task_from_multi_jobs(batch_service_client, job_id_list, task_id_list, timedelta_minutes, verbose=True, num_restart=0):
 
     timeout = datetime.timedelta(minutes=timedelta_minutes)
     timeout_expiration = datetime.datetime.now() + timeout
+    task_retries = {}
 
     while datetime.datetime.now() < timeout_expiration:
         if verbose:
@@ -618,15 +664,30 @@ def wait_for_one_task_from_multi_jobs(batch_service_client, job_id_list, task_id
             task = batch_service_client.task.get(job_id, task_id['taskname'])
             is_complete = task.state == batchmodels.TaskState.completed
 
-            if is_complete:
-                return task_id['taskname'], job_id
-        
+            if is_complete:            
+                if task.execution_info.result == batchmodels.TaskExecutionResult.failure:
+                    if task_retries.get(task.id) is None:
+                        retry_count = 0
+                    else:
+                        retry_count = task_retries[task.id]
+
+                    if retry_count < num_restart:
+                        batch_service_client.task.reactivate(job_id, task.id)
+                        task_retries.update({task.id: retry_count + 1})
+                        if verbose:
+                            print('\nRestart task no ', task.id)
+                    else:
+                        warnings.warn("Task failed after maximum number of retries.")
+                        return task_id['taskname'], job_id, False
+                else:
+                    return task_id['taskname'], job_id, True
         # No completed task found -> sleep and try again
         time.sleep(1)
     if verbose:        
         print()
-    raise RuntimeError("ERROR: Task did not reach 'Completed' state within "
+    warnings.warn("Task did not reach 'Completed' state within "
                        "timeout period of " + str(timeout))
+    return None, None, False
 
 
 # Environment variables

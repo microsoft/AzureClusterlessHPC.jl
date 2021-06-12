@@ -79,17 +79,10 @@ create_batch_resource_from_bytes(blob_client::Nothing, container, blob_name, blo
 create_batch_job(batch_client::Nothing, job_id, pool_id; uses_task_dependencies=false, priority=0) = nothing
 
 # Wait for all tasks to complete
-wait_for_tasks_to_complete(batch_service_client::Nothing, job_id, timeout, verbose=true) = true
+wait_for_tasks_to_complete(batch_service_client::Nothing, job_id, timeout, verbose=true, num_restart=0) = true
 
 # Wait for specified task to complete
 wait_for_task_to_complete(batch_service_client::Nothing, job_id, task_id, timeout, verbose=true) = true
-
-# Wait for one task from a list of tasks to complete
-function wait_for_one_task_to_complete(batch_service_client::Array{Nothing,1}, job_id, 
-        task_id_list, timedelta_minutes, verbose=true)
-    idx = randperm(length(task_id_list))[1]    # return random index from task list
-    return task_id_list[idx]
-end
 
 function wait_for_one_task_from_multi_pool(batch_service_client::Array{Nothing,1}, 
         job_id, task_id_list, timedelta_minutes, verbose=true)

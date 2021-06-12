@@ -103,3 +103,13 @@ fetchreduce!(batch_controller, output; op=+)
 @show output
 output = ([2.0 2.0; 2.0 2.0], [4.0 4.0; 4.0 4.0])
 ```
+
+
+## Fetch output and retry failed tasks
+
+To fetch the output of one or multiple tasks and allow that failed tasks are restarted, pass the `num_restart` keyword argument to the `fetch`/`fetch!` or `fetchreduce`/`fetchreduce!` functions:
+
+```
+# Fetch output and allow two retrys per task in case of failures
+output_job = fetch(batch_controller; num_restart=2)
+```
