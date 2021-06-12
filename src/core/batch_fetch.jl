@@ -26,6 +26,8 @@
 
  - `timeout`: Timeout in minutes.
 
+ - `num_restart`: Allowed retries for failed tasks (default is `0`).
+
 
  *Output*:
 
@@ -91,6 +93,8 @@ end
  - `destroy_blob` (Bool): Remove the original blob upon successful fetching (default is `true` for inplace fetch)
 
  - `timeout`: Timeout in minutes.
+
+ - `num_restart`: Allowed retries for failed tasks (default is `0`).
 
 
  *Output*:
@@ -262,6 +266,8 @@ end
  - `destroy_blob` (Bool): Remove the original blob upon successful fetching (default is `false`)
 
  - `timeout`: Timeout in minutes.
+
+ - `num_restart`: Allowed retries for failed tasks (default is `0`).
 
  - `remote` (Bool): If `true`, execute the reduction operation as additional batch tasks. Otherwise, the reduction happens locally.
 
@@ -465,6 +471,8 @@ end
  - `destroy_blob` (Bool): Remove the original blob upon successful fetching (default is `false`)
 
  - `timeout`: Timeout in minutes.
+
+ - `num_restart`: Allowed retries for failed tasks (default is `0`).
 
 
  *Output*:

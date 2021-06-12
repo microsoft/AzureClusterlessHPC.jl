@@ -227,6 +227,10 @@ end
 
  - `batch_controller`: Batch control structure
 
+ - `timeout`: Maximum runtime per task in minutes (default is `60`).
+
+ - `num_restart`: Allowed retries for failed tasks (default is `0`).
+
  *Output*:
 
  - Nothing
