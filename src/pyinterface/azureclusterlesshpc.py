@@ -596,50 +596,6 @@ def wait_for_task_to_complete(batch_service_client, job_id, task_id, timedelta_m
                 return False
 
 
-# def wait_for_one_task_to_complete(batch_service_client, job_id, task_id_list, timedelta_minutes, verbose=True, num_restart=0):
-
-#     timeout = datetime.timedelta(minutes=timedelta_minutes)
-#     timeout_expiration = datetime.datetime.now() + timeout
-#     task_retries = {}
-
-#     while datetime.datetime.now() < timeout_expiration:
-#         if verbose:
-#             print('.', end='')
-#         sys.stdout.flush()
-
-#         is_complete = False
-
-#         for task_id in task_id_list:
-#             task = batch_service_client.task.get(job_id, task_id)
-#             is_complete = task.state == batchmodels.TaskState.completed
-
-#             if is_complete:            
-#                 if task.execution_info.result == batchmodels.TaskExecutionResult.failure:
-#                     if task_retries.get(task.id) is None:
-#                         retry_count = 0
-#                     else:
-#                         retry_count = task_retries[task.id]
-
-#                     if retry_count < num_restart:
-#                         batch_service_client.task.reactivate(job_id, task.id)
-#                         task_retries.update({task.id: retry_count + 1})
-#                         if verbose:
-#                             print('\nRestart task no ', task.id)
-#                     else:
-#                         warnings.warn("Task failed after maximum number of retries.")
-#                         return task_id, False
-#                 else:
-#                     return task_id, True
-
-#         # No completed task found -> sleep and try again
-#         time.sleep(1)
-#     if verbose:        
-#         print()
-#     warnings.warn("Task did not reach 'Completed' state within "
-#                        "timeout period of " + str(timeout))
-#     return None, False
-
-
 def wait_for_one_task_from_multi_pool(batch_service_clients, job_id, task_id_list, timedelta_minutes, verbose=True, num_restart=0):
 
     timeout = datetime.timedelta(minutes=timedelta_minutes)

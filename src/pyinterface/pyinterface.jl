@@ -178,13 +178,7 @@ wait_for_tasks_to_complete(batch_service_client, job_id, timeout; verbose=true, 
 wait_for_task_to_complete(batch_service_client, job_id, task_id, timeout; verbose=true, num_restart=0) = 
     azureclusterlesshpc.wait_for_task_to_complete(batch_service_client, job_id, task_id, timeout, verbose=verbose,
     num_restart=num_restart)
-
-
-# Wait for one task from a list of tasks to complete
-# wait_for_one_task_to_complete(batch_service_client, job_id, task_id_list, timedelta_minutes; verbose=true, num_restart=0) = 
-#     azureclusterlesshpc.wait_for_one_task_to_complete(batch_service_client, job_id, task_id_list, timedelta_minutes,
-#         verbose=verbose, num_restart=num_restart)
-
+    
 
 # Wait for one task from a list of tasks to complete
 wait_for_one_task_from_multi_pool(batch_service_client, job_id, task_id_list, timedelta_minutes; 
