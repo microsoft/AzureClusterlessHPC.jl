@@ -575,8 +575,9 @@ def wait_for_task_to_complete(batch_service_client, job_id, task_id, timedelta_m
 
         # If task is running, check it hasn't exceeded max runtime
         elif task.state == batchmodels.TaskState.running:
-            current_runtime = task.execution_info.start_time - datetime.datetime.now()
-            
+            tstart = task.execution_info.start_time
+            current_runtime = tstart - datetime.datetime.now(tz=tstart.tzinfo)
+
             # Max runtime violated -> either restart task or return
             if current_runtime > timeout:
                 if task_retries < num_restart:
