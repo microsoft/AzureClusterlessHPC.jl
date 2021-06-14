@@ -576,6 +576,8 @@ def wait_for_task_to_complete(batch_service_client, job_id, task_id, timedelta_m
                 return True
         else:
             time.sleep(1)
+            if task.state == batchmodels.TaskState.active:
+                timeout_expiration = datetime.datetime.now() + timeout  # reset expiration if task hasn't started yet
 
         # Restart after timeout?
         if datetime.datetime.now() >= timeout_expiration:
