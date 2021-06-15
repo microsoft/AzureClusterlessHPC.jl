@@ -169,9 +169,9 @@ create_task_constraint(; max_wall_clock_time=nothing, retention_time=nothing, ma
 
 
 # Wait for all tasks to complete
-wait_for_tasks_to_complete(batch_service_client, job_id, timeout; verbose=true, num_restart=0) = 
-    azureclusterlesshpc.wait_for_tasks_to_complete(batch_service_client, job_id, timeout, verbose=verbose,
-        num_restart=num_restart)
+wait_for_tasks_to_complete(batch_service_client, job_id;  task_timeout=60, fetch_timeout=60, verbose=true, num_restart=0) = 
+    azureclusterlesshpc.wait_for_tasks_to_complete(batch_service_client, job_id, task_timeout=task_timeout, 
+        fetch_timeout=fetch_timeout, verbose=verbose, num_restart=num_restart)
 
 
 # Wait for specified task to complete
