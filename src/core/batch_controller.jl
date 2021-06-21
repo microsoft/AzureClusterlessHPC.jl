@@ -227,21 +227,23 @@ end
 
  - `batch_controller`: Batch control structure
 
- - `timeout`: Maximum runtime per task in minutes (default is `60`).
+ - `timeout`: Maximum time (in minutes) to wait for all tasks to finish (default is `60`).
 
- - `num_restart`: Allowed retries for failed tasks (default is `0`).
+ - `task_timeout`: Maximum runtime (in minutes) per individual task (default is `60`).
+
+ - `num_restart`: Maximum number of retries for failed or timed-out tasks (default is `0`).
 
  *Output*:
 
  - Nothing
  
 """
-function wait_for_tasks_to_complete(batch_controller::BatchController; timeout=60, num_restart=0)
+function wait_for_tasks_to_complete(batch_controller::BatchController; timeout=60, task_timeout=60, num_restart=0)
     status = []
     @sync begin
         for (i, batch_client) in enumerate(batch_controller.batch_client)
-            @async push!(status, wait_for_tasks_to_complete(batch_client, batch_controller.job_id[i], timeout; 
-                verbose=__verbose__, num_restart=num_restart))
+            @async push!(status, wait_for_tasks_to_complete(batch_client, batch_controller.job_id[i];
+                task_timeout=task_timeout, fetch_timeout=timeout, verbose=__verbose__, num_restart=num_restart))
         end
     end
 

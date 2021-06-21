@@ -169,9 +169,9 @@ create_task_constraint(; max_wall_clock_time=nothing, retention_time=nothing, ma
 
 
 # Wait for all tasks to complete
-wait_for_tasks_to_complete(batch_service_client, job_id, timeout; verbose=true, num_restart=0) = 
-    azureclusterlesshpc.wait_for_tasks_to_complete(batch_service_client, job_id, timeout, verbose=verbose,
-        num_restart=num_restart)
+wait_for_tasks_to_complete(batch_service_client, job_id;  task_timeout=60, fetch_timeout=60, verbose=true, num_restart=0) = 
+    azureclusterlesshpc.wait_for_tasks_to_complete(batch_service_client, job_id, task_timeout=task_timeout, 
+        fetch_timeout=fetch_timeout, verbose=verbose, num_restart=num_restart)
 
 
 # Wait for specified task to complete
@@ -181,16 +181,16 @@ wait_for_task_to_complete(batch_service_client, job_id, task_id, timeout; verbos
     
 
 # Wait for one task from a list of tasks to complete
-wait_for_one_task_from_multi_pool(batch_service_client, job_id, task_id_list, timedelta_minutes; 
-    verbose=true, num_restart=0) = 
+wait_for_one_task_from_multi_pool(batch_service_client, job_id, task_id_list;
+    task_timeout=60, fetch_timeout=60, verbose=true, num_restart=0) = 
     azureclusterlesshpc.wait_for_one_task_from_multi_pool(batch_service_client, job_id, task_id_list, 
-        timedelta_minutes, verbose=verbose, num_restart=num_restart)
+    task_timeout=task_timeout, fetch_timeout=fetch_timeout, verbose=verbose, num_restart=num_restart)
 
 
-wait_for_one_task_from_multi_jobs(batch_service_client, job_id_list, task_id_list, timedelta_minutes; 
-    verbose=true, num_restart=0) =
+wait_for_one_task_from_multi_jobs(batch_service_client, job_id_list, task_id_list;
+    task_timeout=60, fetch_timeout=60, verbose=true, num_restart=0) =
     azureclusterlesshpc.wait_for_one_task_from_multi_jobs(batch_service_client, job_id_list, task_id_list, 
-        timedelta_minutes, verbose=verbose, num_restart=num_restart)
+    task_timeout=task_timeout, fetch_timeout=fetch_timeout, verbose=verbose, num_restart=num_restart)
 
 # Create batch environment variable
 create_batch_env(name, value) = azureclusterlesshpc.create_batch_env(name, value)
