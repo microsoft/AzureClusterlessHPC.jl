@@ -6,7 +6,7 @@
 module AzureClusterlessHPC
 
 # If key is set, requires re-compilation
-if haskey(ENV, "AZ_BATCH_TASK_WORKING_DIR")
+if haskey(ENV, "LIGHT_RUNTIME") && ENV["LIGHT_RUNTIME"] == "1"
     include("runtime/azureclusterlesshpc_light.jl")
 else
     using PyCall, Serialization, JSON, Random, SyntaxTree, Logging

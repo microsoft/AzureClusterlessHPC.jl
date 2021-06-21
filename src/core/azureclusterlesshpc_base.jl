@@ -15,6 +15,7 @@ const default_parameters = [
     ["_NODE_OS_OFFER", "UbuntuServer"],
     ["_NODE_OS_SKU", "18.04"],
     ["_BLOB_CONTAINER", "azureclusterlesshpctemp"],
+    ["_LIGHT_RUNTIME", "1"],
     ["_INTER_NODE_CONNECTION", "0"],
     ["_NUM_RETRYS", "0"],
     ["_MPI_RUN", "0"],
