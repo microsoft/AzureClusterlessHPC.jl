@@ -76,26 +76,23 @@ def create_clients(credentials, batch=False, blob=False, queue=False):
 ###################################################################################################
 # Blob stuff
 
-# Fine
 def create_blob_containers(blob_client, container_name_list):
     for container in container_name_list:
         blob_client.create_container(container, fail_on_exist=False)
     return True
 
-# Conflict
 def create_sas_token(
         blob_client, container_name, blob_name, permission, expiry=None,
         timeout=None):
 
     if expiry is None:
         if timeout is None:
-            timeout = 30
+            timeout = 999
         expiry = datetime.datetime.utcnow() + datetime.timedelta(
             minutes=timeout)
     return blob_client.generate_blob_shared_access_signature(
         container_name, blob_name, permission=permission, expiry=expiry)
 
-# Conflict
 def upload_blob_and_create_sas(
         blob_client, container_name, blob_name, file_name, expiry,
         timeout=None):
@@ -126,7 +123,6 @@ def upload_blob_and_create_sas(
 
     return sas_url
 
-# Conflict
 def upload_files_to_blob(blob_client, container_name, file_paths, verbose=True):
 
     blob_names = list()
@@ -141,7 +137,6 @@ def upload_files_to_blob(blob_client, container_name, file_paths, verbose=True):
 
     return blob_names
 
-# Fine
 def upload_bytes_to_container(blob_client, container_name, blob_name, blob, verbose=True):
     if verbose:
         print('Uploading file {} to container [{}]...'.format(blob_name, container_name))
@@ -150,7 +145,6 @@ def upload_bytes_to_container(blob_client, container_name, blob_name, blob, verb
     return [blob_name]
 
 
-#  Fine
 def create_blob_url(blob_client, container_name, blob_list):
 
     sas_urls = list()
@@ -159,7 +153,7 @@ def create_blob_url(blob_client, container_name, blob_list):
             container_name,
             blob_name,
             permission=azureblob.BlobPermissions.READ,
-            expiry=datetime.datetime.utcnow() + datetime.timedelta(hours=99))
+            expiry=datetime.datetime.utcnow() + datetime.timedelta(hours=999))
 
         sas_urls.append(blob_client.make_blob_url(container_name,
                                                 blob_name,
@@ -167,22 +161,20 @@ def create_blob_url(blob_client, container_name, blob_list):
     return sas_urls
 
 
-# Conflict
 def get_container_sas_token(blob_client, container_name, blob_permissions):
 
     # Obtain the SAS token for the container, setting the expiry time and
     # permissions. In this case, no start time is specified, so the shared
-    # access signature becomes valid immediately. Expiration is in 2 hours.
+    # access signature becomes valid immediately. Expiration is in 999 hours.
     container_sas_token = \
         blob_client.generate_container_shared_access_signature(
             container_name,
             permission=blob_permissions,
-            expiry=datetime.datetime.utcnow() + datetime.timedelta(hours=2))
+            expiry=datetime.datetime.utcnow() + datetime.timedelta(hours=999))
 
     return container_sas_token
 
 
-# Fine
 def get_container_sas_url(blob_client, storage_account_name, container_name, blob_permissions):
 
     # Obtain the SAS token for the container.
@@ -194,7 +186,6 @@ def get_container_sas_url(blob_client, storage_account_name, container_name, blo
     return container_sas_url
 
 
-# Fine
 def create_batch_output_file(blob_client, storage_account_name, container_name, filename):
     
     output_container_sas_url = get_container_sas_url(blob_client, storage_account_name, container_name, 
@@ -212,12 +203,11 @@ def create_batch_output_file(blob_client, storage_account_name, container_name, 
 ###################################################################################################
 # Batch pool stuff
 
-# Fine
 # Create resource file for pool
 def create_pool_resource_file(blob_client, path_to_file, container_name):
 
     # Upload pool startup script
-    timeout = datetime.datetime.utcnow() + datetime.timedelta(hours=1)
+    timeout = datetime.datetime.utcnow() + datetime.timedelta(hours=999)
     object_name = path_to_file.split("/")[-1]
     setup_sas = upload_blob_and_create_sas(blob_client, container_name, object_name, path_to_file, timeout)
 
@@ -229,7 +219,6 @@ def create_pool_resource_file(blob_client, path_to_file, container_name):
     return resource_files
 
 
-# Conflict
 # Get latest VM image info
 def select_latest_verified_vm_image_with_node_agent_sku(
         batch_client, publisher, offer, sku_starts_with):
@@ -252,7 +241,6 @@ def select_latest_verified_vm_image_with_node_agent_sku(
     agent_sku_id, image_ref_to_use = skus_to_use[0]
     return (agent_sku_id, image_ref_to_use)
 
-# Fine
 # Create pool
 def create_pool(batch_service_client, pool_id, pool_vm_size, pool_node_count, node_os_publisher, 
     node_os_offer, node_os_sku, image_resource_id=None, enable_inter_node=False, resource_files=None,
@@ -326,7 +314,6 @@ def create_pool(batch_service_client, pool_id, pool_vm_size, pool_node_count, no
     return True
 
 
-# Fine
 # Create first a resource file and then the pool
 def create_pool_and_resource_file(clients, pool_id, pool_vm_size, pool_node_count, node_os_publisher, 
     node_os_offer, node_os_sku, file_name, container_name, image_resource_id=None, enable_inter_node=False,
@@ -342,7 +329,6 @@ def create_pool_and_resource_file(clients, pool_id, pool_vm_size, pool_node_coun
         container_registry=container_registry)
 
 
-# Fine
 # Enable auto-scaling
 def enable_auto_scale(batch_client, pool_id, auto_scale_formula, auto_scale_evaluation_interval_minutes=5):
 
@@ -355,7 +341,6 @@ def enable_auto_scale(batch_client, pool_id, auto_scale_formula, auto_scale_eval
                                         custom_headers=None, raw=False)
 
 
-# Fine
 # Resize pool
 def resize_pool(batch_client, pool_id, target_dedicated_nodes, target_low_priority_nodes, resize_timeout_minutes=None, node_deallocation_option=None, pool_resize_options=None):
     
@@ -577,7 +562,6 @@ def wait_for_task_to_complete(batch_service_client, job_id, task_id, timedelta_m
         sys.stdout.flush()
         task = batch_service_client.task.get(job_id, task_id)
 
-        print("Num restarts: ", task_retries, "\n")
         # Check if task has terminated and restart if applicable
         if task.state == batchmodels.TaskState.completed:
             if task.execution_info.result == batchmodels.TaskExecutionResult.failure:
