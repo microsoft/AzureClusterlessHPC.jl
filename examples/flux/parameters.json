@@ -1,6 +1,6 @@
 {    
     "_POOL_ID": "JuliaPoolFlux",
-    "_NODE_COUNT_PER_POOL": "2",
+    "_NODE_COUNT_PER_POOL": "1",
     "_POOL_VM_SIZE": "Standard_E8s_v3",
     "_JOB_ID": "FluxDeepLearning",
     "_STANDARD_OUT_FILE_NAME": "stdout.txt",
@@ -9,5 +9,5 @@
     "_NODE_OS_SKU": "18.04",
     "_BLOB_CONTAINER": "azureclusterlesstemp",
     "_INTER_NODE_CONNECTION": "0",
-    "_NUM_RETRYS": "1"
+    "_NUM_RETRYS": "0"
 }
