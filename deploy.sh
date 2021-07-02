@@ -29,7 +29,7 @@ APP_NAME="${BASE}app"
 ###############################################################################################################################
 
 # Get tenant id
-SUBSCRIPTION_ID=`az account show --query id --output tsv`
+SUBSCRIPTION_ID=`az account show --query tenantId --output tsv`
 
 # Create resource group
 az group create --name ${RESOURCE_GROUP} --location ${REGION}
