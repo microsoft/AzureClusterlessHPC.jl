@@ -8,10 +8,13 @@
 ###############################################################################################################################
 
 # Pass name as argument
-BASE=$1
+BASE=${1:-${USER}redwood}
 
 # Set region (e.g. US South Central)
-REGION=$2
+REGION=${2:-southcentralus}
+
+# Credential file name
+FILENAME=${3:-credentials.json}
 
 # Resource group name
 RESOURCE_GROUP="${BASE}-rg"
@@ -63,4 +66,4 @@ echo "{
     \"_REGION\": \"${REGION}\",
     \"_STORAGE_ACCOUNT_NAME\": \"${STORAGE_ACCOUNT}\",
     \"_STORAGE_ACCOUNT_KEY\": \"${STORAGE_CREDENTIALS}\"
-}" > credentials.json
+}" > FILENAME
