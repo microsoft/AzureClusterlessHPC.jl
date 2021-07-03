@@ -49,7 +49,9 @@ else
         # Get credentials if environment variable is set
         try
             if haskey(ENV, "CREDENTIALS")
-                global __get_credentials__ = [JSON.parsefile(ENV["CREDENTIALS"])]
+                creds = JSON.parsefile(ENV["CREDENTIALS"])
+                typeof(creds) != Vector{Any} && (creds = [creds])
+                global __get_credentials__ = creds
             else
                 global __get_credentials__ = get_credentials(joinpath(dirname(pathof(AzureClusterlessHPC))[1:end-4], "user_data"))
             end
