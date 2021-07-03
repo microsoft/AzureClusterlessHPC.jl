@@ -194,3 +194,8 @@ struct Options
 end
 
 Options(; job_name="batchjob_", task_name="task_", priority=0, pool=nothing, reset_mpi=false) = Options(job_name, task_name, priority, pool, reset_mpi)
+
+# Include generic text files (e.g. python files) with task
+function fileinclude(s::String)
+    return nothing
+end

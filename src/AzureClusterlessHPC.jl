@@ -12,7 +12,7 @@ else
     using PyCall, Serialization, JSON, Random, SyntaxTree, Logging
     import Base.fetch, Base.setindex!
 
-    export batch_show, batch_clear, Options
+    export batch_show, batch_clear, Options, fileinclude
     export delete_pool, delete_container, delete_all_jobs
 
     # Initiliaze PyCall constants

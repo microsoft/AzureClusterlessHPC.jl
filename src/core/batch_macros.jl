@@ -22,7 +22,7 @@ function append_batchdef_expression(expr)
     # If expression is "include" statement, add file to batch resources
 
     linefilter!(expr)
-    if expr.args[1] == :include
+    if expr.args[1] == :include || expr.args[1] == :fileinclude
         for (client, resource) in zip(__clients__, __resources__)
             create_blob_containers(client["blob_client"], [__container__]) # if not exist
             push!(resource, create_batch_resource_from_file(client["blob_client"], __container__, expr.args[2];
@@ -39,7 +39,7 @@ function append_batchdef_expression(expr)
         else
             push!(__packages__.args, ex0)
         end
-    else
+    elseif expr.args[1] != :fileinclude
         ex0 = :(@everywhere); push!(ex0.args, expr); linefilter!(ex0)
         # Append expression to AST
         if isnothing(__expressions__)
