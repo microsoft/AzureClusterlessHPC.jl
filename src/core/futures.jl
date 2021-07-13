@@ -3,7 +3,7 @@
 #  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 #  ------------------------------------------------------------------------------------------
 
-export BlobRef, BlobFuture, BatchFuture, fetch, fetch!
+export BlobRef, BlobFuture, BatchFuture, fetch, fetch!, migrate, migrate!
 
 
 ###################################################################################################
@@ -70,7 +70,7 @@ function fetch(arg::BlobFuture; destroy_blob=false)
 
     # Try to read future from disk, otherwise fetch from blob
     i = arg.client_index
-    #try
+    try
         num_files = length(arg.blob.name)
         out_files = []
         for blob in arg.blob.name
@@ -92,9 +92,9 @@ function fetch(arg::BlobFuture; destroy_blob=false)
         else
             return nothing
         end
-    #catch
+    catch
         throw("Blob does not (yet) exist or BlobFuture does not contain a proper blob reference.")
-    #end
+    end
 end
 
 
@@ -130,3 +130,85 @@ function fetch!(arg::BlobFuture; destroy_blob=false)
     end
 end
 
+"""
+    `migrate(blob_future::BlobFuture, destination)`
+
+ Migrate a blob future from the storage account of one pool to another. The destination is the index of the pool to whose storage account the future is moved.
+
+
+ *Arguments*:
+
+ - `blob_future` (BlobFuture): Blob future that is to be moved to a different storage account.
+
+ - `destination` (Integer): Pool number to whose storage account the blob future will be moved.
+
+
+ *Output*:
+
+ - `new_blob_future::BlobFuture`: New blob future at new location.
+ 
+ See also:  [`fetch`](@ref)
+ """
+function migrate(arg::BlobFuture, destination; delete_blob=true)
+
+    # Fetch to master
+    blobs = fetch(arg)
+
+    # Upload to new destination
+    for (name, blob) in zip(arg.blob.name, blobs)
+
+        # Serialize variable
+        iobuff = IOBuffer()
+        AzureClusterlessHPC.serialize(iobuff, blob)   # eval in local scope
+        binary = iobuff.data
+
+        # Create new resource
+        upload_bytes_to_container(__clients__[destination]["blob_client"], arg.container, name, binary; verbose=__verbose__)
+
+        # Remove old blob
+        if delete_blob
+            __clients__[arg.client_index]["blob_client"].delete_blob(arg.container, name)
+        end
+    end
+
+    return BlobFuture(arg.container, arg.blob, destination)
+end
+
+"""
+    `migrate!(blob_future::BlobFuture, destination)`
+
+ Migrate a blob future from the storage account of one pool to another. The destination is the index of the pool to whose storage account the future is moved.
+
+
+ *Arguments*:
+
+ - `blob_future` (BlobFuture): Blob future that is to be moved to a different storage account.
+
+ - `destination` (Integer): Pool number to whose storage account the blob future will be moved.
+ 
+ See also:  [`fetch`](@ref)
+ """
+function migrate!(arg::BlobFuture, destination; delete_blob=true)
+
+    # Fetch to master
+    blobs = fetch(arg)
+
+    # Upload to new destination
+    for (name, blob) in zip(arg.blob.name, blobs)
+
+        # Serialize variable
+        iobuff = IOBuffer()
+        AzureClusterlessHPC.serialize(iobuff, blob)   # eval in local scope
+        binary = iobuff.data
+
+        # Create new resource
+        upload_bytes_to_container(__clients__[destination]["blob_client"], arg.container, name, binary; verbose=__verbose__)
+
+        # Remove old blob
+        if delete_blob
+            __clients__[arg.client_index]["blob_client"].delete_blob(arg.container, name)
+        end
+    end
+    arg.client_index = destination
+    return arg
+end
