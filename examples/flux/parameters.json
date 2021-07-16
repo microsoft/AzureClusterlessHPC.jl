@@ -8,6 +8,9 @@
     "_NODE_OS_OFFER": "UbuntuServer",
     "_NODE_OS_SKU": "18.04",
     "_BLOB_CONTAINER": "azureclusterlesstemp",
+    "_CONTAINER": "philippwitte/azureclusterlesshpcgpu:v1.0",
+    "_JULIA_DEPOT_PATH": "/root/.julia",
+    "_PYTHONPATH": "/usr/local/lib/python3.8/dist-packages",
     "_INTER_NODE_CONNECTION": "0",
     "_NUM_RETRYS": "0"
 }
