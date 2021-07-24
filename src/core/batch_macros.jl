@@ -150,9 +150,10 @@ function create_batch_task!(expr, pool_no, count, tasks, resources, task_ids, ou
     end
     envs = create_batch_envs(
         ["FILENAME", "JULIA_DEPOT_PATH", "PYTHONPATH", "MPI_RUN", "INTER_NODE_CONNECTION", "NUM_NODES_PER_TASK",
-        "NUM_PROCS_PER_NODE", "OMP_NUM_THREADS",], [filename, __params__["_JULIA_DEPOT_PATH"], 
+        "NUM_PROCS_PER_NODE", "OMP_NUM_THREADS","STORAGE_ACCOUNT", "STORAGE_KEY",], [filename, __params__["_JULIA_DEPOT_PATH"], 
         __params__["_PYTHONPATH"], __params__["_MPI_RUN"], __params__["_INTER_NODE_CONNECTION"], 
-        env_num_nodes_per_task, env_num_procs_per_node, __params__["_OMP_NUM_THREADS"]])
+        env_num_nodes_per_task, env_num_procs_per_node, __params__["_OMP_NUM_THREADS"], 
+        __credentials__[pool_no]["_STORAGE_ACCOUNT_NAME"], __credentials__[pool_no]["_STORAGE_ACCOUNT_KEY"]])
 
     # Create resource file and append to resource list
     ast_resource = create_batch_resource_from_bytes(__active_pools__[pool_no]["clients"]["blob_client"], __container__, filename, iostream.data; verbose=__verbose__)
@@ -262,7 +263,11 @@ function submit_batch_job(expression_list; options=nothing)
     for (i, expressions) in enumerate(expressions_per_pool)
 
         pool_no = pool_numbers[i]
-        push!(job_ids, join([job_base, "_", i]))
+        if ~isnothing(options) && ~isnothing(options.job_name_full)
+            push!(job_ids, options.job_name_full)
+        else
+            push!(job_ids, join([job_base, "_", i]))
+        end
         create_batch_job(__active_pools__[pool_no]["clients"]["batch_client"], job_ids[end], 
             __active_pools__[pool_no]["pool_id"]; uses_task_dependencies=false, priority=priority, verbose=__verbose__)
         create_blob_containers(__active_pools__[pool_no]["clients"]["blob_client"], [__container__])

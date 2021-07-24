@@ -187,13 +187,14 @@ end
 """
 struct Options
     job_name::String
+    job_name_full::Union{Nothing, String}
     task_name::String
     priority::Integer
     pool::Union{Nothing, Integer}
     reset_mpi::Bool
 end
 
-Options(; job_name="batchjob_", task_name="task_", priority=0, pool=nothing, reset_mpi=false) = Options(job_name, task_name, priority, pool, reset_mpi)
+Options(; job_name="batchjob_", job_name_full=nothing, task_name="task_", priority=0, pool=nothing, reset_mpi=false) = Options(job_name, job_name_full, task_name, priority, pool, reset_mpi)
 
 # Include generic text files (e.g. python files) with task
 function fileinclude(s::String)

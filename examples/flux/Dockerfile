@@ -1,7 +1,6 @@
-#FROM ubuntu:20.04
 FROM nvidia/cuda:10.2-runtime-ubuntu18.04
 
-ENV DEBIAN_FRONTEND=noninteractive 
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Set up base and ssh keys
 COPY ssh_config /root/.ssh/config
@@ -35,12 +34,13 @@ RUN wget "https://julialang-s3.julialang.org/bin/linux/x64/1.6/julia-1.6.1-linux
     ln -s /julia-1.6.1/bin/julia /usr/local/bin/julia
 
 # AzureClusterlessHPC
-RUN julia -e 'using Pkg; Pkg.add.(["PyCall", "Flux", "Zygote", "Parameters", "CUDA", "MLDatasets", "MLDataPattern"])' && \
+RUN julia -e 'using Pkg; Pkg.add.(["PyCall", "Flux", "BSON", "Zygote", "Parameters", "CUDA", "MLDatasets", "MLDataPattern"])' && \
     julia -e 'using Pkg; Pkg.add(url="https://github.com/microsoft/AzureClusterlessHPC.jl")' && \
-    julia -e 'using PyCall; using AzureClusterlessHPC, Flux, Zygote, Parameters, CUDA, MLDatasets, MLDataPattern'
+    julia -e 'using PyCall, AzureClusterlessHPC, Flux, Zygote, BSON, Parameters, CUDA, MLDatasets, MLDataPattern'
 
+RUN julia -e 'using CUDA; CUDA.has_cuda(); CUDA.has_cudnn()'
 RUN chmod -R 777 /root/.julia
 
 # clean
 RUN rm -rf /var/lib/apt/lists/* \
-	&& apt-get clean
+        && apt-get clean

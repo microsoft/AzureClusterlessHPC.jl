@@ -114,8 +114,6 @@ def upload_blob_and_create_sas(
         expiry=expiry,
         timeout=timeout)
 
-
-
     sas_url = blob_client.make_blob_url(
         container_name,
         blob_name,
