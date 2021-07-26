@@ -113,8 +113,12 @@ end
 function create_batch_task!(expr, pool_no, count, tasks, resources, task_ids, output, app_cmd, options)
 
     # Append expressions previously tagged via @batchdef
-    isnothing(options) ? (task_base = "task_") : (task_base = options.task_name)
-    push!(task_ids, Dict("taskname" => join([task_base, count]), "pool" => pool_no))
+    isnothing(options) ? (task_base = "task_") : (task_base = options.task_name_full)
+    if ~isnothing(options) && ~isnothing(options.task_name_full)
+        push!(task_ids, Dict("taskname" => options.task_name_full, "pool" => pool_no))
+    else
+        push!(task_ids, Dict("taskname" => join([task_base, count]), "pool" => pool_no))
+    end
     if isnothing(__expressions__)
         expressions = expr
     else

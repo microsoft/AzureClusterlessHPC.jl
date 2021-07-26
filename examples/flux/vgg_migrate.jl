@@ -229,16 +229,24 @@ function migrate!(bctrl::BatchController, task_no, pool_no_new)
     # If existing tasks already run in new target pool, submit new task to same job ID
     if length(bctrl.job_id) < pool_no_new
         new_job_id = split(job_id, "_")[1]
-        opt = Options(job_name=new_job_id, task_name=task_name, pool=pool_no_new)
+        opt = Options(job_name=new_job_id, task_name_full=task_name, pool=pool_no_new)
     else
         new_job_id = bctrl.job_id[pool_no_new]
-        opt = Options(job_name=new_job_id, task_name=task_name, pool=pool_no_new)
+        opt = Options(job_name=new_job_id, task_name_full=task_name, pool=pool_no_new)
     end
     
     # Restart task in different pool
     bctrl_mig = @batchexec(train(; checkpoint=check), opt)
+    new_job = bctrl_mig.job_id[1]
+    new_task = bctrl_mig.task_id[1]
+    new_output = bctrl_mig.output[1]
 
-    # TO DO: merge batch controllers
+    # Update information in batch controller
+    popat!(bctrl.task_id, task_no)
+    popat!(bctrl.output, task_no)
+    push!(bctrl.job_id, new_job)
+    push!(bctrl.task_id, new_task)
+    push!(bctrl.output, new_output)
 end
 
 
@@ -261,8 +269,8 @@ task_no = 1
 new_pool = 2
 migrate!(bctrl, task_no, new_pool)
 
-# # Fetch result
-# m = fetch(bctrl)
+# Fetch result
+m = fetch(bctrl)
 
-# # Test model locally
-# test(m)
+# Test model locally
+test(m)
