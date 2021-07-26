@@ -262,7 +262,7 @@ create_pool(num_nodes_per_pool=[1,0]);
 bctrl = @batchexec train()
 
 # Wait for some epochs to finish
-# sleep(300)  # 5 minutes
+sleep(300)  # 5 minutes
 
 # Migrate job
 task_no = 1
