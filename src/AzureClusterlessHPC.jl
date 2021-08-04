@@ -62,43 +62,25 @@ else
         global __credentials__ = __get_credentials__
 
         # Initialize global resource and blobfuture variables
-        if ~isnothing(__credentials__)
-            global __num_accounts__ = length(__credentials__)
-        else
-            global __num_accounts__ = 0
-        end
-        
-        global __resources__ = Array{Any}(undef, __num_accounts__)
-        for i=1:__num_accounts__
-            __resources__[i] = []
-        end
+        global __num_accounts__ = ~isnothing(__credentials__) ? length(__credentials__) : 0
+        global __resources__ = [[] for i=1:__num_accounts__]
 
         # Read parameters
-        try
+        global __params__ = try
             if haskey(ENV, "PARAMETERS")
                 user_params = JSON.parsefile(ENV["PARAMETERS"])
             else
                 user_params = Dict()
             end
-            global __get_params__ = create_parameter_dict(user_params, default_parameters)
+            create_parameter_dict(user_params, default_parameters)
         catch
-            global __get_params__ = nothing
+            nothing
         end
-        global __params__ = __get_params__
 
         # Create storage container
-        try
-            global __get_container__ = __params__["_BLOB_CONTAINER"]    # Azure container for temporary files
-        catch
-            global __get_container__ = nothing
-        end
-        global __container__ = __get_container__
-
-        if __params__["_VERBOSE"] == "1"
-            global __verbose__ = true
-        else
-            global __verbose__ = false
-        end
+        global __container__ = try __params__["_BLOB_CONTAINER"] catch; nothing end   # Azure container for temporary files
+        
+        global __verbose__ = parse(Bool, __params__["_VERBOSE"])
 
         # Global list of pools (start with no pools)
         global __active_pools__ = Array{Dict}(undef, 0)

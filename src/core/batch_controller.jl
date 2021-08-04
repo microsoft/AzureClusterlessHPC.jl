@@ -71,7 +71,7 @@ mutable struct BatchController
     job_id::Union{Array, String}
     task_id::Array{Dict, 1}
     num_tasks::Integer
-    output::Array{BlobFuture, 1}
+    output::Array{Any, 1}
     blobcontainer::String
     batch_client::Union{Array, Nothing}
     blob_client::Union{Array, Nothing}

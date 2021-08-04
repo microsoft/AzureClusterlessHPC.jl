@@ -66,6 +66,9 @@ function create_pool(; enable_auto_scale=false, auto_scale_formula=nothing,
     container_registry=nothing)
 
     # Autoscaling?
+    for client in __clients__
+        create_blob_containers(client["blob_client"], [__container__])
+    end
     if enable_auto_scale
         num_nodes = nothing
     else
@@ -88,7 +91,7 @@ function create_pool(; enable_auto_scale=false, auto_scale_formula=nothing,
 
     for i=1:num_pools
         pool_id = join([__params__["_POOL_ID"], "_", i])
-        # try
+        try
             azureclusterlesshpc.create_pool(clients_per_pool[i]["batch_client"], pool_id, __params__["_POOL_VM_SIZE"], num_nodes, 
                 __params__["_NODE_OS_PUBLISHER"], __params__["_NODE_OS_OFFER"], __params__["_NODE_OS_SKU"],
                 enable_inter_node=enable_inter_node, enable_auto_scale=enable_auto_scale, auto_scale_formula=auto_scale_formula, 
@@ -99,11 +102,11 @@ function create_pool(; enable_auto_scale=false, auto_scale_formula=nothing,
             __verbose__ && print(join(["Created pool ", i ," of ", num_pools, " in ", credential_per_pool[i]["_REGION"], " with ", num_nodes, " nodes.\n"]))
             push!(__active_pools__, Dict("pool_id" => pool_id, "clients" => clients_per_pool[i], "credentials" => credential_per_pool[i],
                 "resources" => resources_per_pool[i]))
-        # catch
-        #     __verbose__ && print(join(["Pool ", i ," of ", num_pools, " in ", credential_per_pool[i]["_REGION"]," already exists.\n"]))
-        #     push!(__active_pools__, Dict("pool_id" => pool_id, "clients" => clients_per_pool[i], "credentials" => credential_per_pool[i],
-        #         "resources" => resources_per_pool[i]))
-        # end
+        catch
+            __verbose__ && print(join(["Pool ", i ," of ", num_pools, " in ", credential_per_pool[i]["_REGION"]," already exists.\n"]))
+            push!(__active_pools__, Dict("pool_id" => pool_id, "clients" => clients_per_pool[i], "credentials" => credential_per_pool[i],
+                "resources" => resources_per_pool[i]))
+        end
     end
 end
 
