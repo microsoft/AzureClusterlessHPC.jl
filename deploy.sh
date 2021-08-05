@@ -31,8 +31,9 @@ APP_NAME="${BASE}app"
 
 ###############################################################################################################################
 
-# Get tenant id
-SUBSCRIPTION_ID=`az account show --query tenantId --output tsv`
+# Get tenant + subscription id
+TENANT_ID=`az account show --query tenantId --output tsv`
+SUBSCRIPTION_ID=`az account show --query subscription --output tsv`
 
 # Create resource group
 az group create --name ${RESOURCE_GROUP} --location ${REGION}
@@ -58,7 +59,7 @@ BATCH_SECRET=`az ad app credential reset --id $APP_ID --append | jq  -r '.passwo
 
 # Write to credential file
 echo "{
-    \"_AD_TENANT\": \"${SUBSCRIPTION_ID}\",
+    \"_AD_TENANT\": \"${TENANT_ID}\",
     \"_AD_BATCH_CLIENT_ID\": \"${APP_ID}\",
     \"_AD_SECRET_BATCH\": \"${BATCH_SECRET}\",
     \"_BATCH_ACCOUNT_URL\": \"https://${BATCH_ACCOUNT}.${REGION}.batch.azure.com\",
@@ -66,4 +67,4 @@ echo "{
     \"_REGION\": \"${REGION}\",
     \"_STORAGE_ACCOUNT_NAME\": \"${STORAGE_ACCOUNT}\",
     \"_STORAGE_ACCOUNT_KEY\": \"${STORAGE_CREDENTIALS}\"
-}" > FILENAME
+}" > $FILENAME
