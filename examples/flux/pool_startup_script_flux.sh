@@ -20,10 +20,10 @@ julia -e 'using Pkg; Pkg.add(url="https://github.com/microsoft/AzureClusterlessH
 # ADD USER PACKAGES HERE
 
 # Install Julia packages
-julia -e 'using Pkg; Pkg.add("Flux"); Pkg.add("Zygote")'
+julia -e 'using Pkg; Pkg.add(["Flux", "Zygote", "Parameters", "CUDA", "MLDatasets", "MLDataPattern"])'
 
 # Precompile
-julia -e 'using Flux, Zygote'
+julia -e 'using Flux, Zygote, Parameters, CUDA, MLDatasets, MLDataPattern'
 
 
 ###################################################################################################

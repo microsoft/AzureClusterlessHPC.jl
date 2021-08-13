@@ -63,13 +63,16 @@ end
  """
 function create_pool(; enable_auto_scale=false, auto_scale_formula=nothing, 
     auto_scale_evaluation_interval_minutes=nothing, image_resource_id=nothing, 
-    container_registry=nothing)
+    container_registry=nothing, num_nodes_per_pool=nothing)
 
     # Autoscaling?
+    num_pools = parse(Int, __params__["_POOL_COUNT"])
     if enable_auto_scale
         num_nodes = nothing
+    elseif isnothing(num_nodes_per_pool)
+        num_nodes = ones(Integer, num_pools) .* __params__["_NODE_COUNT_PER_POOL"]
     else
-        num_nodes = __params__["_NODE_COUNT_PER_POOL"]
+        num_nodes = num_nodes_per_pool
     end
 
     # Internode?
@@ -84,19 +87,18 @@ function create_pool(; enable_auto_scale=false, auto_scale_formula=nothing,
 
     # Divide clients among pools
     credential_per_pool, clients_per_pool, resources_per_pool = divide_clients_among_pools()
-    num_pools = parse(Int, __params__["_POOL_COUNT"])
 
     for i=1:num_pools
         pool_id = join([__params__["_POOL_ID"], "_", i])
         try
-            azureclusterlesshpc.create_pool(clients_per_pool[i]["batch_client"], pool_id, __params__["_POOL_VM_SIZE"], num_nodes, 
+            azureclusterlesshpc.create_pool(clients_per_pool[i]["batch_client"], pool_id, __params__["_POOL_VM_SIZE"], num_nodes[i], 
                 __params__["_NODE_OS_PUBLISHER"], __params__["_NODE_OS_OFFER"], __params__["_NODE_OS_SKU"],
                 enable_inter_node=enable_inter_node, enable_auto_scale=enable_auto_scale, auto_scale_formula=auto_scale_formula, 
                 auto_scale_evaluation_interval_minutes=auto_scale_evaluation_interval_minutes, image_resource_id=image_resource_id,
                 container=docker_container, container_registry=container_registry)
 
             # Keep track of active pools
-            __verbose__ && print(join(["Created pool ", i ," of ", num_pools, " in ", credential_per_pool[i]["_REGION"], " with ", num_nodes, " nodes.\n"]))
+            __verbose__ && print(join(["Created pool ", i ," of ", num_pools, " in ", credential_per_pool[i]["_REGION"], " with ", num_nodes[i], " nodes.\n"]))
             push!(__active_pools__, Dict("pool_id" => pool_id, "clients" => clients_per_pool[i], "credentials" => credential_per_pool[i],
                 "resources" => resources_per_pool[i]))
         catch
@@ -139,16 +141,19 @@ end
  See also:  [`create_pool`](@ref)
  """
 function create_pool_and_resource_file(startup_script; enable_auto_scale=false, auto_scale_formula=nothing,
-    auto_scale_evaluation_interval_minutes=nothing, image_resource_id=nothing)
+    auto_scale_evaluation_interval_minutes=nothing, image_resource_id=nothing, num_nodes_per_pool=nothing)
 
     # Create container if it doesn't exist
     for client in __clients__
         create_blob_containers(client["blob_client"], [__container__])
     end
+    num_pools = parse(Int, __params__["_POOL_COUNT"])
     if enable_auto_scale
         num_nodes = nothing
+    elseif isnothing(num_nodes_per_pool)
+        num_nodes = ones(Integer, num_pools) .* __params__["_NODE_COUNT_PER_POOL"]
     else
-        num_nodes = __params__["_NODE_COUNT_PER_POOL"]
+        num_nodes = num_nodes_per_pool
     end
    
     # Enable inter node connection?
@@ -163,19 +168,18 @@ function create_pool_and_resource_file(startup_script; enable_auto_scale=false, 
 
     # Divide clients among pools
     credential_per_pool, clients_per_pool, resources_per_pool = divide_clients_among_pools()
-    num_pools = parse(Int, __params__["_POOL_COUNT"])
 
     for i=1:num_pools
         pool_id = join([__params__["_POOL_ID"], "_", i])
         try
-            azureclusterlesshpc.create_pool_and_resource_file(clients_per_pool[i], pool_id, __params__["_POOL_VM_SIZE"], num_nodes, 
+            azureclusterlesshpc.create_pool_and_resource_file(clients_per_pool[i], pool_id, __params__["_POOL_VM_SIZE"], num_nodes[i], 
                 __params__["_NODE_OS_PUBLISHER"], __params__["_NODE_OS_OFFER"], __params__["_NODE_OS_SKU"], startup_script, __container__; 
                 enable_inter_node=enable_inter_node, enable_auto_scale=enable_auto_scale, auto_scale_formula=auto_scale_formula, 
                 auto_scale_evaluation_interval_minutes=auto_scale_evaluation_interval_minutes, image_resource_id=image_resource_id,
                 container=docker_container)
 
             # Keep track of active pools
-            __verbose__ && print(join(["Created pool ", i ," of ", num_pools, " in ", credential_per_pool[i]["_REGION"], " with ", num_nodes, " nodes.\n"]))
+            __verbose__ && print(join(["Created pool ", i ," of ", num_pools, " in ", credential_per_pool[i]["_REGION"], " with ", num_nodes[i], " nodes.\n"]))
             push!(__active_pools__, Dict("pool_id" => pool_id, "clients" => clients_per_pool[i], "credentials" => credential_per_pool[i],
                 "resources" => resources_per_pool[i]))
         catch
