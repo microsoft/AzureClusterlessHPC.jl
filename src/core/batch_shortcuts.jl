@@ -66,6 +66,10 @@ function create_pool(; enable_auto_scale=false, auto_scale_formula=nothing,
     container_registry=nothing)
 
     # Autoscaling?
+    for client in __clients__
+        create_blob_containers(client["blob_client"], [__container__])
+    end
+    
     if enable_auto_scale
         num_nodes = nothing
     else
