@@ -38,10 +38,10 @@ else
         sys.path = cat(sys.path, joinpath(dirname(pathof(AzureClusterlessHPC)), "pyinterface"); dims=1)
 
         # Load pymodules
-        copy!(batch, pyimport("azure.batch"))
-        copy!(azurequeue, pyimport("azure.storage.queue"))
-        copy!(azureblob, pyimport("azure.storage.blob"))
-        copy!(serviceprinciple, pyimport("azure.common.credentials"))
+        copy!(batch, pyimport_conda("azure.batch", "azure-batch==9.0.0"))
+        copy!(azurequeue, pyimport_conda("azure.storage.queue", "azure-storage-queue==1.4.0"))
+        copy!(azureblob, pyimport_conda("azure.storage.blob", "azure-storage-blob==1.3.1"))
+        copy!(serviceprinciple, pyimport_conda("azure.common.credentials", "azure-common"))
         copy!(datetime, pyimport("datetime"))
         copy!(batchmodels, batch.models)
         copy!(azureclusterlesshpc, pyimport("azureclusterlesshpc"))
