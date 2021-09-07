@@ -3,6 +3,12 @@ uuid = "0090f474-c28d-4577-9e1b-9155814dbffa"
 authors = ["pwitte <pwitte@microsoft.com>"]
 version = "0.1.0"
 
+[compat]
+julia = "1.6.0", "1.6.1", "1.6.2"
+JSON = "1.5.0", "1.5.2"
+PyCall = "1.92.0", "1.92.3"
+SyntaxTree = "1.0.0", "1.0.1"
+
 [deps]
 Distributed = "8ba89e20-285c-5b6f-9357-94700520ee1b"
 JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
