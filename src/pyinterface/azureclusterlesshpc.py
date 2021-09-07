@@ -303,7 +303,6 @@ def create_pool(batch_service_client, pool_id, pool_vm_size, pool_node_count, no
         target_dedicated_nodes=pool_node_count,
         virtual_machine_configuration=vmc,
         start_task=start_task,
-        max_tasks_per_node=1,
         enable_inter_node_communication=enable_inter_node,
         application_package_references=[],
         enable_auto_scale=enable_auto_scale,
