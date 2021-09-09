@@ -87,7 +87,12 @@ function create_pool(; enable_auto_scale=false, auto_scale_formula=nothing,
     end
 
     # Divide clients among pools
-    credential_per_pool, clients_per_pool, resources_per_pool = divide_clients_among_pools()
+    if ~isnothing(__credentials__)
+        credential_per_pool, clients_per_pool, resources_per_pool = divide_clients_among_pools()
+    else
+        __verbose__ && @warn "Could not create pool(s). No credentials were found."
+        return nothing
+    end
     num_pools = parse(Int, __params__["_POOL_COUNT"])
 
     for i=1:num_pools
@@ -103,10 +108,15 @@ function create_pool(; enable_auto_scale=false, auto_scale_formula=nothing,
             __verbose__ && print(join(["Created pool ", i ," of ", num_pools, " in ", credential_per_pool[i]["_REGION"], " with ", num_nodes, " nodes.\n"]))
             push!(__active_pools__, Dict("pool_id" => pool_id, "clients" => clients_per_pool[i], "credentials" => credential_per_pool[i],
                 "resources" => resources_per_pool[i]))
-        catch
-            __verbose__ && print(join(["Pool ", i ," of ", num_pools, " in ", credential_per_pool[i]["_REGION"]," already exists.\n"]))
-            push!(__active_pools__, Dict("pool_id" => pool_id, "clients" => clients_per_pool[i], "credentials" => credential_per_pool[i],
-                "resources" => resources_per_pool[i]))
+        catch e
+            if typeof(e) == PyCall.PyError && e.val.error.code == "PoolExists"
+                print(e, "\n")
+                __verbose__ && print(join(["Pool ", i ," of ", num_pools, " in ", credential_per_pool[i]["_REGION"]," already exists.\n"]))
+                push!(__active_pools__, Dict("pool_id" => pool_id, "clients" => clients_per_pool[i], "credentials" => credential_per_pool[i],
+                    "resources" => resources_per_pool[i]))
+            else
+                __verbose__ && print(join(["Failed to start pool ", i ," of ", num_pools, " in ", credential_per_pool[i]["_REGION"],". Verify that you have correct credentials, a batch account with AAD authentication and that pool parameters are correct.\n"]))
+            end
         end
     end
 end
@@ -166,7 +176,12 @@ function create_pool_and_resource_file(startup_script; enable_auto_scale=false, 
     end
 
     # Divide clients among pools
-    credential_per_pool, clients_per_pool, resources_per_pool = divide_clients_among_pools()
+    if ~isnothing(__credentials__)
+        credential_per_pool, clients_per_pool, resources_per_pool = divide_clients_among_pools()
+    else
+        __verbose__ && @warn "Could not create pool(s). No credentials were found."
+        return nothing
+    end    
     num_pools = parse(Int, __params__["_POOL_COUNT"])
 
     for i=1:num_pools
@@ -182,10 +197,14 @@ function create_pool_and_resource_file(startup_script; enable_auto_scale=false, 
             __verbose__ && print(join(["Created pool ", i ," of ", num_pools, " in ", credential_per_pool[i]["_REGION"], " with ", num_nodes, " nodes.\n"]))
             push!(__active_pools__, Dict("pool_id" => pool_id, "clients" => clients_per_pool[i], "credentials" => credential_per_pool[i],
                 "resources" => resources_per_pool[i]))
-        catch
-            __verbose__ && print(join(["Pool ", i ," of ", num_pools, " in ", credential_per_pool[i]["_REGION"]," already exists.\n"]))
-            push!(__active_pools__, Dict("pool_id" => pool_id, "clients" => clients_per_pool[i], "credentials" => credential_per_pool[i],
-                "resources" => resources_per_pool[i]))
+        catch e
+            if typeof(e) == PyCall.PyError && e.val.error.code == "PoolExists"
+                __verbose__ && print(join(["Pool ", i ," of ", num_pools, " in ", credential_per_pool[i]["_REGION"]," already exists.\n"]))
+                push!(__active_pools__, Dict("pool_id" => pool_id, "clients" => clients_per_pool[i], "credentials" => credential_per_pool[i],
+                    "resources" => resources_per_pool[i]))
+            else
+                __verbose__ && print(join(["Failed to start pool ", i ," of ", num_pools, " in ", credential_per_pool[i]["_REGION"],". Verify that you have correct credentials, a batch account with AAD authentication and that pool parameters are correct.\n"]))
+            end
         end
     end
 end
