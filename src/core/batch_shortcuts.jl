@@ -110,7 +110,6 @@ function create_pool(; enable_auto_scale=false, auto_scale_formula=nothing,
                 "resources" => resources_per_pool[i]))
         catch e
             if typeof(e) == PyCall.PyError && e.val.error.code == "PoolExists"
-                print(e, "\n")
                 __verbose__ && print(join(["Pool ", i ," of ", num_pools, " in ", credential_per_pool[i]["_REGION"]," already exists.\n"]))
                 push!(__active_pools__, Dict("pool_id" => pool_id, "clients" => clients_per_pool[i], "credentials" => credential_per_pool[i],
                     "resources" => resources_per_pool[i]))
