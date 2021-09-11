@@ -14,31 +14,22 @@ Using `AzureClusterlessHPC` requires at the minimum one Azure Batch and one Azur
 
 ## Install Julia package
 
-Run the following command from an interactive Julia session to install `AzureClusterlessHPC.jl` (press the `]` key and then type the command)
+Run the following command from an interactive Julia session to install the developer version of `AzureClusterlessHPC.jl` (press the `]` key and then type the command)
 
 ```
-] dev https://github.com/microsoft/AzureClusterlessHPC.jl
+] dev AzureClusterlessHPC.jl
 ```
 
+## Install Python dependencies (only for custom Julia Python)
 
-## Install Python dependencies
+If your Julia PyCall package uses the default Python version, all Python dependencies will be installed automatically. No actions are required.
 
-AzureClusterlessHPC requires the Azure software development kits (SDKs) for batch computing, blob storage and common functionalities. Install the required packages via:
+If you are using a custom Python version for PyCall, the Python dependencies need to be install manually into the Python environment that PyCall is using. E.g.:
 
 ```
 # Go to AzureClusterlessHPC directory
 cd ~/.julia/dev/AzureClusterlessHPC
 pip3 install -r pyrequirements.txt
-```
-
-Next, we need to make sure that Julia is pointed to the correct Python version in which we installed our packages. Run `which python3` from the terminal and then start a Julia session and run (replace `/path/to/python3` with the correct path):
-
-```
-using Pkg; Pkg.add("PyCall")
-using PyCall
-
-ENV["PYTHON"] = "/path/to/python3"  # typically "/usr/bin/python3" or similar
-Pkg.build("PyCall")
 ```
 
 ## Create Azure Storage and Batch account with AAD authentication
