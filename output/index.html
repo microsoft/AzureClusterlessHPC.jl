@@ -82,6 +82,8 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#fetch-and-reduce-output">Fetch and reduce output</a>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#fetch-output-and-retry-failed-tasks">Fetch output and retry failed tasks</a>
+    </li>
     </ul>
                     </li>
                 </ul>
@@ -207,6 +209,11 @@ fetchreduce!(batch_controller, output; op=+)
 
 @show output
 output = ([2.0 2.0; 2.0 2.0], [4.0 4.0; 4.0 4.0])
+</code></pre>
+<h2 id="fetch-output-and-retry-failed-tasks">Fetch output and retry failed tasks</h2>
+<p>To fetch the output of one or multiple tasks and allow that failed tasks are restarted, pass the <code>num_restart</code> keyword argument to the <code>fetch</code>/<code>fetch!</code> or <code>fetchreduce</code>/<code>fetchreduce!</code> functions:</p>
+<pre><code># Fetch output and allow two retrys per task in case of failures
+output_job = fetch(batch_controller; num_restart=2)
 </code></pre>
               
             </div>
