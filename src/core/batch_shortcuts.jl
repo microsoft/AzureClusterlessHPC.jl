@@ -65,6 +65,7 @@ function create_pool(; enable_auto_scale=false, auto_scale_formula=nothing,
     auto_scale_evaluation_interval_minutes=nothing, image_resource_id=nothing, 
     container_registry=nothing)
 
+    (~enable_auto_scale) && (auto_scale_formula=auto_scale_evaluation_interval_minutes=nothing)
     # Autoscaling?
     for client in __clients__
         create_blob_containers(client["blob_client"], [__container__])
