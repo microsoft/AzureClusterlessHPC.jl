@@ -624,7 +624,7 @@ function bcast_expression(expr::Symbol; container=nothing)
         _binary = _iobuff.data
 
         # Create batch resource
-        _blob_name = join([$filename, randstring(8), ".dat"])
+        _blob_name = join([$filename, objectid($expr), ".dat"])
         create_bcast_batch_resource(_blob_name, _binary; container=$container)
     end
     return esc(expr_out)
