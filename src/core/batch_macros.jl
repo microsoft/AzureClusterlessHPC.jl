@@ -251,7 +251,7 @@ function submit_batch_job(expression_list; options=nothing)
     # CMD, job id and priority
     app_cmd = "/bin/bash -c \'set -e; set -o pipefail; \$AZ_BATCH_TASK_WORKING_DIR/application-cmd; wait\'"
     ~isnothing(options) ? (base_name = options.job_name) : (base_name = __params__["_JOB_ID"])
-    job_base = join([base_name, "_", randstring(8)])
+    job_base = join([base_name, "_", objectid(expression_list)])
     ~isnothing(options) ? (priority = options.priority) : (priority = 0)
 
     # Split expressions among available batch pools
