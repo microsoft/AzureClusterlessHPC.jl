@@ -78,7 +78,7 @@ else
         end
 
         # Create storage container
-        global __container__ = try __params__["_BLOB_CONTAINER"] catch; nothing end # Azure container for temp files
+        global __container__ = try lowercase(__params__["_BLOB_CONTAINER"]) catch; nothing end # Azure container for temp files
         global __verbose__ = parse(Bool, __params__["_VERBOSE"])
 
         # Global list of pools (start with no pools)
