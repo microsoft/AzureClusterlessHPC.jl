@@ -245,7 +245,7 @@ def select_latest_verified_vm_image_with_node_agent_sku(
 def create_pool(batch_service_client, pool_id, pool_vm_size, pool_node_count, node_os_publisher, 
     node_os_offer, node_os_sku, image_resource_id=None, enable_inter_node=False, resource_files=None,
     enable_auto_scale=False, auto_scale_formula=None, auto_scale_evaluation_interval_minutes=None,
-    container=None, container_registry=None):
+    container=None, container_registry=None, app_insights=None):
 
     # Configure the start task for the pool
     user = batchmodels.AutoUserSpecification(
@@ -258,13 +258,33 @@ def create_pool(batch_service_client, pool_id, pool_vm_size, pool_node_count, no
     else:
         autoscale_interval = None
 
-    # As starttask, run the setup script
+    # App insights?
+    if app_insights is not None:
+        env1=batchmodels.EnvironmentSetting(name="APP_INSIGHTS_APP_ID", value=app_insights[0])
+        env2=batchmodels.EnvironmentSetting(name="APP_INSIGHTS_INSTRUMENTATION_KEY", value=app_insights[1])
+        envs = [env1, env2]
+    else:
+        envs = None
+
     if resource_files is not None:
         start_task = batchmodels.StartTask(
             command_line='/home/setup.sh',
             user_identity=batchmodels.UserIdentity(auto_user=user),
             wait_for_success=True,
-            resource_files=resource_files
+            resource_files=resource_files,
+            environment_settings=envs
+        )
+    elif app_insights is not None:
+        cmd_line = '/bin/sh -c "set -e; wget -O ./batch-insights \
+            "https://github.com/Azure/batch-insights/releases/download/v1.0.0/batch-insights"; \
+            chmod +x ./batch-insights; ./batch-insights $AZ_BATCH_INSIGHTS_ARGS  \
+            > batch-insights.log&"'
+        
+        start_task = batchmodels.StartTask(
+            command_line=cmd_line,
+            user_identity=batchmodels.UserIdentity(auto_user=user),
+            wait_for_success=True,
+            environment_settings=envs
         )
     else:
         start_task = None
@@ -317,7 +337,7 @@ def create_pool(batch_service_client, pool_id, pool_vm_size, pool_node_count, no
 def create_pool_and_resource_file(clients, pool_id, pool_vm_size, pool_node_count, node_os_publisher, 
     node_os_offer, node_os_sku, file_name, container_name, image_resource_id=None, enable_inter_node=False,
     enable_auto_scale=False, auto_scale_formula=None, auto_scale_evaluation_interval_minutes=None,
-    container=None, container_registry=None):
+    container=None, container_registry=None, app_insights=None):
 
     resource_file = create_pool_resource_file(clients["blob_client"], file_name, container_name)
 
@@ -325,7 +345,7 @@ def create_pool_and_resource_file(clients, pool_id, pool_vm_size, pool_node_coun
         node_os_offer, node_os_sku, image_resource_id=image_resource_id, enable_inter_node=enable_inter_node, 
         resource_files=resource_file, enable_auto_scale=enable_auto_scale, auto_scale_formula=auto_scale_formula, 
         auto_scale_evaluation_interval_minutes=auto_scale_evaluation_interval_minutes, container=container,
-        container_registry=container_registry)
+        container_registry=container_registry, app_insights=app_insights)
 
 
 # Enable auto-scaling
