@@ -95,14 +95,23 @@ function create_pool(; enable_auto_scale=false, auto_scale_formula=nothing,
     end
     num_pools = parse(Int, __params__["_POOL_COUNT"])
 
+    # Create pools
     for i=1:num_pools
         pool_id = join([__params__["_POOL_ID"], "_", i])
+
+        # App insights?
+        if haskey(__credentials__[i], "_APP_INSIGHTS_APP_ID") && haskey(__credentials__[i], "_APP_INSIGHTS_INSTRUMENTATION_KEY")
+            app_insights = [__credentials__[i]["_APP_INSIGHTS_APP_ID"], __credentials__[i]["_APP_INSIGHTS_INSTRUMENTATION_KEY"]]
+        else
+            app_insights = nothing
+        end
+
         try
             azureclusterlesshpc.create_pool(clients_per_pool[i]["batch_client"], pool_id, __params__["_POOL_VM_SIZE"], num_nodes, 
                 __params__["_NODE_OS_PUBLISHER"], __params__["_NODE_OS_OFFER"], __params__["_NODE_OS_SKU"],
                 enable_inter_node=enable_inter_node, enable_auto_scale=enable_auto_scale, auto_scale_formula=auto_scale_formula, 
                 auto_scale_evaluation_interval_minutes=auto_scale_evaluation_interval_minutes, image_resource_id=image_resource_id,
-                container=docker_container, container_registry=container_registry)
+                container=docker_container, container_registry=container_registry, app_insights=app_insights)
 
             # Keep track of active pools
             __verbose__ && print(join(["Created pool ", i ," of ", num_pools, " in ", credential_per_pool[i]["_REGION"], " with ", num_nodes, " nodes.\n"]))
@@ -185,12 +194,20 @@ function create_pool_and_resource_file(startup_script; enable_auto_scale=false, 
 
     for i=1:num_pools
         pool_id = join([__params__["_POOL_ID"], "_", i])
+
+        # App insights?
+        if haskey(__credentials__[i], "_APP_INSIGHTS_APP_ID") && haskey(__credentials__[i], "_APP_INSIGHTS_INSTRUMENTATION_KEY")
+            app_insights = [__credentials__[i]["_APP_INSIGHTS_APP_ID"], __credentials__[i]["_APP_INSIGHTS_INSTRUMENTATION_KEY"]]
+        else
+            app_insights = nothing
+        end
+        
         try
             azureclusterlesshpc.create_pool_and_resource_file(clients_per_pool[i], pool_id, __params__["_POOL_VM_SIZE"], num_nodes, 
                 __params__["_NODE_OS_PUBLISHER"], __params__["_NODE_OS_OFFER"], __params__["_NODE_OS_SKU"], startup_script, __container__; 
                 enable_inter_node=enable_inter_node, enable_auto_scale=enable_auto_scale, auto_scale_formula=auto_scale_formula, 
                 auto_scale_evaluation_interval_minutes=auto_scale_evaluation_interval_minutes, image_resource_id=image_resource_id,
-                container=docker_container)
+                container=docker_container, app_insights=app_insights)
 
             # Keep track of active pools
             __verbose__ && print(join(["Created pool ", i ," of ", num_pools, " in ", credential_per_pool[i]["_REGION"], " with ", num_nodes, " nodes.\n"]))
