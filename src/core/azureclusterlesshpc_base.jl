@@ -200,3 +200,8 @@ Options(; job_name="batchjob_", task_name="task_", priority=0, pool=nothing, res
 function fileinclude(s::String)
     return nothing
 end
+
+# Return generic files
+function filereturn(s::String)
+    return nothing
+end
