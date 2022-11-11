@@ -26,6 +26,8 @@ export fetchreduce,  fetchreduce!, get_job_stats
 
  - `output` (Array{Any, 1}): List of outputs, one cell entry per task. The list contains one blob future for each task
 
+ - `files` (Array{Any, 1}): List of return files, one cell entry per task. The list contains one file future for each task
+
  - `blobcontainer` (String): Name of Blob container in which (temporary) results are stored
 
  - `clients` (Dict): Dictionary with entries `batch_client` and `blob_client`, each of which are a PyObject of clients
@@ -72,12 +74,13 @@ mutable struct BatchController
     task_id::Array{Dict, 1}
     num_tasks::Integer
     output::Array{Any, 1}
+    files::Array{FileFuture, 1}
     blobcontainer::String
     batch_client::Union{Array, Nothing}
     blob_client::Union{Array, Nothing}
 end
 
-function BatchController(job_id, task_id, num_tasks, output)
+function BatchController(job_id, task_id, num_tasks, output; files=[])
 
     batch_clients = []
     blob_clients = []
@@ -95,6 +98,7 @@ function BatchController(job_id, task_id, num_tasks, output)
         task_id,
         num_tasks,
         output,
+        files,
         blobcontainer,
         batch_clients,
         blob_clients
