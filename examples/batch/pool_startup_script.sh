@@ -16,9 +16,16 @@ ln -s /mnt/batch/tasks/startup/wd/julia-1.7.2/bin/julia /usr/local/bin/julia
 # AzureClusterlessHPC
 julia -e 'using Pkg; Pkg.add(url="https://github.com/microsoft/AzureClusterlessHPC.jl")'
 
+# Job monitoring
+set -e;
+wget -O ./batch-insights "https://github.com/Azure/batch-insights/releases/download/v1.0.0/batch-insights";
+chmod +x ./batch-insights;
+./batch-insights $AZ_BATCH_INSIGHTS_ARGS  > batch-insights.log &
+
 ###################################################################################################
 # ADD USER PACKAGES HERE
 # ...
+
 
 ###################################################################################################
 # DO NOT MODIFY!

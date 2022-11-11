@@ -12,6 +12,7 @@ nav:
     - Remote function calls: functioncalls.md
     - Broadcasting: broadcasting.md
     - Collect output: output.md
+    - Copying and retrieving files: files.md
     - Clean up: cleanup.md
     - FAQ: faq.md
     - About: about.md

@@ -24,6 +24,17 @@ Alternatively, you can set up the accounts manually (e.g. using the Azure consol
 When using AzureClusterlessHPC, set the environment variable `ENV["CREDENTIALS"] = "/path/to/credentials.json"` **before** you load the package via `using AzureClusterlessHPC`.
 
 
+## Job monitoring via App Insights
+
+`AzureClusterlessHPC.jl` supports job monitoring via Azure Batch Insights. Follow [the Batch Insights instructions](https://github.com/Azure/batch-insights) to set up Applications insights in the Azure portal. From your application, retrieve the app insights ID and the instrumentation key and add them to your `credentials.json` file: 
+
+```
+{
+    "_APP_INSIGHTS_APP_ID": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+    "_APP_INSIGHTS_INSTRUMENTATION_KEY": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+}
+```
+
 ## Multi accounts
 
 AzureClusterlessHPC also allows using multiple storage and/or batch accounts. Using multiple batch accounts provides the possiblity to cirumvent service limits of a single batch account or it allows to distribute workloads among multiple regions. If you create batch accounts for multiple regions, you need to have at least one storage account in each region. To automatically create multiple batch and storage accounts, use the shell script `create_azure_accounts.sh`. Pass the list of region(s) and the number of accounts per region as command line arguments to the script. E.g., to create two batch and storeage acounts in each US West and South Central US (i.e, total of 4 batch and 4 storage accounts), run:

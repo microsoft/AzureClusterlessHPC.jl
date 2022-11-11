@@ -110,7 +110,7 @@ function create_batch_resource_from_batch_future(batch_future::BatchFuture, pool
 end
 
 
-function create_batch_task!(expr, pool_no, count, tasks, resources, task_ids, output, app_cmd, options)
+function create_batch_task!(expr, pool_no, count, tasks, resources, task_ids, output, files, app_cmd, options)
 
     # Append expressions previously tagged via @batchdef
     isnothing(options) ? (task_base = "task_") : (task_base = options.task_name)
@@ -133,8 +133,22 @@ function create_batch_task!(expr, pool_no, count, tasks, resources, task_ids, ou
     end
 
     # Collect output blob names in Julia Futures
-    future = BlobFuture(__container__, BlobRef(tuple(filenames...)), pool_no)
-    push!(output, future)
+    future_return = BlobFuture(__container__, BlobRef(tuple(filenames...)), pool_no)
+    push!(output, future_return)
+
+    # Create batch output files for filereturns()
+    filereturns = []
+    find_filereturns_in_ast!(expressions, filereturns)
+    for outfile in filereturns
+        push!(outfiles, create_batch_output_file(__active_pools__[pool_no]["clients"]["blob_client"], 
+            __active_pools__[pool_no]["credentials"]["_STORAGE_ACCOUNT_NAME"], 
+            __container__, outfile)...)
+    end
+
+    # Collect output blob names in Julia Futures
+    future_file = FileFuture(__container__, BlobRef(tuple(filereturns...)), pool_no)
+    print(files)
+    push!(files, future_file)
 
     # Serialize AST
     filename = join([task_base, count, ".dat"])
@@ -259,7 +273,7 @@ function submit_batch_job(expression_list; options=nothing)
     task_list_per_pool =  assign_tasks_per_pool(num_tasks; strategy="chunk", options=options)
     expressions_per_pool, pool_numbers = split_expressions(expression_list, task_list_per_pool)
 
-    output = []; task_ids = []; count = 1; job_ids = []
+    output = []; task_ids = []; count = 1; job_ids = []; files=Vector{FileFuture}()
     for (i, expressions) in enumerate(expressions_per_pool)
 
         pool_no = pool_numbers[i]
@@ -288,7 +302,7 @@ function submit_batch_job(expression_list; options=nothing)
         tasks = []
         @sync begin
             for (j, expr) in enumerate(expressions)
-                create_batch_task!(expr, pool_no, count, tasks, resources, task_ids, output, app_cmd, options)
+                create_batch_task!(expr, pool_no, count, tasks, resources, task_ids, output, files, app_cmd, options)
                 count += 1
             end
         end
@@ -296,7 +310,7 @@ function submit_batch_job(expression_list; options=nothing)
             __active_pools__[pool_no]["clients"]["batch_client"].task.add_collection(job_ids[end], tasks)
         end
     end
-    return BatchController(job_ids, task_ids, length(expression_list), output)
+    return BatchController(job_ids, task_ids, length(expression_list), output, files=files)
 end
 
 
@@ -581,6 +595,24 @@ function find_function_in_ast_and_replace_return!(expr, fname, filelist)
         for i=1:length(expr.args)
             if typeof(expr.args[i]) == Expr
                 find_function_in_ast_and_replace_return!(expr.args[i], fname, filelist)
+            end
+        end
+    end
+end
+
+# Find filereturns() in ast and return list of files to be returned
+function find_filereturns_in_ast!(expr, filereturns)
+
+    # Reached AST leaf
+    typeof(expr) != Expr && return
+
+    if expr.head == :call && expr.args[1] == :filereturn && typeof(expr.args[2]) == String
+        push!(filereturns, expr.args[2])
+    else
+        # Step through AST
+        for i=1:length(expr.args)
+            if typeof(expr.args[i]) == Expr
+                find_filereturns_in_ast!(expr.args[i], filereturns)
             end
         end
     end

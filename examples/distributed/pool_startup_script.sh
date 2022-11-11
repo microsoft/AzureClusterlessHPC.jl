@@ -22,6 +22,12 @@ julia -e 'using PyCall'
 julia --project -e 'ENV["JULIA_MPI_BINARY"]="system"; using Pkg; Pkg.build("MPI"; verbose=true)'
 julia -e 'using MPI; MPI.install_mpiexecjl()'
 
+# Job monitoring
+set -e;
+wget -O ./batch-insights "https://github.com/Azure/batch-insights/releases/download/v1.0.0/batch-insights";
+chmod +x ./batch-insights;
+./batch-insights $AZ_BATCH_INSIGHTS_ARGS  > batch-insights.log &
+
 ###################################################################################################
 # ADD USER PACKAGES HERE
 

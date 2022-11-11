@@ -3,7 +3,7 @@
 #  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 #  ------------------------------------------------------------------------------------------
 
-export BlobRef, BlobFuture, BatchFuture, fetch, fetch!, migrate, migrate!
+export BlobRef, BlobFuture, BatchFuture, FileFuture, fetch, fetch!, migrate, migrate!
 
 
 ###################################################################################################
@@ -51,6 +51,48 @@ function fetch!(arg::BatchFuture)
     return arg.blob
 end
 
+
+###################################################################################################
+# File Future: reference to blob in blob storage (user-side fetch)
+
+mutable struct FileFuture
+    container::Union{String, Nothing}
+    blob
+    client_index::Integer
+end
+
+FileFuture(container, blob) = FileFuture(container, blob, 1)
+FileFuture(container) = FileFuture(container, nothing, 1)
+FileFuture() = FileFuture(nothing, nothing, 1)
+
+# Copy file from blob storage to local disk
+function fetch(arg::FileFuture; path=pwd(), destroy_blob=false)
+
+    # Try to read future from disk, otherwise fetch from blob
+    i = arg.client_index
+    try
+        num_files = length(arg.blob.name)
+        out_files = []
+        for blob in arg.blob.name
+
+            # Fetch blob and add to collection
+            if ~isnothing(__clients__[i]["blob_client"])
+                __clients__[1]["blob_client"].get_blob_to_path(arg.container, blob, joinpath(path, blob))
+
+                # Delete blob (default is true)
+                destroy_blob && __clients__[i]["blob_client"].delete_blob(arg.container, blob)
+            end
+        end
+    catch
+        throw("Blob does not (yet) exist or BlobFuture does not contain a proper blob reference.")
+    end
+end
+
+function fetch(args::Vector{FileFuture}; path=pwd(), destroy_blob=false)
+    for file in args
+        fetch(file; path=path, destroy_blob=destroy_blob)
+    end
+end
 
 ###################################################################################################
 # Blob Future: reference to blob in blob storage (user-side fetch)
