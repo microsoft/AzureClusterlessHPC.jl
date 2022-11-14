@@ -147,7 +147,6 @@ function create_batch_task!(expr, pool_no, count, tasks, resources, task_ids, ou
 
     # Collect output blob names in Julia Futures
     future_file = FileFuture(__container__, BlobRef(tuple(filereturns...)), pool_no)
-    print(files)
     push!(files, future_file)
 
     # Serialize AST
