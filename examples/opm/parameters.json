@@ -1,0 +1,15 @@
+{
+    "_POOL_ID": "SleipnerDataPool",
+    "_POOL_COUNT": "1",
+    "_NODE_COUNT_PER_POOL": "8",
+    "_POOL_VM_SIZE": "Standard_E8s_v3",
+    "_JOB_ID": "FluidSimJob",
+    "_NODE_OS_PUBLISHER": "microsoft-azure-batch",
+    "_NODE_OS_OFFER": "ubuntu-server-container",
+    "_NODE_OS_SKU": "20-04-lts",
+    "_BLOB_CONTAINER": "fluidsim",
+    "_CONTAINER": "philippwitte/sleipnerwno:v1.0",
+    "_JULIA_DEPOT_PATH": "/root/.julia",
+    "_PYTHONPATH": "/usr/local/lib/python3.8/dist-packages:/fluidsim",
+    "_OMP_NUM_THREADS": "8"
+}
