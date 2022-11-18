@@ -32,7 +32,7 @@ If you use your own docker image, update the image name in `parameters.json` acc
 
 ### Run data generation
 
-Start the data generation via:
+The data generation script is provided in the file [run_opm_batch.jl](https://github.com/microsoft/AzureClusterlessHPC.jl/blob/main/examples/opm/run_opm_batch.jl). Run it via:
 
 ```
 julia run_opm_batch.jl
@@ -45,7 +45,7 @@ Note that the default setup creates a pool with 32 VMs and simulates 32 training
 
 The dataset from the above paper reference is available for (free) download. The dataset consists of 4,000 training pairs, with input (permeability and topography) and output data (saturation, pressure). 
 
-For accessing and downloading the data we provide a Pytorch dataloader. The data loader automatically downloads the samples from a public Azure storage container. See [load_training_data.ipynb]() for an example.
+For accessing and downloading the data we provide a Pytorch dataloader. The data loader automatically downloads the samples from a public Azure storage container. See [load_training_data.ipynb](https://github.com/microsoft/AzureClusterlessHPC.jl/blob/main/examples/opm/load_training_data.ipynb) instructions on how to access the data.
 
 
 ## Copyright
