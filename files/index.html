@@ -8,16 +8,16 @@
   
   
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>Quickstart - AzureClusterlessHPC</title>
+  <title>Copying and retrieving files - AzureClusterlessHPC</title>
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
   
   <script>
     // Current page data
-    var mkdocs_page_name = "Quickstart";
-    var mkdocs_page_input_path = "quickstart.md";
-    var mkdocs_page_url = "/AzureClusterlessHPC.jl/quickstart/";
+    var mkdocs_page_name = "Copying and retrieving files";
+    var mkdocs_page_input_path = "files.md";
+    var mkdocs_page_url = "/AzureClusterlessHPC.jl/files/";
   </script>
   
   <script src="../js/jquery-2.1.1.min.js" defer></script>
@@ -56,15 +56,9 @@
     <a class="" href="../installation/">Installation</a>
 	    </li>
           
-            <li class="toctree-l1 current">
+            <li class="toctree-l1">
 		
-    <a class="current" href="./">Quickstart</a>
-    <ul class="subnav">
-            
-    <li class="toctree-l2"><a href="#quick-start">Quick start</a></li>
-    
-
-    </ul>
+    <a class="" href="../quickstart/">Quickstart</a>
 	    </li>
           
             <li class="toctree-l1">
@@ -92,9 +86,23 @@
     <a class="" href="../output/">Collect output</a>
 	    </li>
           
-            <li class="toctree-l1">
+            <li class="toctree-l1 current">
 		
-    <a class="" href="../files/">Copying and retrieving files</a>
+    <a class="current" href="./">Copying and retrieving files</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#copying-and-retrieving-files">Copying and retrieving files</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#upload-files-for-batch-task">Upload files for batch task</a></li>
+        
+            <li><a class="toctree-l3" href="#retrieve-file-from-batch-task">Retrieve file from batch task</a></li>
+        
+        </ul>
+    
+
+    </ul>
 	    </li>
           
             <li class="toctree-l1">
@@ -134,10 +142,10 @@
     
       
     
-    <li>Quickstart</li>
+    <li>Copying and retrieving files</li>
     <li class="wy-breadcrumbs-aside">
       
-        <a href="https://github.com/microsoft/AzureClusterlessHPC.jl/edit/master/docs/quickstart.md"
+        <a href="https://github.com/microsoft/AzureClusterlessHPC.jl/edit/master/docs/files.md"
           class="icon icon-github"> Edit on GitHub</a>
       
     </li>
@@ -147,61 +155,43 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="quick-start">Quick start</h1>
-<p>To run this example, you need to have followed the installation and setup steps in <a href="https://microsoft.github.io/AzureClusterlessHPC.jl/installation/">Installation</a>. Complete the steps in the installation section before proceeding. See section <a href="https://microsoft.github.io/AzureClusterlessHPC.jl/credentials/">Credentials</a> for additional information on resources and credentials.</p>
-<p>To run our first example, we move to the <code>/examples/batch</code> directory and have a look at the directory content:</p>
-<pre><code># Go to example directory
-cd ~/.julia/dev/AzureClusterlessHPC/examples/batch
-
-# List directory content
-ls -l
-
-julia_batch_macros.ipynb
-parameters.json
-pool_startup_script.sh
+                <h1 id="copying-and-retrieving-files">Copying and retrieving files</h1>
+<p>Aside from passing data and variables as function arguments to a batch task, it is possible to manually upload files from the local disk to a batch task. This avoids having to read a file into Julia before passing it as a function argument or broadcasting it. Similarily, it is possible to copy files from the batch worker disk back to the local disk.</p>
+<h2 id="upload-files-for-batch-task">Upload files for batch task</h2>
+<p>To upload a file from the local disk to your batch tasks, use the <code>fileinclude</code> function:</p>
+<pre><code>@batchdef fileinclude(&quot;my_local_file.dat&quot;)
 </code></pre>
 
-<p>We can see that our directory contains a <code>parameters.json</code> file with job parameters such as the number and type of Azure instances for our pool. (See section <a href="https://microsoft.github.io/AzureClusterlessHPC.jl/credentials/#user-parameters">User parameters</a> for a list of all available job parameters.) Additionally, we have a <code>pool_startup_script.sh</code> that is executed by every new VM joining a pool and which allows us to specify dependiencies that need to be installed on the worker nodes. Alternatively, we can also start pools with a managed VM image or using <a href="https://github.com/microsoft/AzureClusterlessHPC.jl/blob/main/examples/container/julia_batch_docker.ipynb">Docker images</a>.</p>
-<p>Next, we start a Julia session and set the environment variables <code>CREDENTIALS</code> and <code>PARAMETERS</code> so that they point to your parameter and credential file. You can either set the variables in your bash terminal (e.g. in your <code>~/.bashrc</code> file), or directly in the Julia terminal:</p>
-<pre><code># Set path to credentials in Julia
-ENV[&quot;CREDENTIALS&quot;] = joinpath(pwd(), &quot;../..&quot;, &quot;credentials.json&quot;)
-
-# Set path to batch parameters (pool id, VM types, etc.)
-ENV[&quot;PARAMETERS&quot;] = joinpath(pwd(), &quot;parameters.json&quot;)
+<p>This expression first copies the file <code>my_local_file.dat</code> to the Azure blob store and then includes it as a resource file with any future batch task.</p>
+<h2 id="retrieve-file-from-batch-task">Retrieve file from batch task</h2>
+<p>If your remotely executed Julia function saves a file to the local batch worker disk, you can use the <code>filereturn()</code> function to move that file from the disk of the batch worker to blob storage:</p>
+<pre><code>filereturn(&quot;my_remote_file.dat&quot;)
 </code></pre>
 
-<p>Next, load AzureClusterlessHPC.jl and create a pool with the parameters from <code>parameters.json</code> and using our <code>pool_startup_script.sh</code>:</p>
-<pre><code># Load package
-using AzureClusterlessHPC
+<p>Note that the <code>filereturn</code> statement must be included in the function that will executed remotely as a batch task. See the following function as an example:</p>
+<pre><code>@batchdef function create_file()
 
-# Create default pool with parameters from parameters.json
-startup_script = &quot;pool_startup_script.sh&quot;
-create_pool_and_resource_file(startup_script)
-</code></pre>
+    # Do some work
+    data = ...
 
-<p>You can check the status of your batch pool in the <a href="https://azure.microsoft.com/en-us/features/azure-portal/">Microsoft Azure Portal</a> or with the <a href="https://azure.github.io/BatchExplorer/">Azure Batch Explorer</a> (recommended). </p>
-<p>Now you can execute Julia functions that are defined using the <code>@batchdef</code> macro via Azure batch:</p>
-<pre><code># Define function
-@batchdef function hello_world(name)
-    print(&quot;Hello $name&quot;)
-    return &quot;Goodbye&quot;
+    # Write output to local file
+    iostream = open(&quot;my_remote_file.dat&quot;, &quot;w&quot;)
+    write(iostream, data)
+
+    # Copy remote file to blob store
+    filereturn(&quot;my_remote_file.dat&quot;)
 end
-
-# Execute function via Azure batch
-@batchexec hello_world(&quot;Bob&quot;)
 </code></pre>
 
-<p>You can also run multi-tasks batch job using the <code>pmap</code> function in combination with <code>@batchdef</code>:</p>
-<pre><code># Run a multi-task batch job
-@batchexec pmap(name -&gt; hello_world(name), [&quot;Bob&quot;, &quot;Jane&quot;])
-</code></pre>
+<p>Similar to return arguments, files from <code>filereturn</code> will be included as a <code>Future</code> in the batch controller. Once your function has executed successfully, you can retrieve the file via:</p>
+<pre><code># Remotely run function via azure batch
+bctrl = @batchexec create_file()
 
-<p>To delete all resources run:</p>
-<pre><code># Shut down pool
-delete_pool()
+# Wait for task to finish
+wait_for_tasks_to_complete(bctrl)
 
-# Delete container with temporary blob files
-delete_container()
+# Copy &quot;my_remote_file.dat&quot; to your local disk
+fetch(bctrl.files; path=pwd())
 </code></pre>
               
             </div>
@@ -210,10 +200,10 @@ delete_container()
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../credentials/" class="btn btn-neutral float-right" title="Credentials">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../cleanup/" class="btn btn-neutral float-right" title="Clean up">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../installation/" class="btn btn-neutral" title="Installation"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../output/" class="btn btn-neutral" title="Collect output"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -243,10 +233,10 @@ delete_container()
           <a href="https://github.com/microsoft/AzureClusterlessHPC.jl/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
-        <span><a href="../installation/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../output/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../credentials/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../cleanup/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

@@ -7,14 +7,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   
-  <link rel="canonical" href="https://microsoft.github.io/AzureClusterlessHPC.jl/functioncalls/">
   <link rel="shortcut icon" href="../img/favicon.ico">
   <title>Remote function calls - AzureClusterlessHPC</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
-
-  <link rel="stylesheet" href="../css/theme.css" />
-  <link rel="stylesheet" href="../css/theme_extra.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
   
   <script>
     // Current page data
@@ -25,7 +22,7 @@
   
   <script src="../js/jquery-2.1.1.min.js" defer></script>
   <script src="../js/modernizr-2.8.3.min.js" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
   <script>hljs.initHighlightingOnLoad();</script> 
   
 </head>
@@ -36,7 +33,6 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
-    <div class="wy-side-scroll">
       <div class="wy-side-nav-search">
         <a href=".." class="icon icon-home"> AzureClusterlessHPC</a>
         <div role="search">
@@ -47,60 +43,88 @@
       </div>
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../quickstart/">Quickstart</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../credentials/">Credentials</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../pool/">Manage pools</a>
-                    </li>
-                </ul>
-                <ul class="current">
-                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Remote function calls</a>
-    <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#batchdef">@batchdef</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#batchexec">@batchexec</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#mpi-support">MPI support</a>
-    </li>
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../installation/">Installation</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../quickstart/">Quickstart</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../credentials/">Credentials</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../pool/">Manage pools</a>
+	    </li>
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">Remote function calls</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#remote-function-calls">Remote function calls</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#batchdef">@batchdef</a></li>
+        
+            <li><a class="toctree-l3" href="#batchexec">@batchexec</a></li>
+        
+            <li><a class="toctree-l3" href="#mpi-support">MPI support</a></li>
+        
+        </ul>
+    
+
     </ul>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../broadcasting/">Broadcasting</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../output/">Collect output</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../cleanup/">Clean up</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../faq/">FAQ</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../about/">About</a>
-                    </li>
-                </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../broadcasting/">Broadcasting</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../output/">Collect output</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../files/">Copying and retrieving files</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../cleanup/">Clean up</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../faq/">FAQ</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../about/">About</a>
+	    </li>
+          
+        </ul>
       </div>
-    </div>
+      &nbsp;
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -128,7 +152,6 @@
       
     </li>
   </ul>
-  
   <hr/>
 </div>
           <div role="main">
@@ -139,6 +162,7 @@
 <p>Execute an expression under Main and on the batch workers of a (future) batch job that is executed from the same Julia session (equivalent to <code>@everywhere</code> for parallel Julia sessions).</p>
 <pre><code>@batchdef expr
 </code></pre>
+
 <p><code>@batchdef</code> can be used to define variables, functions or with <code>include</code> and <code>using</code> statements:</p>
 <pre><code># Import packages
 @batchdef using LinearAlgebra, Random
@@ -152,17 +176,20 @@
 # Define functions
 @batchdef hello_world(name) = print(&quot;Hello $name&quot;)
 </code></pre>
+
 <p>You can define multiple expression with <code>@batchdef</code> using a <code>begin ... end</code> block:</p>
 <pre><code>@batchdef begin
     A = ones(1, 1)
     B = zeros(1, 1)
 end
 </code></pre>
+
 <p>Expressions that are tagged via <code>@batchdef</code> are collected by AzureClusterlessHPC and are used in subsequent batch job executions. To print the current collection of expressions, type <code>batch_show()</code>. To reset the batch environment and remove all prior expressions from the call stack, use <code>batch_clear()</code> (or restart the Julia session).</p>
 <h2 id="batchexec">@batchexec</h2>
 <p>Execute an expression as a batch job (equivalent to <code>@spawn</code> for parallel Julia sessions).</p>
 <pre><code>@batchexec expr
 </code></pre>
+
 <p>The primary purpose of <code>@batchexec</code> is to execute functions that have been priorly defined with <code>@batchdef</code>. E.g.</p>
 <pre><code># Define function
 @batchdef function hello_world(name)
@@ -173,11 +200,13 @@ end
 # Call function via batch
 bctrl = @batchexec hello_world(&quot;Bob&quot;)
 </code></pre>
+
 <p>Arguments for functions executed via <code>@batchexec</code> are always <strong>passed by copy</strong>. This is important to keep in mind when passing large arguments to a function that is executed as a multi-task batch job, in which case arguments are copied to each task separately. To pass large arguments to a multi-task batch job, use the <code>@bcast</code> macro (see next section).</p>
 <p>To execute a multi-task batch job, use the <code>pmap</code> function:</p>
 <pre><code># Multi-task batch job
 bctrl = @batchexec pmap(name -&gt; hello_world(name), [&quot;Bob&quot;, &quot;Jane&quot;])
 </code></pre>
+
 <p>The <code>@batchexec</code> macro returns a batch controller (<code>bctrl</code>) that can be used for the following actions:</p>
 <ul>
 <li>
@@ -237,6 +266,7 @@ bctrl = @batchexec pmap(name -&gt; hello_world(name), [&quot;Bob&quot;, &quot;Ja
     &quot;_NUM_PROCS_PER_NODE&quot;: &quot;2&quot;,
     &quot;_OMP_NUM_THREADS&quot;: &quot;1&quot;
 </code></pre>
+
 <p>Note, that <code>"_NUM_NODES_PER_TASK"</code> must be set to <code>1</code> if <code>"_INTER_NODE_CONNECTION"</code> is set to <code>"0"</code>. <code>"_NUM_PROCS_PER_NODE"</code> specifies the number of MPI ranks per node and <code>"_OMP_NUM_THREADS"</code> specifies the number of OpenMP threads per rank (if applicable).</p>
 <p>To enable MPI tasks on multiple instances (distributed memory parallelism), set:</p>
 <pre><code>    &quot;_INTER_NODE_CONNECTION&quot;: &quot;1&quot;,
@@ -245,6 +275,7 @@ bctrl = @batchexec pmap(name -&gt; hello_world(name), [&quot;Bob&quot;, &quot;Ja
     &quot;_NUM_PROCS_PER_NODE&quot;: &quot;4&quot;,
     &quot;_OMP_NUM_THREADS&quot;: &quot;1&quot;
 </code></pre>
+
 <p>The total number of MPI ranks for each task is given by <code>"_NUM_NODES_PER_TASK"</code> times <code>"_NUM_PROCS_PER_NODE"</code>. E.g. in this example, each MPI task is executed on 2 nodes with 4 processes per node, i.e. 8 MPI ranks in total.</p>
 <p>In your application, you need to load the Julia MPI package via <code>@batchdef</code>. For a full MPI example, see <code>AzureClusterlessHPC/examples/mpi/julia_batch_mpi.ipynb</code>.</p>
               
@@ -271,7 +302,7 @@ bctrl = @batchexec pmap(name -&gt; hello_world(name), [&quot;Bob&quot;, &quot;Ja
     
   </div>
 
-  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
 </footer>
       
         </div>
@@ -281,7 +312,7 @@ bctrl = @batchexec pmap(name -&gt; hello_world(name), [&quot;Bob&quot;, &quot;Ja
 
   </div>
 
-  <div class="rst-versions" role="note" aria-label="versions">
+  <div class="rst-versions" role="note" style="cursor: pointer">
     <span class="rst-current-version" data-toggle="rst-current-version">
       
           <a href="https://github.com/microsoft/AzureClusterlessHPC.jl/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
@@ -297,11 +328,6 @@ bctrl = @batchexec pmap(name -&gt; hello_world(name), [&quot;Bob&quot;, &quot;Ja
     <script>var base_url = '..';</script>
     <script src="../js/theme.js" defer></script>
       <script src="../search/main.js" defer></script>
-    <script defer>
-        window.onload = function () {
-            SphinxRtdTheme.Navigation.enable(true);
-        };
-    </script>
 
 </body>
 </html>

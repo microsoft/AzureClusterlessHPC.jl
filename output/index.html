@@ -7,14 +7,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   
-  <link rel="canonical" href="https://microsoft.github.io/AzureClusterlessHPC.jl/output/">
   <link rel="shortcut icon" href="../img/favicon.ico">
   <title>Collect output - AzureClusterlessHPC</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
-
-  <link rel="stylesheet" href="../css/theme.css" />
-  <link rel="stylesheet" href="../css/theme_extra.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
   
   <script>
     // Current page data
@@ -25,7 +22,7 @@
   
   <script src="../js/jquery-2.1.1.min.js" defer></script>
   <script src="../js/modernizr-2.8.3.min.js" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
   <script>hljs.initHighlightingOnLoad();</script> 
   
 </head>
@@ -36,7 +33,6 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
-    <div class="wy-side-scroll">
       <div class="wy-side-nav-search">
         <a href=".." class="icon icon-home"> AzureClusterlessHPC</a>
         <div role="search">
@@ -47,60 +43,88 @@
       </div>
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../quickstart/">Quickstart</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../credentials/">Credentials</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../pool/">Manage pools</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../functioncalls/">Remote function calls</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../broadcasting/">Broadcasting</a>
-                    </li>
-                </ul>
-                <ul class="current">
-                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Collect output</a>
-    <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#fetch-output">Fetch output</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#fetch-and-reduce-output">Fetch and reduce output</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#fetch-output-and-retry-failed-tasks">Fetch output and retry failed tasks</a>
-    </li>
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../installation/">Installation</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../quickstart/">Quickstart</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../credentials/">Credentials</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../pool/">Manage pools</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../functioncalls/">Remote function calls</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../broadcasting/">Broadcasting</a>
+	    </li>
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">Collect output</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#collect-output">Collect output</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#fetch-output">Fetch output</a></li>
+        
+            <li><a class="toctree-l3" href="#fetch-and-reduce-output">Fetch and reduce output</a></li>
+        
+            <li><a class="toctree-l3" href="#fetch-output-and-retry-failed-tasks">Fetch output and retry failed tasks</a></li>
+        
+        </ul>
+    
+
     </ul>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../cleanup/">Clean up</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../faq/">FAQ</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../about/">About</a>
-                    </li>
-                </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../files/">Copying and retrieving files</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../cleanup/">Clean up</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../faq/">FAQ</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../about/">About</a>
+	    </li>
+          
+        </ul>
       </div>
-    </div>
+      &nbsp;
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -128,7 +152,6 @@
       
     </li>
   </ul>
-  
   <hr/>
 </div>
           <div role="main">
@@ -148,6 +171,7 @@ end
 n = 2
 batch_controller = @batchexec pmap(() -&gt; hello_world(n), 1:2)  # 2 tasks
 </code></pre>
+
 <p>The batch controller has a field called <code>batch_controller.output</code>, which is a cell array of blob futures. The blob futures contain a (randomly generated) blob name of the future result stored in blob storage. E.g.:</p>
 <pre><code>julia&gt; batch_controller.output
 
@@ -155,6 +179,7 @@ batch_controller = @batchexec pmap(() -&gt; hello_world(n), 1:2)  # 2 tasks
  BlobFuture(&quot;redwoodtemp&quot;, BlobRef((&quot;o9UspZStMmqn&quot;, &quot;TwIMfLrYiac2&quot;)))
  BlobFuture(&quot;redwoodtemp&quot;, BlobRef((&quot;PxgtEgZonWPJ&quot;, &quot;kZz1Wuknnag0&quot;)))
 </code></pre>
+
 <p>The cell array contains one entry per task, i.e. <code>length(batch_controller.output)</code> is equal to the number of tasks of the executed batch job (in this case 2). As our function returns two arguments, each <code>BlobRef</code> contains two (future) blob names.</p>
 <p>To fetch the output of an executed function, AzureClusterlessHPC provides the <code>fetch</code> and <code>fetch!</code> functions. These functions can be either called on the batch controller <code>output = fetch(batch_controller)</code> or they can be directly called on the blob futures:</p>
 <pre><code># fetch called on batch controller
@@ -163,6 +188,7 @@ output_job = fetch(batch_controller)
 # fetch called on blob future
 output_task_1 = fetch(batch_controller.output[1])
 </code></pre>
+
 <p>However, we recommend to always call <code>fetch</code> on the batch controller and not on the batch futures in <code>.output</code>. Calling <code>fetch(batch_controller)</code> is a blocking operation and waits for all batch tasks to terminate. Calling <code>fetch(batch_controller.output[1])</code> is non-blocking and throws an exception if the task or job has not yet finished and the output is not yet available in blob storage.</p>
 <p>AzureClusterlessHPC also supplies in-place fetch functions, which not only return the output, but they also overwrite the <code>BlobRef</code> of the <code>BlobFuture</code> in <code>batch_controller.output</code>:</p>
 <pre><code># Inplace fetch
@@ -178,6 +204,7 @@ batch_controller.output
  BlobFuture(&quot;redwoodtemp&quot;, ([0.0 0.0; 0.0 0.0], [1.0 1.0; 1.0 1.0]))
  BlobFuture(&quot;redwoodtemp&quot;, ([0.0 0.0; 0.0 0.0], [1.0 1.0; 1.0 1.0]))
 </code></pre>
+
 <p>Inplace <code>fetch!</code> by default deletes the referenced blob objects. If <code>fetch!</code> is called on the batch controller again, it will then throw an error. To avoid deleting the blob, call <code>fetch!(batch_controller; destroy_blob=false)</code>. </p>
 <h2 id="fetch-and-reduce-output">Fetch and reduce output</h2>
 <p>AzureClusterlessHPC supplies the <code>fetchreduce</code> and <code>fetchreduce!</code> functions to collect the output from multiple tasks and apply a specified reduction operation to the output.
@@ -193,12 +220,14 @@ end
 n = 2
 batch_controller = @batchexec pmap(() -&gt; hello_world(n), 1:2)  # 2 tasks
 </code></pre>
+
 <p>We can fetch and sum the output via:</p>
 <pre><code>output_sum = fetchreduce(batch_controller; op=+, remote=false)
 
 # Returns
 ([2.0 2.0; 2.0 2.0], [4.0 4.0; 4.0 4.0])
 </code></pre>
+
 <p>The <code>remote</code> keyword argument specifies where the summation is execute. By default, the output is collected and summed on the master. For <code>remote=true</code>, AzureClusterlessHPC will schedule the summation tasks on idle instances in the batch pool and only the final (reduced) argument is copied back to the master.</p>
 <p>We can also initialize the output ourselves and then call the in-place <code>fetchreduce!</code> function:</p>
 <pre><code># Initialize output
@@ -210,6 +239,7 @@ fetchreduce!(batch_controller, output; op=+)
 @show output
 output = ([2.0 2.0; 2.0 2.0], [4.0 4.0; 4.0 4.0])
 </code></pre>
+
 <h2 id="fetch-output-and-retry-failed-tasks">Fetch output and retry failed tasks</h2>
 <p>To fetch the output of one or multiple tasks and allow that failed tasks are restarted, pass the <code>num_restart</code> keyword argument to the <code>fetch</code>/<code>fetch!</code> or <code>fetchreduce</code>/<code>fetchreduce!</code> functions:</p>
 <pre><code># Fetch output and allow two retrys per task in case of failures
@@ -222,7 +252,7 @@ output_job = fetch(batch_controller; num_restart=2)
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../cleanup/" class="btn btn-neutral float-right" title="Clean up">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../files/" class="btn btn-neutral float-right" title="Copying and retrieving files">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
         <a href="../broadcasting/" class="btn btn-neutral" title="Broadcasting"><span class="icon icon-circle-arrow-left"></span> Previous</a>
@@ -239,7 +269,7 @@ output_job = fetch(batch_controller; num_restart=2)
     
   </div>
 
-  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
 </footer>
       
         </div>
@@ -249,7 +279,7 @@ output_job = fetch(batch_controller; num_restart=2)
 
   </div>
 
-  <div class="rst-versions" role="note" aria-label="versions">
+  <div class="rst-versions" role="note" style="cursor: pointer">
     <span class="rst-current-version" data-toggle="rst-current-version">
       
           <a href="https://github.com/microsoft/AzureClusterlessHPC.jl/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
@@ -258,18 +288,13 @@ output_job = fetch(batch_controller; num_restart=2)
         <span><a href="../broadcasting/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../cleanup/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../files/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
     <script>var base_url = '..';</script>
     <script src="../js/theme.js" defer></script>
       <script src="../search/main.js" defer></script>
-    <script defer>
-        window.onload = function () {
-            SphinxRtdTheme.Navigation.enable(true);
-        };
-    </script>
 
 </body>
 </html>

@@ -7,14 +7,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   
-  <link rel="canonical" href="https://microsoft.github.io/AzureClusterlessHPC.jl/installation/">
   <link rel="shortcut icon" href="../img/favicon.ico">
   <title>Installation - AzureClusterlessHPC</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
-
-  <link rel="stylesheet" href="../css/theme.css" />
-  <link rel="stylesheet" href="../css/theme_extra.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
   
   <script>
     // Current page data
@@ -25,7 +22,7 @@
   
   <script src="../js/jquery-2.1.1.min.js" defer></script>
   <script src="../js/modernizr-2.8.3.min.js" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
   <script>hljs.initHighlightingOnLoad();</script> 
   
 </head>
@@ -36,7 +33,6 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
-    <div class="wy-side-scroll">
       <div class="wy-side-nav-search">
         <a href=".." class="icon icon-home"> AzureClusterlessHPC</a>
         <div role="search">
@@ -47,64 +43,92 @@
       </div>
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
-                    </li>
-                </ul>
-                <ul class="current">
-                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Installation</a>
-    <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#prerequisites">Prerequisites</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#install-julia-package">Install Julia package</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#install-python-dependencies-only-for-custom-julia-python">Install Python dependencies (only for custom Julia Python)</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#create-azure-storage-and-batch-account-with-aad-authentication">Create Azure Storage and Batch account with AAD authentication</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#test-setup">Test setup</a>
-    </li>
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">Home</a>
+	    </li>
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">Installation</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#installation-and-setup">Installation and setup</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#prerequisites">Prerequisites</a></li>
+        
+            <li><a class="toctree-l3" href="#install-julia-package">Install Julia package</a></li>
+        
+            <li><a class="toctree-l3" href="#install-python-dependencies-only-for-custom-julia-python">Install Python dependencies (only for custom Julia Python)</a></li>
+        
+            <li><a class="toctree-l3" href="#create-azure-storage-and-batch-account-with-aad-authentication">Create Azure Storage and Batch account with AAD authentication</a></li>
+        
+            <li><a class="toctree-l3" href="#test-setup">Test setup</a></li>
+        
+        </ul>
+    
+
     </ul>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../quickstart/">Quickstart</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../credentials/">Credentials</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../pool/">Manage pools</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../functioncalls/">Remote function calls</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../broadcasting/">Broadcasting</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../output/">Collect output</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../cleanup/">Clean up</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../faq/">FAQ</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../about/">About</a>
-                    </li>
-                </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../quickstart/">Quickstart</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../credentials/">Credentials</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../pool/">Manage pools</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../functioncalls/">Remote function calls</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../broadcasting/">Broadcasting</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../output/">Collect output</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../files/">Copying and retrieving files</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../cleanup/">Clean up</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../faq/">FAQ</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../about/">About</a>
+	    </li>
+          
+        </ul>
       </div>
-    </div>
+      &nbsp;
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -132,7 +156,6 @@
       
     </li>
   </ul>
-  
   <hr/>
 </div>
           <div role="main">
@@ -157,6 +180,7 @@
 <p>Run the following command from an interactive Julia session to install the developer version of <code>AzureClusterlessHPC.jl</code> (press the <code>]</code> key and then type the command)</p>
 <pre><code>] dev AzureClusterlessHPC.jl
 </code></pre>
+
 <h2 id="install-python-dependencies-only-for-custom-julia-python">Install Python dependencies (only for custom Julia Python)</h2>
 <p>If your Julia PyCall package uses the default Python version, all Python dependencies will be installed automatically. No actions are required.</p>
 <p>If you are using a custom Python version for PyCall, the Python dependencies need to be install manually into the Python environment that PyCall is using. E.g.:</p>
@@ -164,13 +188,16 @@
 cd ~/.julia/dev/AzureClusterlessHPC
 pip3 install -r pyrequirements.txt
 </code></pre>
+
 <h2 id="create-azure-storage-and-batch-account-with-aad-authentication">Create Azure Storage and Batch account with AAD authentication</h2>
 <p>Using <code>AzureClusterlessHPC.jl</code> requires an Azure Storage and Azure Batch account with AAD authentication. First, install the Azure Command Line Interface (CLI) by running (see <a href="https://docs.microsoft.com/en-us/cli/azure/">here</a> for additional instructions):</p>
 <pre><code>curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 </code></pre>
+
 <p>Next, log into your Azure account:</p>
 <pre><code>az login
 </code></pre>
+
 <p>Once you have sucessfully logged in, follow the next steps to create all required accounts and to create a credential file:</p>
 <pre><code># Move to AzureClusterlessHPC directory
 cd ~/.julia/dev/AzureClusterlessHPC
@@ -181,6 +208,7 @@ sudo apt-get update -y &amp; sudo apt-get install -y jq
 # Create batch and storage accounts with given base name and region
 ./deploy.sh myname southcentralus
 </code></pre>
+
 <p>The shell script writes the credentials to <code>/path/to/AzureClusterlessHPC/credentials.json</code>. <strong>Make sure to never check this credential file into git and keep it private!</strong></p>
 <h2 id="test-setup">Test setup</h2>
 <p>Start a Julia session and set the <code>CREDENTIALS</code> environment variable so that it points to your credential file:</p>
@@ -191,6 +219,7 @@ ENV[&quot;CREDENTIALS&quot;] = Pkg.dir(&quot;AzureClusterlessHPC&quot;, &quot;cr
 # Load package
 using AzureClusterlessHPC
 </code></pre>
+
 <p>If you were able to load the package without any warnings or erros, you're good to go. Proceed to the <a href="https://microsoft.github.io/AzureClusterlessHPC.jl/quickstart/">Quickstart</a> section in the documentation or browse through the <a href="https://github.com/microsoft/AzureClusterlessHPC.jl/tree/main/examples">example notebooks</a>.</p>
               
             </div>
@@ -216,7 +245,7 @@ using AzureClusterlessHPC
     
   </div>
 
-  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
 </footer>
       
         </div>
@@ -226,7 +255,7 @@ using AzureClusterlessHPC
 
   </div>
 
-  <div class="rst-versions" role="note" aria-label="versions">
+  <div class="rst-versions" role="note" style="cursor: pointer">
     <span class="rst-current-version" data-toggle="rst-current-version">
       
           <a href="https://github.com/microsoft/AzureClusterlessHPC.jl/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
@@ -242,11 +271,6 @@ using AzureClusterlessHPC
     <script>var base_url = '..';</script>
     <script src="../js/theme.js" defer></script>
       <script src="../search/main.js" defer></script>
-    <script defer>
-        window.onload = function () {
-            SphinxRtdTheme.Navigation.enable(true);
-        };
-    </script>
 
 </body>
 </html>

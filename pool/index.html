@@ -7,14 +7,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   
-  <link rel="canonical" href="https://microsoft.github.io/AzureClusterlessHPC.jl/pool/">
   <link rel="shortcut icon" href="../img/favicon.ico">
   <title>Manage pools - AzureClusterlessHPC</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
-
-  <link rel="stylesheet" href="../css/theme.css" />
-  <link rel="stylesheet" href="../css/theme_extra.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
   
   <script>
     // Current page data
@@ -25,7 +22,7 @@
   
   <script src="../js/jquery-2.1.1.min.js" defer></script>
   <script src="../js/modernizr-2.8.3.min.js" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
   <script>hljs.initHighlightingOnLoad();</script> 
   
 </head>
@@ -36,7 +33,6 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
-    <div class="wy-side-scroll">
       <div class="wy-side-nav-search">
         <a href=".." class="icon icon-home"> AzureClusterlessHPC</a>
         <div role="search">
@@ -47,64 +43,92 @@
       </div>
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../quickstart/">Quickstart</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../credentials/">Credentials</a>
-                    </li>
-                </ul>
-                <ul class="current">
-                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Manage pools</a>
-    <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#start-a-pool">Start a pool</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#pools-with-managed-vm-images">Pools with managed VM images</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#pools-with-docker">Pools with Docker</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#pool-autoscaling">Pool autoscaling</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#pool-resize">Pool resize</a>
-    </li>
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../installation/">Installation</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../quickstart/">Quickstart</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../credentials/">Credentials</a>
+	    </li>
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">Manage pools</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#managing-pools">Managing pools</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#start-a-pool">Start a pool</a></li>
+        
+            <li><a class="toctree-l3" href="#pools-with-managed-vm-images">Pools with managed VM images</a></li>
+        
+            <li><a class="toctree-l3" href="#pools-with-docker">Pools with Docker</a></li>
+        
+            <li><a class="toctree-l3" href="#pool-autoscaling">Pool autoscaling</a></li>
+        
+            <li><a class="toctree-l3" href="#pool-resize">Pool resize</a></li>
+        
+        </ul>
+    
+
     </ul>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../functioncalls/">Remote function calls</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../broadcasting/">Broadcasting</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../output/">Collect output</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../cleanup/">Clean up</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../faq/">FAQ</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../about/">About</a>
-                    </li>
-                </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../functioncalls/">Remote function calls</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../broadcasting/">Broadcasting</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../output/">Collect output</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../files/">Copying and retrieving files</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../cleanup/">Clean up</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../faq/">FAQ</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../about/">About</a>
+	    </li>
+          
+        </ul>
       </div>
-    </div>
+      &nbsp;
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -132,7 +156,6 @@
       
     </li>
   </ul>
-  
   <hr/>
 </div>
           <div role="main">
@@ -171,12 +194,15 @@ julia -e 'using Pkg; Pkg.add(url=joinpath(pwd(), &quot;AzureClusterlessHPC&quot;
 chmod -R 777 /mnt/batch/tasks/startup/wd/.julia
 
 </code></pre>
+
 <p>If you need to install Julia packages for your application, specify the packages in the section <code># ADD USER PACKAGES HERE</code>. E.g. to install the Julia package <code>IterativeSolvers.jl</code>, add the line:</p>
 <pre><code>julia -e 'using Pkg; Pkg.add(&quot;IterativeSolvers&quot;)'
 </code></pre>
+
 <p>To install packages that are not officially registered with Julia, use this line to add packages:</p>
 <pre><code>julia -e 'using Pkg; Pkg.develop(PackageSpec(url=&quot;https://github.com/slimgroup/JOLI.jl&quot;))'
 </code></pre>
+
 <p>Save this batch script, e.g. as <code>pool_startup_script.sh</code>. You can now create a pool in which the startup script will be executed on each node that joins the pool:</p>
 <pre><code># Path to bash file
 startup_script = &quot;/path/to/pool_startup_script.sh&quot;
@@ -185,6 +211,7 @@ startup_script = &quot;/path/to/pool_startup_script.sh&quot;
 create_pool_and_resource_file(startup_script; enable_auto_scale=false, auto_scale_formula=nothing,
     auto_scale_evaluation_interval_minutes=nothing, image_resource_id=nothing)
 </code></pre>
+
 <p>Once you run the pool creation command, an active pool is added to the current session. You can list the currently active pools with <code>AzureClusterlessHPC.__active_pools__</code>.</p>
 <p><strong>Important</strong>: If you start a new session, you need to run the <code>create_pool_and_resource_file</code> again, even if your pool still exists, so that the pool is added to the active pools of the session.</p>
 <p><strong>Required input arguments:</strong></p>
@@ -216,6 +243,7 @@ image_id = &quot;xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&quot;
 create_pool(image_resource_id=image_id, enable_auto_scale=false, auto_scale_formula=nothing,
     auto_scale_evaluation_interval_minutes=nothing)
 </code></pre>
+
 <p><strong>Optional keyword arguments:</strong></p>
 <ul>
 <li><code>image_resource_id=nothing</code>: Image resource ID to use a custom machine image for nodes joining the batch pool.</li>
@@ -237,9 +265,11 @@ docker login
 docker tag redwood:v1.0 username/redwood:v1.0
 docker push username/redwood:v1.0
 </code></pre>
+
 <p>Once you have a Docker image in a public repository, you can specify a Docker image in your <code>parameters.json</code> file:</p>
 <pre><code>    &quot;_CONTAINER&quot;: &quot;username/redwood:v1.0&quot;
 </code></pre>
+
 <p>If the <code>_CONTAINER</code> parameter is set, AzureClusterlessHPC will install the specified container image on the VMs in the batch pool.</p>
 <h2 id="pool-autoscaling">Pool autoscaling</h2>
 <p>To create a pool with auto-scaling, use one of the above commands and set the following keyword arguments:</p>
@@ -258,6 +288,7 @@ docker push username/redwood:v1.0
     \$TargetDedicatedNodes=min(maxNumberofVMs, pendingTaskSamples);
     \$NodeDeallocationOption = taskcompletion;&quot;&quot;&quot;
 </code></pre>
+
 <p>For other auto-scaling formulas, refer to the <a href="https://docs.microsoft.com/en-us/azure/batch/batch-automatic-scaling">Azure Batch documentation</a>.</p>
 <ul>
 <li>Set the auto-scaling interval: <code>auto_scale_evaluation_interval_minutes=5</code>. The minimum allowed values is 5 minutes.</li>
@@ -277,6 +308,7 @@ auto_scale_formula = &quot;&quot;&quot;startingNumberOfVMs = 1;
 create_pool_and_resource_file(startup_script; enable_auto_scale=true, auto_scale_formula=auto_scale_formula,            
     auto_scale_evaluation_interval_minutes=5)
 </code></pre>
+
 <h2 id="pool-resize">Pool resize</h2>
 <p>Currently not supported.</p>
               
@@ -303,7 +335,7 @@ create_pool_and_resource_file(startup_script; enable_auto_scale=true, auto_scale
     
   </div>
 
-  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
 </footer>
       
         </div>
@@ -313,7 +345,7 @@ create_pool_and_resource_file(startup_script; enable_auto_scale=true, auto_scale
 
   </div>
 
-  <div class="rst-versions" role="note" aria-label="versions">
+  <div class="rst-versions" role="note" style="cursor: pointer">
     <span class="rst-current-version" data-toggle="rst-current-version">
       
           <a href="https://github.com/microsoft/AzureClusterlessHPC.jl/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
@@ -329,11 +361,6 @@ create_pool_and_resource_file(startup_script; enable_auto_scale=true, auto_scale
     <script>var base_url = '..';</script>
     <script src="../js/theme.js" defer></script>
       <script src="../search/main.js" defer></script>
-    <script defer>
-        window.onload = function () {
-            SphinxRtdTheme.Navigation.enable(true);
-        };
-    </script>
 
 </body>
 </html>
